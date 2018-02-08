@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\App\Service\SystemDatabaseInformationService;
+use Adianti\Base\App\Service\SystemDatabaseInformationService;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
@@ -10,7 +10,6 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Exception;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemTableList

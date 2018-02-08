@@ -11,7 +11,6 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use stdClass;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemPHPErrorLogView

@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
+use Adianti\Base\Lib\Base\TStandardList;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Registry\TSession;
@@ -16,8 +17,6 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
-use Adianti\Base\TStandardList;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemProgramList

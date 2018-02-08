@@ -167,7 +167,7 @@ trait AdiantiStandardListTrait
                 if (isset($data->{$formFilter}) and $data->{$formFilter}) {
                     // $this->filterTransformers
                     if ($filterFunction) {
-                        $fieldData = $filterFunction($data->{$formFilter});
+                        $fieldData =  is_callable($filterFunction) ? $filterFunction($data->{$formFilter}) : null;
                     } else {
                         $fieldData = $data->{$formFilter};
                     }

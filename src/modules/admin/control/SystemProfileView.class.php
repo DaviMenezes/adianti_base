@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
-use App\Model\Admin\SystemUser;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Exception;
 
 /**

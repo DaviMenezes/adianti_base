@@ -58,8 +58,7 @@ class SystemAccessLog extends TRecord
         $logs = self::where('sessionid', '=', session_id())->load();
         if (count($logs)>0) {
             $log = $logs[0];
-            if ($log instanceof SystemAccessLog);
-            {
+            if ($log instanceof SystemAccessLog) {
                 $log->logout_time = date("Y-m-d H:i:s");
             }
             $log->store();

@@ -10,7 +10,6 @@ use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemDatabaseExplorer

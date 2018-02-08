@@ -13,9 +13,9 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
-use App\Model\Admin\SystemPreference;
+use Adianti\Base\Modules\Admin\Model\SystemPreference;
 use Exception;
-use TMail;
+use Adianti\Base\App\Lib\Util\TMail;
 
 /**
  * SystemSupportForm

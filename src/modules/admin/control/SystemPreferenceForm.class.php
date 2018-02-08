@@ -13,9 +13,8 @@ use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemPreference;
-use Adianti\Base\TStandardForm;
+use Adianti\Base\Lib\Base\TStandardForm;
 use Exception;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemPreferenceForm

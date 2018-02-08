@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\App\Service\SystemDatabaseInformationService;
+use Adianti\Base\App\Service\SystemDatabaseInformationService;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Database\TTransaction;
@@ -20,7 +20,6 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Exception;
 use stdClass;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemSQLPanel

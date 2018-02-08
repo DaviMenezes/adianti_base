@@ -7,7 +7,6 @@ use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TAlert;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
-use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemPHPInfoView

@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use _t;
+use function Adianti\Base\App\Lib\Util\_t;
 use Adianti\Base\Lib\Base\AdiantiStandardFormListTrait;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;

@@ -20,6 +20,7 @@ class TDateValidator extends TFieldValidator
      * @param $label Identifies the value to be validated in case of exception
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (ex: mask)
+     * @throws Exception
      */
     public function validate($label, $value, $parameters = null)
     {

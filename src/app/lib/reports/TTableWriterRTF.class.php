@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\App\Lib\Reports;
 
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 use PHPRtfLite;
 use PHPRtfLite_Border;
@@ -121,7 +122,7 @@ class TTableWriterRTF implements ITableWriter
     public function addCell($content, $align, $stylename, $colspan = 1)
     {
         if (is_null($stylename) or !isset($this->styles[$stylename])) {
-            throw new Exception(TAdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__));
+            throw new Exception(AdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__));
         }
         
         // obtém a fonte e a cor de preenchimento

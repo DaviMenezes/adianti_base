@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\App\Lib\Reports;
 
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+
 /**
  * Write tables in HTML
  * @author Pablo Dall'Oglio
@@ -92,7 +94,7 @@ class TTableWriterHTML implements ITableWriter
     public function addCell($content, $align, $stylename, $colspan = 1)
     {
         if (is_null($stylename) or !isset($this->styles[$stylename])) {
-            throw new Exception(TAdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__));
+            throw new \Exception(AdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__));
         }
         
         $width = 0;

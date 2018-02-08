@@ -70,9 +70,9 @@ class Lexer
         foreach ($tokenArray as $t) {
             if (array_key_exists($t, static::$operatorsMap)) {
                 $token = new Operator(
-                        $t,
-                        static::$operatorsMap[$t]['priority'],
-                        static::$operatorsMap[$t]['associativity']
+                    $t,
+                    static::$operatorsMap[$t]['priority'],
+                    static::$operatorsMap[$t]['associativity']
                 );
             } elseif (is_numeric($t)) {
                 $token = new Token((float) $t, Token::T_OPERAND);

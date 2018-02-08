@@ -2,8 +2,10 @@
 namespace Adianti\Base\Lib\Widget\Form;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Exception;
 
 /**
  * Color Widget

@@ -24,11 +24,12 @@ class TTableRow extends TElement
     {
         parent::__construct('tr');
     }
-    
+
     /**
      * Add a new cell (TTableCell) to the Table Row
      * @param  $value Cell Content
      * @return TTableCell
+     * @throws Exception
      */
     public function addCell($value)
     {

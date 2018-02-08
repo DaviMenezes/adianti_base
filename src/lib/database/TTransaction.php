@@ -1,8 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
 use Closure;
+use Exception;
 use PDO;
 
 /**

@@ -31,7 +31,7 @@ class TMail
                 )
             );
             
-        $this->pm-> CharSet = 'utf-8';
+        $this->pm->CharSet = 'utf-8';
     }
     
     /**
@@ -49,10 +49,10 @@ class TMail
      */
     public function setFrom($from, $name = null)
     {
-        $this->pm-> From     = $from;
+        $this->pm->From     = $from;
         
         if ($name) {
-            $this->pm-> FromName = $name;
+            $this->pm->FromName = $name;
         }
     }
     
@@ -63,7 +63,7 @@ class TMail
      */
     public function setReplyTo($address, $name = '')
     {
-        $this->pm-> AddReplyTo($address, $name = '');
+        $this->pm->AddReplyTo($address, $name = '');
     }
     
     /**
@@ -72,7 +72,7 @@ class TMail
      */
     public function setSubject($subject)
     {
-        $this->pm-> Subject = $subject;
+        $this->pm->Subject = $subject;
     }
     
     /**
@@ -81,8 +81,8 @@ class TMail
      */
     public function setTextBody($body)
     {
-        $this->pm-> Body = $body;
-        $this->pm-> IsHTML(false);
+        $this->pm->Body = $body;
+        $this->pm->IsHTML(false);
     }
     
     /**
@@ -91,7 +91,7 @@ class TMail
      */
     public function setHtmlBody($html)
     {
-        $this->pm-> MsgHTML($html);
+        $this->pm->MsgHTML($html);
     }
     
     /**
@@ -106,7 +106,7 @@ class TMail
             list($address, $name) = $this->parseMail($address);
         }
         
-        $this->pm-> AddAddress($address, $name);
+        $this->pm->AddAddress($address, $name);
     }
     
     /**
@@ -116,7 +116,7 @@ class TMail
      */
     public function addCC($address, $name = '')
     {
-        $this->pm-> AddCC($address, $name);
+        $this->pm->AddCC($address, $name);
     }
     
     /**
@@ -126,7 +126,7 @@ class TMail
      */
     public function addBCC($address, $name = '')
     {
-        $this->pm-> AddBCC($address, $name);
+        $this->pm->AddBCC($address, $name);
     }
     
     /**
@@ -136,7 +136,7 @@ class TMail
      */
     public function addAttach($path, $name = '')
     {
-        $this->pm-> AddAttachment($path, $name);
+        $this->pm->AddAttachment($path, $name);
     }
     
     /**
@@ -144,8 +144,8 @@ class TMail
      */
     public function SetUseSmtp($auth = true)
     {
-        $this->pm-> IsSMTP();            // set mailer to use SMTP
-        $this->pm-> SMTPAuth = $auth;    // turn on SMTP authentication
+        $this->pm->IsSMTP();            // set mailer to use SMTP
+        $this->pm->SMTPAuth = $auth;    // turn on SMTP authentication
     }
     
     /**
@@ -154,11 +154,11 @@ class TMail
      */
     public function SetSmtpHost($host, $port = 25)
     {
-        $this->pm-> Host = $host;
-        $this->pm-> Port = $port;
+        $this->pm->Host = $host;
+        $this->pm->Port = $port;
         
         if (strstr($this->pm-> Host, 'gmail') !== false) {
-            $this->pm-> SMTPSecure = "ssl";
+            $this->pm->SMTPSecure = "ssl";
         }
     }
     
@@ -169,8 +169,8 @@ class TMail
      */
     public function SetSmtpUser($user, $pass)
     {
-        $this->pm-> Username = $user;
-        $this->pm-> Password = $pass;
+        $this->pm->Username = $user;
+        $this->pm->Password = $pass;
     }
     
     /**
@@ -195,7 +195,7 @@ class TMail
      */
     public function send()
     {
-        $this->pm-> Send();
+        $this->pm->Send();
         return true;
     }
 }

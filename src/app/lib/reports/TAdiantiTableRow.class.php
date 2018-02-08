@@ -20,7 +20,7 @@ class TAdiantiTableRow extends TAdiantiElement
     /**
      * Add a new cell (TTableCell) to the Table Row
      * @param  $value Cell Content
-     * @return The created Table Cell
+     * @return TAdiantiTableCell
      */
     public function addCell($value)
     {

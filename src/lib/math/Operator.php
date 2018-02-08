@@ -58,7 +58,7 @@ class Operator extends Token
     /**
      * Return true if this operator has lower priority of operator $o.
      *
-     * @param \Math\Operator $o
+     * @param Operator Math $o
      * @return boolean
      */
     public function hasLowerPriority(Operator $o)

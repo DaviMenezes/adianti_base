@@ -2,6 +2,7 @@
 namespace Adianti\Base\App\Lib\Widget;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 
 /**
  * TAccordion Container

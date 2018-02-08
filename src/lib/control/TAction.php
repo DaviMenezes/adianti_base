@@ -111,10 +111,11 @@ class TAction
     {
         return $this->action;
     }
-    
+
     /**
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
+     * @return string
      */
     public function serialize($format_action = true)
     {
@@ -125,10 +126,10 @@ class TAction
             $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
             // get the method name
             $url['method'] = $this->action[1];
-        }
 
-        // otherwise the callback is a function
-        elseif (is_string($this->action)) {
+        } elseif (is_string($this->action)) {
+            // otherwise the callback is a function
+
             // get the function name
             $url['method'] = $this->action;
         }

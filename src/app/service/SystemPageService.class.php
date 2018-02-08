@@ -97,7 +97,7 @@ class SystemPageService
         $entries = array();
         foreach (new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator('app/control'),
-                                                         RecursiveIteratorIterator::CHILD_FIRST
+            RecursiveIteratorIterator::CHILD_FIRST
         ) as $arquivo) {
             if (substr($arquivo, -4) == '.php') {
                 $name = $arquivo->getFileName();

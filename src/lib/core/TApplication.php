@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 

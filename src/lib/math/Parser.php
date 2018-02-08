@@ -2,6 +2,8 @@
 
 namespace Adianti\Base\Lib\Math;
 
+use Adianti\Base\Lib\Math\TranslationStrategy\ShuntingYard;
+
 /**
  * Evaluate mathematical expression.
  *
@@ -68,7 +70,7 @@ class Parser
         $lexer = $this->getLexer();
         $tokens = $lexer->tokenize($expression);
 
-        $translationStrategy = new \Math\TranslationStrategy\ShuntingYard();
+        $translationStrategy = new ShuntingYard();
 
         return $this->evaluateRPN($translationStrategy->translate($tokens));
     }

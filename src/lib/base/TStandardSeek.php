@@ -41,10 +41,11 @@ class TStandardSeek extends TWindow
     private $pageNavigation;
     private $parentForm;
     private $loaded;
-    
+
     /**
      * Constructor Method
      * Creates the page, the search form and the listing
+     * @throws Exception
      */
     public function __construct()
     {

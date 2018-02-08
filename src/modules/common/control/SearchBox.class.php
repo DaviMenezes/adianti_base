@@ -1,16 +1,16 @@
 <?php
 namespace Adianti\Base\Modules\Common\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Control\TPage;
-use Adianti\Core\TApplication;
-use Adianti\Database\TTransaction;
-use Adianti\Modules\Admin\Model\SystemUser;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\TMultiSearch;
-use Adianti\Widget\Menu\TMenuParser;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\TApplication;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Form\TMultiSearch;
+use Adianti\Base\Lib\Widget\Menu\TMenuParser;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Exception;
 
 /**

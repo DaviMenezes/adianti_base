@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
-use Adianti\Validator\TFieldValidator;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
@@ -22,10 +21,9 @@ class TNumericValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (min value)
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, $parameters = null)
     {
-        if (!is_numeric($value))
-        {
+        if (!is_numeric($value)) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 must be numeric', $label));
         }
     }

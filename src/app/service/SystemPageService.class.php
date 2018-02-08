@@ -1,6 +1,13 @@
 <?php
 namespace Adianti\Base\App\Service;
 
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Exception;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class SystemPageService
 {
     /**
@@ -12,12 +19,9 @@ class SystemPageService
         $token = $ini['general']['token'];
         $controller = $param['controller'];
         $url = "http://manager.adiantibuilder.com.br/ws.php?method=editPage&controller={$controller}&token={$token}";
-        if (self::checkExternalUrl($url) !== 200)
-        {
+        if (self::checkExternalUrl($url) !== 200) {
             new TMessage('error', _t('Connection failed'));
-        }
-        else
-        {
+        } else {
             TScript::create("__adianti_open_page('{$url}')");
         }
     }
@@ -33,23 +37,18 @@ class SystemPageService
         $controller = $param['controller'];
         $url = "http://manager.adiantibuilder.com.br/ws.php?method=getPages&controller={$controller}&token={$token}";
         
-        if (self::checkExternalUrl($url) !== 200)
-        {
+        if (self::checkExternalUrl($url) !== 200) {
             throw new Exception(_t('Connection failed'));
         }
         
         $content = file_get_contents($url);
         $page_data = (array) json_decode($content);
         
-        if (json_last_error() == JSON_ERROR_NONE)
-        {
-            if ($page_data['status'] == 'error')
-            {
+        if (json_last_error() == JSON_ERROR_NONE) {
+            if ($page_data['status'] == 'error') {
                 throw new Exception('Builder: '. $page_data['message']);
             }
-        }
-        else
-        {
+        } else {
             throw new Exception(_t('Invalid return'));
         }
         
@@ -65,16 +64,13 @@ class SystemPageService
         $token = $ini['general']['token'];
         $url = "http://manager.adiantibuilder.com.br/ws.php?method=getPages&token={$token}";
         
-        if (self::checkExternalUrl($url) !== 200)
-        {
+        if (self::checkExternalUrl($url) !== 200) {
             throw new Exception(_t('Connection failed'));
         }
         
         $programs = self::getLocalPrograms();
-        if ($programs)
-        {
-            foreach ($programs as $program)
-            {
+        if ($programs) {
+            foreach ($programs as $program) {
                 $url .= '&controllers[]=' . $program;
             }
         }
@@ -82,15 +78,11 @@ class SystemPageService
         $content = file_get_contents($url);
         $page_info = (array) json_decode($content);
         
-        if (json_last_error() == JSON_ERROR_NONE)
-        {
-            if ($page_info['status'] == 'error')
-            {
+        if (json_last_error() == JSON_ERROR_NONE) {
+            if ($page_info['status'] == 'error') {
                 throw new Exception('Builder: '. $page_info['message']);
             }
-        }
-        else
-        {
+        } else {
             throw new Exception(_t('Invalid return'));
         }
         
@@ -103,11 +95,11 @@ class SystemPageService
     public static function getLocalPrograms()
     {
         $entries = array();
-        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('app/control'),
-                                                         RecursiveIteratorIterator::CHILD_FIRST) as $arquivo)
-        {
-            if (substr($arquivo, -4) == '.php')
-            {
+        foreach (new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator('app/control'),
+                                                         RecursiveIteratorIterator::CHILD_FIRST
+        ) as $arquivo) {
+            if (substr($arquivo, -4) == '.php') {
                 $name = $arquivo->getFileName();
                 $pieces = explode('.', $name);
                 $class = (string) $pieces[0];

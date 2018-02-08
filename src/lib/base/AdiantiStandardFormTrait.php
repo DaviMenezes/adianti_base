@@ -1,10 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRecord;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Exception;
 
 /**

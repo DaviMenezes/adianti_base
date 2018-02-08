@@ -1,15 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Core\AdiantiApplicationConfig;
-use Adianti\Control\TPage;
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TField;
-
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
 
 /**

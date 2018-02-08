@@ -1,22 +1,22 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Base\AdiantiStandardFormListTrait;
-use Adianti\Control\TAction;
-use Adianti\Control\TPage;
-use Adianti\Modules\Communication\Model\SystemDocumentCategory;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Datagrid\TDataGrid;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
-use Adianti\Wrapper\BootstrapFormBuilder;
+use _t;
+use Adianti\Base\Lib\Base\AdiantiStandardFormListTrait;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
 
 /**
  * SystemDocumentCategoryFormList

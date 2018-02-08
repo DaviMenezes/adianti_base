@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\App\Lib\Util;
 
+use SessionHandlerInterface;
+
 class TApplicationFileSessionHandler implements SessionHandlerInterface
 {
     private $savePath;

@@ -1,14 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Util\TImage;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Control\TAction;
-
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Util\TImage;
 use Exception;
 
 /**
@@ -83,7 +80,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
     /**
      * Define the list size
      */
-    public function setSize($width, $height = NULL)
+    public function setSize($width, $height = null)
     {
         $this->tag->{'style'} = "width:{$width}px;height:{$height}px";
     }
@@ -95,27 +92,20 @@ class TSortList extends TField implements AdiantiWidgetInterface
     public function setValue($value)
     {
         $items = $this->initialItems;
-        if (is_array($value))
-        {
+        if (is_array($value)) {
             $this->items = array();
-            foreach ($value as $index)
-            {
-                if (isset($items[$index]))
-                {
+            foreach ($value as $index) {
+                if (isset($items[$index])) {
                     $this->items[$index] = $items[$index];
-                }
-                else if (isset($this->connectedTo) AND is_array($this->connectedTo))
-                {
-                    foreach ($this->connectedTo as $connectedList)
-                    {
-                        if (isset($connectedList->initialItems[$index] ) )
-                        {
+                } elseif (isset($this->connectedTo) and is_array($this->connectedTo)) {
+                    foreach ($this->connectedTo as $connectedList) {
+                        if (isset($connectedList->initialItems[$index])) {
                             $this->items[$index] = $connectedList->initialItems[$index];
                         }
                     }
                 }
             }
-        	$this->valueSet = TRUE;
+            $this->valueSet = true;
         }
     }
     
@@ -134,8 +124,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public function addItems($items)
     {
-        if (is_array($items))
-        {
+        if (is_array($items)) {
             $this->initialItems += $items;
             $this->items += $items;
         }
@@ -154,12 +143,9 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name]))
-        {
+        if (isset($_POST[$this->name])) {
             return $_POST[$this->name];
-        }
-        else
-        {
+        } else {
             return array();
         }
     }
@@ -170,12 +156,9 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public function setChangeAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->changeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -194,7 +177,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tsortlist_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tsortlist_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -202,7 +185,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tsortlist_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tsortlist_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -210,7 +193,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tsortlist_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tsortlist_clear_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -220,39 +203,30 @@ class TSortList extends TField implements AdiantiWidgetInterface
     {
         $this->tag->{'id'} = $this->id;
         
-        if ($this->orientation == 'horizontal')
-        {
+        if ($this->orientation == 'horizontal') {
             $this->tag->{'itemdisplay'} = 'inline-block';
-        }
-        else
-        {
+        } else {
             $this->tag->{'itemdisplay'} = 'block';
         }
         
-        if ($this->items)
-        {
+        if ($this->items) {
             $i = 1;
             // iterate the checkgroup options
-            foreach ($this->items as $index => $label)
-            {
+            foreach ($this->items as $index => $label) {
                 // control to reduce available options when they are present
                 // in another connected list as a post value
-	            if ($this->connectedTo AND is_array($this->connectedTo))
-	            {
-	                foreach ($this->connectedTo as $connectedList)
-	                {
-                        if (isset($connectedList->items[$index]) AND $connectedList->valueSet )
-                        {
+                if ($this->connectedTo and is_array($this->connectedTo)) {
+                    foreach ($this->connectedTo as $connectedList) {
+                        if (isset($connectedList->items[$index]) and $connectedList->valueSet) {
                             continue 2;
                         }
-	                }
-	            }
+                    }
+                }
 
                 // instantiates a new Item
                 $item = new TElement('li');
                 
-                if ($this->itemIcon)
-                {
+                if ($this->itemIcon) {
                     $item->add($this->itemIcon);
                 }
                 $item->add(new TLabel($label));
@@ -261,8 +235,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
                 $item->{'id'} = "tsortlist_{$this->name}_item_{$i}_li";
                 $item->{'title'} = $this->tag->title;
                 
-                if ($this->orientation == 'horizontal')
-                {
+                if ($this->orientation == 'horizontal') {
                     $item->{'style'} = 'display:inline-block';
                 }
                 
@@ -278,29 +251,23 @@ class TSortList extends TField implements AdiantiWidgetInterface
             }
         }
         
-        if (parent::getEditable())
-        {
+        if (parent::getEditable()) {
             $change_action = 'function() {}';
-            if (isset($this->changeAction))
-            {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-                }            
-                $string_action = $this->changeAction->serialize(FALSE);
+            if (isset($this->changeAction)) {
+                if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+                }
+                $string_action = $this->changeAction->serialize(false);
                 $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
             }
             
-            if (isset($this->changeFunction))
-            {
+            if (isset($this->changeFunction)) {
                 $change_action = "function() { $this->changeFunction }";
             }
             
             $connect = 'false';
-            if ($this->connectedTo AND is_array($this->connectedTo))
-            {
-                foreach ($this->connectedTo as $connectedList)
-                {
+            if ($this->connectedTo and is_array($this->connectedTo)) {
+                foreach ($this->connectedTo as $connectedList) {
                     $connectIds[] =  '#'.$connectedList->getId();
                 }
                 $connect = implode(', ', $connectIds);

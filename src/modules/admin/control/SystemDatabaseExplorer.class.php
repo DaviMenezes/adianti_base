@@ -1,16 +1,16 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use function Adianti\App\Lib\Util\_t;
-use Adianti\Control\TPage;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Template\THtmlRenderer;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Widget\Wrapper\TQuickGrid;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
 
 /**
  * SystemDatabaseExplorer

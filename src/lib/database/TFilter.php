@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Database\TExpression;
-use Adianti\Database\TSqlStatement;
-
 /**
  * Provides an interface to define filters to be used inside a criteria
  *
@@ -23,13 +20,13 @@ class TFilter extends TExpression
     
     /**
      * Class Constructor
-     * 
+     *
      * @param  $variable = variable
      * @param  $operator = operator (>, <, =, BETWEEN)
      * @param  $value    = value to be compared
      * @param  $value2   = second value to be compared (between)
      */
-    public function __construct($variable, $operator, $value, $value2 = NULL)
+    public function __construct($variable, $operator, $value, $value2 = null)
     {
         // store the properties
         $this->variable = $variable;
@@ -39,8 +36,7 @@ class TFilter extends TExpression
         // transform the value according to its type
         $this->value    = $value;
         
-        if ($value2)
-        {
+        if ($value2) {
             $this->value2 = $value2;
         }
     }
@@ -52,45 +48,32 @@ class TFilter extends TExpression
      * @param $prepared If the value will be prepared
      * @return       Transformed Value
      */
-    private function transform($value, $prepared = FALSE)
+    private function transform($value, $prepared = false)
     {
         // if the value is an array
-        if (is_array($value))
-        {
+        if (is_array($value)) {
             $foo = array();
             // iterate the array
-            foreach ($value as $x)
-            {
+            foreach ($value as $x) {
                 // if the value is an integer
-                if (is_numeric($x))
-                {
-                    if ($prepared)
-                    {
+                if (is_numeric($x)) {
+                    if ($prepared) {
                         $preparedVar = ':par_'.$this->getRandomParameter();
                         $this->preparedVars[ $preparedVar ] = $x;
                         $foo[] = $preparedVar;
-                    }
-                    else
-                    {
+                    } else {
                         $foo[] = $x;
                     }
-                }
-                else if (is_string($x))
-                {
+                } elseif (is_string($x)) {
                     // if the value is an string, add quotes
-                    if ($prepared)
-                    {
+                    if ($prepared) {
                         $preparedVar = ':par_'.$this->getRandomParameter();
                         $this->preparedVars[ $preparedVar ] = $x;
                         $foo[] = $preparedVar;
-                    }
-                    else
-                    {
+                    } else {
                         $foo[] = "'$x'";
                     }
-                }
-                else if (is_bool($x))
-                {
+                } elseif (is_bool($x)) {
                     $foo[] = ($x) ? 'TRUE' : 'FALSE';
                 }
             }
@@ -98,58 +81,44 @@ class TFilter extends TExpression
             $result = '(' . implode(',', $foo) . ')';
         }
         // if the value is a subselect (must not be escaped as string)
-        else if (substr(strtoupper($value),0,7) == '(SELECT')
-        {
+        elseif (substr(strtoupper($value), 0, 7) == '(SELECT') {
             $result = "$value";
         }
         // if the value must not be escaped (NOESC in front)
-        else if (substr($value,0,6) == 'NOESC:')
-        {
-            $result = substr($value,6);
+        elseif (substr($value, 0, 6) == 'NOESC:') {
+            $result = substr($value, 6);
         }
         // if the value is a string
-        else if (is_string($value))
-        {
-            if ($prepared)
-            {
+        elseif (is_string($value)) {
+            if ($prepared) {
                 $preparedVar = ':par_'.$this->getRandomParameter();
                 $this->preparedVars[ $preparedVar ] = $value;
                 $result = $preparedVar;
-            }
-            else
-            {
+            } else {
                 // add quotes
                 $result = "'$value'";
             }
         }
         // if the value is NULL
-        else if (is_null($value))
-        {
+        elseif (is_null($value)) {
             // the result is 'NULL'
             $result = 'NULL';
         }
         // if the value is a boolean
-        else if (is_bool($value))
-        {
+        elseif (is_bool($value)) {
             // the result is 'TRUE' of 'FALSE'
             $result = $value ? 'TRUE' : 'FALSE';
         }
         // if the value is a TSqlStatement object
-        else if ($value instanceof TSqlStatement)
-        {
+        elseif ($value instanceof TSqlStatement) {
             // the result is the return of the getInstruction()
             $result = '(' . $value->getInstruction() . ')';
-        }
-        else
-        {
-            if ($prepared)
-            {
+        } else {
+            if ($prepared) {
                 $preparedVar = ':par_'.$this->getRandomParameter();
                 $this->preparedVars[ $preparedVar ] = $value;
                 $result = $preparedVar;
-            }
-            else
-            {
+            } else {
                 $result = $value;
             }
         }
@@ -170,18 +139,15 @@ class TFilter extends TExpression
      * Return the filter as a string expression
      * @return  A string containing the filter
      */
-    public function dump( $prepared = FALSE )
+    public function dump($prepared = false)
     {
         $this->preparedVars = array();
         $value = $this->transform($this->value, $prepared);
-        if ($this->value2)
-        {
+        if ($this->value2) {
             $value2 = $this->transform($this->value2, $prepared);
             // concatenated the expression
             return "{$this->variable} {$this->operator} {$value} AND {$value2}";
-        }
-        else
-        {
+        } else {
             // concatenated the expression
             return "{$this->variable} {$this->operator} {$value}";
         }

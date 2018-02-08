@@ -1,11 +1,12 @@
 <?php
 namespace Adianti\Base\App\Lib\Barcode;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Wrapper\AdiantiPDFDesigner;
-use Picqer\Barcode\BarcodeGeneratorPNG;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Wrapper\AdiantiPDFDesigner;
 use BaconQrCode\Renderer\Image\Png;
 use BaconQrCode\Writer;
+use Exception;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 /**
  * Barcode generator

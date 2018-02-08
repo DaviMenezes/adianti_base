@@ -1,11 +1,11 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TPage;
-use Adianti\Database\TTransaction;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Template\THtmlRenderer;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use App\Model\Admin\SystemUser;
 use Exception;
 

@@ -1,16 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Dialog\TQuestion;
-use Adianti\Control\TAction;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRepository;
-use Adianti\Database\TRecord;
-use Adianti\Database\TFilter;
-use Adianti\Database\TCriteria;
-use Adianti\Registry\TSession;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Dialog\TQuestion;
 use Exception;
 
 /**

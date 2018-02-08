@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Control\TAction;
+use Adianti\Base\Lib\Control\TAction;
 
 /**
  * Action Link
@@ -26,8 +25,7 @@ class TActionLink extends TTextDisplay
      */
     public function __construct($value, TAction $action, $color = null, $size = null, $decoration = null, $icon = null)
     {
-        if ($icon)
-        {
+        if ($icon) {
             $value = new TImage($icon) . $value;
         }
         

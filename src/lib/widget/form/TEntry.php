@@ -1,12 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TField;
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
 
 /**
@@ -43,8 +40,8 @@ class TEntry extends TField implements AdiantiWidgetInterface
     {
         parent::__construct($name);
         $this->id   = 'tentry_' . mt_rand(1000000000, 1999999999);
-        $this->numericMask = FALSE;
-        $this->replaceOnPost = FALSE;
+        $this->numericMask = false;
+        $this->replaceOnPost = false;
         $this->tag->{'type'}   = 'text';
         $this->tag->{'widget'} = 'tentry';
     }
@@ -72,9 +69,9 @@ class TEntry extends TField implements AdiantiWidgetInterface
      * @param $decimalsSeparator Sets the separator for the decimal point.
      * @param $thousandSeparator Sets the thousands separator.
      */
-    public function setNumericMask($decimals, $decimalsSeparator, $thousandSeparator, $replaceOnPost = FALSE)
+    public function setNumericMask($decimals, $decimalsSeparator, $thousandSeparator, $replaceOnPost = false)
     {
-        $this->numericMask = TRUE;
+        $this->numericMask = true;
         $this->decimals = $decimals;
         $this->decimalsSeparator = $decimalsSeparator;
         $this->thousandSeparator = $thousandSeparator;
@@ -87,19 +84,13 @@ class TEntry extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($this->replaceOnPost)
-        {
-            if (is_numeric($value))
-            {
+        if ($this->replaceOnPost) {
+            if (is_numeric($value)) {
                 $this->value = number_format($value, $this->decimals, $this->decimalsSeparator, $this->thousandSeparator);
-            }
-            else
-            {
+            } else {
                 $this->value = $value;
             }
-        }
-        else
-        {
+        } else {
             $this->value = $value;
         }
     }
@@ -111,22 +102,16 @@ class TEntry extends TField implements AdiantiWidgetInterface
     {
         $name = str_replace(['[',']'], ['',''], $this->name);
         
-        if (isset($_POST[$name]))
-        {
-            if ($this->replaceOnPost)
-            {
+        if (isset($_POST[$name])) {
+            if ($this->replaceOnPost) {
                 $value = $_POST[$name];
-                $value = str_replace( $this->thousandSeparator, '', $value);
-                $value = str_replace( $this->decimalsSeparator, '.', $value);
+                $value = str_replace($this->thousandSeparator, '', $value);
+                $value = str_replace($this->decimalsSeparator, '.', $value);
                 return $value;
-            }
-            else
-            {
+            } else {
                 return $_POST[$name];
             }
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
@@ -137,8 +122,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
      */
     public function setMaxLength($length)
     {
-        if ($length > 0)
-        {
+        if ($length > 0) {
             $this->tag-> maxlength = $length;
         }
     }
@@ -147,7 +131,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
      * Define options for completion
      * @param $options array of options for completion
      */
-    function setCompletion($options)
+    public function setCompletion($options)
     {
         $this->completion = $options;
     }
@@ -156,14 +140,11 @@ class TEntry extends TField implements AdiantiWidgetInterface
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
      */
-    function setExitAction(TAction $action)
+    public function setExitAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->exitAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -187,7 +168,6 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'onBlur'} = "return tentry_lower(this)";
         $this->tag->{'forcelower'} = "1";
         $this->setProperty('style', 'text-transform: lowercase');
-        
     }
     
     /**
@@ -210,66 +190,48 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'name'}  = $this->name;    // TAG name
         $this->tag->{'value'} = $this->value;   // TAG value
         
-        if (!empty($this->size))
-        {
-            if (strstr($this->size, '%') !== FALSE)
-            {
+        if (!empty($this->size)) {
+            if (strstr($this->size, '%') !== false) {
                 $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-            }
-            else
-            {
+            } else {
                 $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
             }
         }
         
-        if ($this->id and empty($this->tag->{'id'}))
-        {
+        if ($this->id and empty($this->tag->{'id'})) {
             $this->tag->{'id'} = $this->id;
         }
         
         // verify if the widget is non-editable
-        if (parent::getEditable())
-        {
-            if (isset($this->exitAction))
-            {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if (parent::getEditable()) {
+            if (isset($this->exitAction)) {
+                if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                 }
-                $string_action = $this->exitAction->serialize(FALSE);
+                $string_action = $this->exitAction->serialize(false);
 
                 $this->setProperty('exitaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
                 
                 // just aggregate onBlur, if the previous one does not have return clause
-                if (strstr($this->getProperty('onBlur'), 'return') == FALSE)
-                {
-                    $this->setProperty('onBlur', $this->getProperty('exitaction'), FALSE);
-                }
-                else
-                {
-                    $this->setProperty('onBlur', $this->getProperty('exitaction'), TRUE);
+                if (strstr($this->getProperty('onBlur'), 'return') == false) {
+                    $this->setProperty('onBlur', $this->getProperty('exitaction'), false);
+                } else {
+                    $this->setProperty('onBlur', $this->getProperty('exitaction'), true);
                 }
             }
             
-            if (isset($this->exitFunction))
-            {
-                if (strstr($this->getProperty('onBlur'), 'return') == FALSE)
-                {
-                    $this->setProperty('onBlur', $this->exitFunction, FALSE);
-                }
-                else
-                {
-                    $this->setProperty('onBlur', $this->exitFunction, TRUE);
+            if (isset($this->exitFunction)) {
+                if (strstr($this->getProperty('onBlur'), 'return') == false) {
+                    $this->setProperty('onBlur', $this->exitFunction, false);
+                } else {
+                    $this->setProperty('onBlur', $this->exitFunction, true);
                 }
             }
             
-            if ($this->mask)
-            {
+            if ($this->mask) {
                 $this->tag->{'onKeyPress'} = "return tentry_mask(this,event,'{$this->mask}')";
             }
-        }
-        else
-        {
+        } else {
             $this->tag->{'readonly'} = "1";
             $this->tag->{'class'} = 'tfield_disabled'; // CSS
             $this->tag->{'onmouseover'} = "style.cursor='default'";
@@ -278,14 +240,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
         // shows the tag
         $this->tag->show();
         
-        if (isset($this->completion))
-        {
+        if (isset($this->completion)) {
             $options = json_encode($this->completion);
             TScript::create(" tentry_autocomplete( '{$this->id}', $options); ");
         }
-        if ($this->numericMask)
-        {
-            TScript::create( "tentry_numeric_mask( '{$this->id}', {$this->decimals}, '{$this->decimalsSeparator}', '{$this->thousandSeparator}'); ");
+        if ($this->numericMask) {
+            TScript::create("tentry_numeric_mask( '{$this->id}', {$this->decimals}, '{$this->decimalsSeparator}', '{$this->thousandSeparator}'); ");
         }
     }
 }

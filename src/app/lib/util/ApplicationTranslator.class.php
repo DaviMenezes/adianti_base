@@ -443,8 +443,7 @@ class ApplicationTranslator
         $this->messages['pt'][] = 'Falhas na conexão';
         
         $this->enWords = [];
-        foreach ($this->messages['en'] as $key => $value)
-        {
+        foreach ($this->messages['en'] as $key => $value) {
             $this->enWords[$value] = $key;
         }
     }
@@ -456,8 +455,7 @@ class ApplicationTranslator
     public static function getInstance()
     {
         // if there's no instance
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             // creates a new object
             self::$instance = new self;
         }
@@ -490,14 +488,13 @@ class ApplicationTranslator
      * @param $word     Word to be translated
      * @return          Translated word
      */
-    public static function translate($word, $param1 = NULL, $param2 = NULL, $param3 = NULL)
+    public static function translate($word, $param1 = null, $param2 = null, $param3 = null)
     {
         // get the self unique instance
         $instance = self::getInstance();
         // search by the numeric index of the word
         
-        if (isset($instance->enWords[$word]) and !is_null($instance->enWords[$word]))
-        {
+        if (isset($instance->enWords[$word]) and !is_null($instance->enWords[$word])) {
             $key = $instance->enWords[$word]; //$key = array_search($word, $instance->messages['en']);
             
             // get the target language
@@ -505,22 +502,17 @@ class ApplicationTranslator
             // returns the translated word
             $message = $instance->messages[$language][$key];
             
-            if (isset($param1))
-            {
+            if (isset($param1)) {
                 $message = str_replace('^1', $param1, $message);
             }
-            if (isset($param2))
-            {
+            if (isset($param2)) {
                 $message = str_replace('^2', $param2, $message);
             }
-            if (isset($param3))
-            {
+            if (isset($param3)) {
                 $message = str_replace('^3', $param3, $message);
             }
             return $message;
-        }
-        else
-        {
+        } else {
             return 'Message not found: '. $word;
         }
     }
@@ -533,10 +525,8 @@ class ApplicationTranslator
         // get the self unique instance
         $instance = self::getInstance();
         // search by translated words
-        if(preg_match_all( '!_t\{(.*?)\}!i', $template, $match ) > 0)
-        {
-            foreach($match[1] as $word)
-            {
+        if (preg_match_all('!_t\{(.*?)\}!i', $template, $match) > 0) {
+            foreach ($match[1] as $word) {
                 $translated = _t($word);
                 $template = str_replace('_t{'.$word.'}', $translated, $template);
             }
@@ -555,5 +545,5 @@ class ApplicationTranslator
  */
 function _t($msg, $param1 = null, $param2 = null, $param3 = null)
 {
-        return ApplicationTranslator::translate($msg, $param1, $param2, $param3);
+    return ApplicationTranslator::translate($msg, $param1, $param2, $param3);
 }

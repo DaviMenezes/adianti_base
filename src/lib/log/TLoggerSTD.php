@@ -1,8 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Log;
 
-use Adianti\Log\TLogger;
-
 /**
  * Register LOG in Standard Output
  *
@@ -22,8 +20,7 @@ class TLoggerSTD extends TLogger
     {
         $level = 'Debug';
         $parts = explode(':', $message);
-        if (count($parts) == 2)
-        {
+        if (count($parts) == 2) {
             $level   = $parts[0];
             $message = $parts[1];
         }

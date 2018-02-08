@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
-use Adianti\Validator\TFieldValidator;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
@@ -22,12 +21,11 @@ class TEmailValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, $parameters = null)
     {
         $filter = filter_var(trim($value), FILTER_VALIDATE_EMAIL);
         
-        if ($filter === FALSE)
-        {
+        if ($filter === false) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 contains an invalid e-mail', $label));
         }
     }

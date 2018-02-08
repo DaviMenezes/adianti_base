@@ -1,46 +1,44 @@
 <?php
 namespace Adianti\Base\Lib\Wrapper;
 
-use Adianti\Base\TStandardSeek;
-use Adianti\Core\AdiantiApplicationConfig;
-use Adianti\Control\TAction;
-use Adianti\Validator\TRequiredValidator;
-
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Container\TPanel;
-use Adianti\Widget\Container\TFrame;
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Container\TTable;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TSpinner;
-use Adianti\Widget\Form\TSlider;
-use Adianti\Widget\Form\TPassword;
-use Adianti\Widget\Form\TDate;
-use Adianti\Widget\Form\TFile;
-use Adianti\Widget\Form\TColor;
-use Adianti\Widget\Form\TSeekButton;
-use Adianti\Widget\Form\TText;
-use Adianti\Widget\Form\TCheckGroup;
-use Adianti\Widget\Form\TRadioGroup;
-use Adianti\Widget\Form\TCombo;
-use Adianti\Widget\Form\TSelect;
-use Adianti\Widget\Form\TSortList;
-use Adianti\Widget\Form\TMultiSearch;
-use Adianti\Widget\Util\TImage;
-use Adianti\Widget\Wrapper\TDBCheckGroup;
-use Adianti\Widget\Wrapper\TDBRadioGroup;
-use Adianti\Widget\Wrapper\TDBCombo;
-use Adianti\Widget\Wrapper\TDBSelect;
-use Adianti\Widget\Wrapper\TDBSortList;
-use Adianti\Widget\Wrapper\TDBMultiSearch;
-use Adianti\Widget\Datagrid\TDataGrid;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Datagrid\TPageNavigation;
-
+use Adianti\Base\Lib\Base\TStandardSeek;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Container\TFrame;
+use Adianti\Base\Lib\Widget\Container\TNotebook;
+use Adianti\Base\Lib\Widget\Container\TPanel;
+use Adianti\Base\Lib\Widget\Container\TTable;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TButton;
+use Adianti\Base\Lib\Widget\Form\TCheckGroup;
+use Adianti\Base\Lib\Widget\Form\TColor;
+use Adianti\Base\Lib\Widget\Form\TCombo;
+use Adianti\Base\Lib\Widget\Form\TDate;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TFile;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TMultiSearch;
+use Adianti\Base\Lib\Widget\Form\TPassword;
+use Adianti\Base\Lib\Widget\Form\TRadioGroup;
+use Adianti\Base\Lib\Widget\Form\TSeekButton;
+use Adianti\Base\Lib\Widget\Form\TSelect;
+use Adianti\Base\Lib\Widget\Form\TSlider;
+use Adianti\Base\Lib\Widget\Form\TSortList;
+use Adianti\Base\Lib\Widget\Form\TSpinner;
+use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Util\TImage;
+use Adianti\Base\Lib\Widget\Wrapper\TDBCheckGroup;
+use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
+use Adianti\Base\Lib\Widget\Wrapper\TDBMultiSearch;
+use Adianti\Base\Lib\Widget\Wrapper\TDBRadioGroup;
+use Adianti\Base\Lib\Widget\Wrapper\TDBSelect;
+use Adianti\Base\Lib\Widget\Wrapper\TDBSortList;
 use Exception;
 use SimpleXMLElement;
 
@@ -92,27 +90,23 @@ class AdiantiUIBuilder extends TPanel
         $xml = new SimpleXMLElement(file_get_contents($filename));
         $widgets = $this->parseElement($xml);
         
-        if ($widgets)
-        {
-            foreach ($widgets as $widget)
-            {
-                if ($widget instanceof TFrame)
-                {
+        if ($widgets) {
+            foreach ($widgets as $widget) {
+                if ($widget instanceof TFrame) {
                     $size = $widget->getSize();
-                    parent::setSize( $size[0], $size[1] );
+                    parent::setSize($size[0], $size[1]);
                 }
                 
-                if ($widget instanceof TNotebook)
-                {
+                if ($widget instanceof TNotebook) {
                     $size = $widget->getSize();
-                    parent::setSize( $size[0], $size[1] + 40); // spacings
+                    parent::setSize($size[0], $size[1] + 40); // spacings
                 }
             }
         }
     }
     
     /**
-     * 
+     *
      */
     public function makeTLabel($properties)
     {
@@ -127,7 +121,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTButton($properties)
     {
@@ -145,7 +139,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTEntry($properties)
     {
@@ -153,17 +147,14 @@ class AdiantiUIBuilder extends TPanel
         $widget->setValue((string) $properties->{'value'});
         $widget->setMask((string) $properties->{'mask'});
         $widget->setSize((int) $properties->{'width'});
-        if (isset($properties->{'maxlen'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'maxlen'})) { // added later (not in the first version)
             $widget->setMaxLength((int) $properties->{'maxlen'});
         }
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -175,7 +166,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTSpinner($properties)
     {
@@ -184,8 +175,7 @@ class AdiantiUIBuilder extends TPanel
         $widget->setValue((string) $properties->{'value'});
         $widget->setSize((int) $properties->{'width'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
@@ -197,7 +187,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTSlider($properties)
     {
@@ -206,8 +196,7 @@ class AdiantiUIBuilder extends TPanel
         $widget->setValue((string) $properties->{'value'});
         $widget->setSize((int) $properties->{'width'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
@@ -219,7 +208,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTPassword($properties)
     {
@@ -228,13 +217,11 @@ class AdiantiUIBuilder extends TPanel
         $widget->setSize((int) $properties->{'width'});
         $widget->setEditable((string) $properties->{'editable'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -245,7 +232,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTDate($properties)
     {
@@ -254,18 +241,15 @@ class AdiantiUIBuilder extends TPanel
         $widget->setSize((int) $properties->{'width'});
         $widget->setEditable((string) $properties->{'editable'});
         
-        if ((string) $properties->{'mask'})
-        {
+        if ((string) $properties->{'mask'}) {
             $widget->setMask((string) $properties->{'mask'});
         }
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -276,7 +260,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTFile($properties)
     {
@@ -284,13 +268,11 @@ class AdiantiUIBuilder extends TPanel
         $widget->setSize((int) $properties->{'width'});
         $widget->setEditable((string) $properties->{'editable'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -301,7 +283,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTColor($properties)
     {
@@ -310,13 +292,11 @@ class AdiantiUIBuilder extends TPanel
         $widget->setSize((int) $properties->{'width'});
         $widget->setEditable((string) $properties->{'editable'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -327,22 +307,19 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTSeekButton($properties)
     {
         $widget = new TSeekButton((string) $properties->{'name'});
         $widget->setSize((int) $properties->{'width'});
         
-        if ( ($properties->{'database'}) AND ($properties->{'model'}) )
-        {
+        if (($properties->{'database'}) and ($properties->{'model'})) {
             $obj = new TStandardSeek;
             $action = new TAction(array($obj, 'onSetup'));
-            $action->setParameter('database',      (string) $properties->{'database'});
-            if (isset($this->form))
-            {
-                if ($this->form instanceof TForm)
-                {
+            $action->setParameter('database', (string) $properties->{'database'});
+            if (isset($this->form)) {
+                if ($this->form instanceof TForm) {
                     $action->setParameter('parent', $this->form->getName());
                 }
             }
@@ -352,12 +329,12 @@ class AdiantiUIBuilder extends TPanel
             $display_field = (string) $properties->{'display'};
             
             $ini  = AdiantiApplicationConfig::get();
-            $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
+            $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
             
-            $action->setParameter('hash',          md5("{$seed}{$database}{$model}{$display_field}"));
-            $action->setParameter('model',         (string) $properties->{'model'});
+            $action->setParameter('hash', md5("{$seed}{$database}{$model}{$display_field}"));
+            $action->setParameter('model', (string) $properties->{'model'});
             $action->setParameter('display_field', (string) $properties->{'display'});
-            $action->setParameter('receive_key',   (string) $properties->{'name'});
+            $action->setParameter('receive_key', (string) $properties->{'name'});
             $action->setParameter('receive_field', (string) $properties->{'receiver'});
             $widget->setAction($action);
         }
@@ -369,16 +346,13 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTImage($properties)
     {
-        if (file_exists((string) $properties->{'image'}))
-        {
+        if (file_exists((string) $properties->{'image'})) {
             $widget = new TImage((string) $properties->{'image'});
-        }
-        else
-        {
+        } else {
             $widget = new TLabel((string) 'Image not found: ' . $properties->{'image'});
         }
         
@@ -386,7 +360,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTText($properties)
     {
@@ -394,13 +368,11 @@ class AdiantiUIBuilder extends TPanel
         $widget->setValue((string) $properties->{'value'});
         $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
         
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
         
-        if (isset($properties->{'required'}) AND $properties->{'required'} == '1') // added later (not in the first version)
-        {
+        if (isset($properties->{'required'}) and $properties->{'required'} == '1') { // added later (not in the first version)
             $widget->addValidation((string) $properties->{'name'}, new TRequiredValidator);
         }
         
@@ -411,338 +383,320 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTCheckGroup($properties)
     {
         $widget = new TCheckGroup((string) $properties->{'name'});
         $widget->setLayout('vertical');
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    $widget->addItems($items);
-	    if (isset($properties->{'value'}))
-	    {
-	        $widget->setValue(explode(',', (string) $properties->{'value'}));
-	    }
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        $widget->addItems($items);
+        if (isset($properties->{'value'})) {
+            $widget->setValue(explode(',', (string) $properties->{'value'}));
+        }
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBCheckGroup($properties)
     {
-        $widget = new TDBCheckGroup((string) $properties->{'name'},
+        $widget = new TDBCheckGroup(
+            (string) $properties->{'name'},
                                     (string) $properties->{'database'},
                                     (string) $properties->{'model'},
                                     (string) $properties->{'key'},
-                                    (string) $properties->{'display'} );
+                                    (string) $properties->{'display'}
+        );
         $widget->setLayout('vertical');
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTRadioGroup($properties)
     {
         $widget = new TRadioGroup((string) $properties->{'name'});
         $widget->setLayout('vertical');
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    $widget->addItems($items);
-	    $widget->setValue((string) $properties->{'value'});
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        $widget->addItems($items);
+        $widget->setValue((string) $properties->{'value'});
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBRadioGroup($properties)
     {
-        $widget = new TDBRadioGroup((string) $properties->{'name'},
+        $widget = new TDBRadioGroup(
+            (string) $properties->{'name'},
                                     (string) $properties->{'database'},
                                     (string) $properties->{'model'},
                                     (string) $properties->{'key'},
-                                    (string) $properties->{'display'} );
+                                    (string) $properties->{'display'}
+        );
         $widget->setLayout('vertical');
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTCombo($properties)
     {
         $widget = new TCombo((string) $properties->{'name'});
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    $widget->addItems($items);
-	    if (isset($properties->{'value'}))
-	    {
-	        $widget->setValue((string) $properties->{'value'});
-	    }
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        $widget->addItems($items);
+        if (isset($properties->{'value'})) {
+            $widget->setValue((string) $properties->{'value'});
+        }
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $widget->setSize((int) $properties->{'width'});
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $widget->setSize((int) $properties->{'width'});
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBCombo($properties)
     {
-        $widget = new TDBCombo((string) $properties->{'name'},
+        $widget = new TDBCombo(
+            (string) $properties->{'name'},
                                (string) $properties->{'database'},
                                (string) $properties->{'model'},
                                (string) $properties->{'key'},
-                               (string) $properties->{'display'} );
-	    $widget->setSize((int) $properties->{'width'});
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+                               (string) $properties->{'display'}
+        );
+        $widget->setSize((int) $properties->{'width'});
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTSelect($properties)
     {
         $widget = new TSelect((string) $properties->{'name'});
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    $widget->addItems($items);
-	    if (isset($properties->{'value'}))
-	    {
-	        $widget->setValue((string) $properties->{'value'});
-	    }
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        $widget->addItems($items);
+        if (isset($properties->{'value'})) {
+            $widget->setValue((string) $properties->{'value'});
+        }
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBSelect($properties)
     {
-        $widget = new TDBSelect((string) $properties->{'name'},
+        $widget = new TDBSelect(
+            (string) $properties->{'name'},
                                (string) $properties->{'database'},
                                (string) $properties->{'model'},
                                (string) $properties->{'key'},
-                               (string) $properties->{'display'} );
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+                               (string) $properties->{'display'}
+        );
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTSortList($properties)
     {
         $widget = new TSortList((string) $properties->{'name'});
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    $widget->addItems($items);
-	    if (isset($properties->{'value'}))
-	    {
-	        $widget->setValue((string) $properties->{'value'});
-	    }
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        $widget->addItems($items);
+        if (isset($properties->{'value'})) {
+            $widget->setValue((string) $properties->{'value'});
+        }
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-	    $widget->setProperty('style', 'box-sizing: border-box !important', FALSE);
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        $widget->setProperty('style', 'box-sizing: border-box !important', false);
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBSortList($properties)
     {
-        $widget = new TDBSortList((string) $properties->{'name'},
+        $widget = new TDBSortList(
+            (string) $properties->{'name'},
                                (string) $properties->{'database'},
                                (string) $properties->{'model'},
                                (string) $properties->{'key'},
-                               (string) $properties->{'display'} );
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-	    $widget->setProperty('style', 'box-sizing: border-box !important', FALSE);
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+                               (string) $properties->{'display'}
+        );
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        $widget->setProperty('style', 'box-sizing: border-box !important', false);
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTMultiSearch($properties)
     {
         $widget = new TMultiSearch((string) $properties->{'name'});
-	    $pieces = explode("\n", (string) $properties->{'items'});
-	    $items = array();
-	    if ($pieces)
-	    {
-	        foreach ($pieces as $line)
-	        {
-    	        $part = explode(':', $line);
-    	        $items[$part[0]] = $part[1];
-	        }
-	    }
-	    
-	    $widget->addItems($items);
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+        $pieces = explode("\n", (string) $properties->{'items'});
+        $items = array();
+        if ($pieces) {
+            foreach ($pieces as $line) {
+                $part = explode(':', $line);
+                $items[$part[0]] = $part[1];
+            }
+        }
+        
+        $widget->addItems($items);
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-	    $widget->setProperty('style', 'box-sizing: border-box !important', FALSE);
-	    $widget->setMinLength( (int) $properties->{'minlen'} );
-	    $widget->setMaxSize( (int) $properties->{'maxsize'} );
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        $widget->setProperty('style', 'box-sizing: border-box !important', false);
+        $widget->setMinLength((int) $properties->{'minlen'});
+        $widget->setMaxSize((int) $properties->{'maxsize'});
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTDBMultiSearch($properties)
     {
-        $widget = new TDBMultiSearch((string) $properties->{'name'},
+        $widget = new TDBMultiSearch(
+            (string) $properties->{'name'},
                                (string) $properties->{'database'},
                                (string) $properties->{'model'},
                                (string) $properties->{'key'},
-                               (string) $properties->{'display'} );
-        if (isset($properties->{'tip'})) // added later (not in the first version)
-        {
+                               (string) $properties->{'display'}
+        );
+        if (isset($properties->{'tip'})) { // added later (not in the first version)
             $widget->setTip((string) $properties->{'tip'});
         }
-	    $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
-	    $widget->setProperty('style', 'box-sizing: border-box !important', FALSE);
-	    $widget->setMinLength( (int) $properties->{'minlen'} );
-	    $widget->setMaxSize( (int) $properties->{'maxsize'} );
-	    
-	    $this->fields[] = $widget;
-	    $this->fieldsByName[(string) $properties->{'name'}] = $widget;
-	    
+        $widget->setSize((int) $properties->{'width'}, (int) $properties->{'height'});
+        $widget->setProperty('style', 'box-sizing: border-box !important', false);
+        $widget->setMinLength((int) $properties->{'minlen'});
+        $widget->setMaxSize((int) $properties->{'maxsize'});
+        
+        $this->fields[] = $widget;
+        $this->fieldsByName[(string) $properties->{'name'}] = $widget;
+        
         return $widget;
     }
     
     /**
-     * 
+     *
      */
     public function makeTNotebook($properties)
     {
         $width  = (int) $properties->{'width'};
         $height = (int) $properties->{'height'} - 30; // correction for sheet tabs
         $widget = new TNotebook($width, $height);
-        if ($properties->{'pages'})
-        {
-            foreach ($properties->{'pages'} as $page)
-            {
+        if ($properties->{'pages'}) {
+            foreach ($properties->{'pages'} as $page) {
                 $attributes = $page->attributes();
                 $name  = $attributes['tab'];
                 $class = get_class($this); // for inheritance
@@ -754,8 +708,8 @@ class AdiantiUIBuilder extends TPanel
                 // parse element
                 $panel->parseElement($page);
                 // integrate the notebook' fields
-                $this->fieldsByName = array_merge( (array) $this->fieldsByName, (array) $panel->getWidgets());
-                $this->fields       = array_merge( (array) $this->fields,       (array) $panel->getFields());
+                $this->fieldsByName = array_merge((array) $this->fieldsByName, (array) $panel->getWidgets());
+                $this->fields       = array_merge((array) $this->fields, (array) $panel->getFields());
                 
                 $widget->appendPage((string) $name, $panel);
             }
@@ -767,7 +721,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTFrame($properties)
     {
@@ -780,15 +734,13 @@ class AdiantiUIBuilder extends TPanel
         $panel->setController($this->controller);
         $panel->setForm($this->form);
         
-        if ($properties->{'child'})
-        {
-            foreach ($properties->{'child'} as $child)
-            {
+        if ($properties->{'child'}) {
+            foreach ($properties->{'child'} as $child) {
                 $panel->parseElement($child);
                 
                 // integrate the frame' fields
-                $this->fieldsByName = array_merge( (array) $this->fieldsByName, (array) $panel->getWidgets());
-                $this->fields       = array_merge( (array) $this->fields,       (array) $panel->getFields());
+                $this->fieldsByName = array_merge((array) $this->fieldsByName, (array) $panel->getWidgets());
+                $this->fields       = array_merge((array) $this->fields, (array) $panel->getFields());
             }
         }
         $widget->setLegend((string) $properties->{'title'});
@@ -799,7 +751,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * 
+     *
      */
     public function makeTDataGrid($properties)
     {
@@ -807,23 +759,21 @@ class AdiantiUIBuilder extends TPanel
         $widget = new TDataGrid;
         $widget->setHeight((string) $properties->{'height'});
         
-        if ($properties->{'columns'})
-        {
-            foreach ($properties->{'columns'} as $Column)
-            {
-                $dgcolumn = new TDataGridColumn((string) $Column->{'name'},
+        if ($properties->{'columns'}) {
+            foreach ($properties->{'columns'} as $Column) {
+                $dgcolumn = new TDataGridColumn(
+                    (string) $Column->{'name'},
                                                 (string) $Column->{'label'},
                                                 (string) $Column->{'align'},
-                                                (string) $Column->{'width'} );
+                                                (string) $Column->{'width'}
+                );
                 $widget->addColumn($dgcolumn);
                 $this->fieldsByName[(string)$Column->{'name'}] = $dgcolumn;
             }
         }
         
-        if ($properties->{'actions'})
-        {
-            foreach ($properties->{'actions'} as $Action)
-            {
+        if ($properties->{'actions'}) {
+            foreach ($properties->{'actions'} as $Action) {
                 //if (is_callable(array($this->controller, (string) $Action->{'method'})))
                 {
                     $dgaction = new TDataGridAction(array($this->controller, (string) $Action->{'method'}));
@@ -837,8 +787,7 @@ class AdiantiUIBuilder extends TPanel
             }
         }
         
-        if ((string)$properties->{'pagenavigator'} == 'yes')
-        {
+        if ((string)$properties->{'pagenavigator'} == 'yes') {
             $loader = (string) $properties->{'loader'} ? (string) $properties->{'loader'} : 'onReload';
             $pageNavigation = new TPageNavigation;
             $pageNavigation->setAction(new TAction(array($this->controller, $loader)));
@@ -849,8 +798,7 @@ class AdiantiUIBuilder extends TPanel
         
         $row = $table->addRow();
         $row->addCell($widget);
-        if (isset($pageNavigation))
-        {
+        if (isset($pageNavigation)) {
             $row = $table->addRow();
             $row->addCell($pageNavigation);
             $widget->setPageNavigation($pageNavigation);
@@ -863,7 +811,7 @@ class AdiantiUIBuilder extends TPanel
     }
     
     /**
-     * parse a xml element 
+     * parse a xml element
      * @param $xml SimpleXMLElement object
      * @ignore-autocomplete on
      */
@@ -872,21 +820,17 @@ class AdiantiUIBuilder extends TPanel
         $errors = array();
         $widgets = array();
         
-        foreach ($xml as $object)
-        {
-            try
-            {
+        foreach ($xml as $object) {
+            try {
                 $class = (string)$object->{'class'};
                 $properties = (array)$object;
-                if (in_array(ini_get('php-gtk.codepage'), array('ISO8859-1', 'ISO-8859-1') ) )
-                {
+                if (in_array(ini_get('php-gtk.codepage'), array('ISO8859-1', 'ISO-8859-1'))) {
                     array_walk_recursive($properties, array($this, 'arrayToIso8859'));
                 }
                 $properties = (object)$properties;
                 
-                $widget = NULL;
-                switch ($class)
-                {
+                $widget = null;
+                switch ($class) {
                     case 'T'.'Label':
                         $widget = $this->makeTLabel($properties);
                         break;
@@ -970,21 +914,16 @@ class AdiantiUIBuilder extends TPanel
                         break;
                 }
                 
-                if ($widget)
-                {
+                if ($widget) {
                     parent::put($widget, (int) $properties->{'x'}, (int) $properties->{'y'});
                     $widgets[] = $widget;
                 }
-            }
-            catch(Exception $e)
-            {
+            } catch (Exception $e) {
                 $errors[] = $e->getMessage();
             }
-        
         }
         
-        if ($errors)
-        {
+        if ($errors) {
             new TMessage('error', implode('<br>', $errors));
         }
         return $widgets;
@@ -998,8 +937,7 @@ class AdiantiUIBuilder extends TPanel
      */
     private function arrayToIso8859(&$value, $key)
     {
-        if (is_scalar($value))
-        {
+        if (is_scalar($value)) {
             $value = utf8_decode($value);
         }
     }
@@ -1044,13 +982,10 @@ class AdiantiUIBuilder extends TPanel
      */
     public function getWidget($name)
     {
-        if (isset($this->fieldsByName[$name]))
-        {
+        if (isset($this->fieldsByName[$name])) {
             return $this->fieldsByName[$name];
-        }
-        else
-        {
+        } else {
             throw new Exception("Widget {$name} not found");
-        } 
+        }
     }
 }

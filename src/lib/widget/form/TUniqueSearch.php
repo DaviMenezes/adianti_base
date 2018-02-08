@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\TMultiSearch;
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-
 /**
  * Unique Search Widget
  *
@@ -25,7 +22,7 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         // executes the parent class constructor
         parent::__construct($name);
         parent::setMaxSize(1);
-        parent::setDefaultOption(TRUE);
+        parent::setDefaultOption(true);
         parent::disableMultiple();
         
         $this->tag->{'name'}  = $this->name;    // tag name
@@ -45,13 +42,10 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name]))
-        {
+        if (isset($_POST[$this->name])) {
             $val = $_POST[$this->name];
             return $val;
-        }
-        else
-        {
+        } else {
             return '';
         }
     }

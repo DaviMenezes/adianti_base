@@ -1,19 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Database\TRepository;
-use Adianti\Database\TSqlSelect;
-use Adianti\Database\TSqlInsert;
-use Adianti\Database\TSqlUpdate;
-use Adianti\Database\TSqlDelete;
-
-use Math\Parser;
-use PDO;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Math\Parser;
 use Exception;
+use PDO;
 
 /**
  * Base class for Active Records

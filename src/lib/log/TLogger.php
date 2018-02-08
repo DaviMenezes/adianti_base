@@ -18,10 +18,9 @@ abstract class TLogger implements AdiantiLoggerInterface
      * Class Constructor
      * @param  $filename path for LOG file
      */
-    public function __construct($filename = NULL)
+    public function __construct($filename = null)
     {
-        if ($filename)
-        {
+        if ($filename) {
             $this->filename = $filename;
             // clear the file contents
             file_put_contents($filename, '');
@@ -32,5 +31,5 @@ abstract class TLogger implements AdiantiLoggerInterface
      * Write abstract method
      * Must be declared in child classes
      */
-    abstract function write($message);
+    abstract public function write($message);
 }

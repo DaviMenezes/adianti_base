@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * SourceCode View
@@ -23,17 +23,15 @@ class TSourceCode
      */
     public function loadFile($file)
     {
-        if (!file_exists($file))
-        {
-            return FALSE;
+        if (!file_exists($file)) {
+            return false;
         }
         
         $this->content = file_get_contents($file);
-        if (utf8_encode(utf8_decode($this->content)) !== $this->content ) // NOT UTF
-        {
+        if (utf8_encode(utf8_decode($this->content)) !== $this->content) { // NOT UTF
             $this->content = utf8_encode($this->content);
         }
-        return TRUE;
+        return true;
     }
     
     /**
@@ -43,8 +41,7 @@ class TSourceCode
     {
         $this->content = $content;
         
-        if (utf8_encode(utf8_decode($content)) !== $content ) // NOT UTF
-        {
+        if (utf8_encode(utf8_decode($content)) !== $content) { // NOT UTF
             $this->content = utf8_encode($content);
         }
     }
@@ -57,7 +54,7 @@ class TSourceCode
         $span = new TElement('span');
         $span->{'style'} = 'font-size:10pt';
         $span->{'class'} = 'tsourcecode';
-        $span->add(highlight_string($this->content, TRUE));
+        $span->add(highlight_string($this->content, true));
         $span->show();
     }
 }

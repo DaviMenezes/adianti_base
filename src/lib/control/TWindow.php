@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Control;
 
-use Adianti\Widget\Container\TJQueryDialog;
+use Adianti\Base\Lib\Widget\Container\TJQueryDialog;
 
 /**
  * Window Container (JQueryDialog wrapper)

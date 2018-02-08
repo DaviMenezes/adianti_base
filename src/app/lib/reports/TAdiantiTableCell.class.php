@@ -19,4 +19,3 @@ class TAdiantiTableCell extends TAdiantiElement
         parent::add($value);
     }
 }
-?>

@@ -1,10 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Service;
 
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRepository;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
 
 /**
  * Record rest service
@@ -29,7 +29,7 @@ class AdiantiRecordService
         
         TTransaction::open($database);
         
-        $object = new $activeRecord($param['id'], FALSE);
+        $object = new $activeRecord($param['id'], false);
         
         TTransaction::close();
         return $object->toArray();
@@ -85,38 +85,30 @@ class AdiantiRecordService
         TTransaction::open($database);
         
         $criteria = new TCriteria;
-        if (isset($param['offset']))
-        {
+        if (isset($param['offset'])) {
             $criteria->setProperty('offset', $param['offset']);
         }
-        if (isset($param['limit']))
-        {
+        if (isset($param['limit'])) {
             $criteria->setProperty('limit', $param['limit']);
         }
-        if (isset($param['order']))
-        {
+        if (isset($param['order'])) {
             $criteria->setProperty('order', $param['order']);
         }
-        if (isset($param['direction']))
-        {
+        if (isset($param['direction'])) {
             $criteria->setProperty('direction', $param['direction']);
         }
-        if (isset($param['filters']))
-        {
-            foreach ($param['filters'] as $filter)
-            {
+        if (isset($param['filters'])) {
+            foreach ($param['filters'] as $filter) {
                 $criteria->add(new TFilter($filter[0], $filter[1], $filter[2]));
             }
         }
         
         $repository = new TRepository($activeRecord);
-        $objects = $repository->load($criteria, FALSE);
+        $objects = $repository->load($criteria, false);
         
         $return = [];
-        if ($objects)
-        {
-            foreach ($objects as $object)
-            {
+        if ($objects) {
+            foreach ($objects as $object) {
                 $return[] = $object->toArray();
             }
         }
@@ -137,10 +129,8 @@ class AdiantiRecordService
         TTransaction::open($database);
         
         $criteria = new TCriteria;
-        if (isset($param['filters']))
-        {
-            foreach ($param['filters'] as $filter)
-            {
+        if (isset($param['filters'])) {
+            foreach ($param['filters'] as $filter) {
                 $criteria->add(new TFilter($filter[0], $filter[1], $filter[2]));
             }
         }

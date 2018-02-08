@@ -1,15 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
-use Adianti\Core\AdiantiApplicationConfig;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TMultiSearch;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TCriteria;
-use Adianti\Widget\Form\TForm;
-
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Form\TMultiSearch;
 use Exception;
 
 /**

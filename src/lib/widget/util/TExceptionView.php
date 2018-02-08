@@ -1,11 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Container\TTable;
-use Adianti\Widget\Container\TScroll;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Core\AdiantiCoreTranslator;
-
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Container\TTable;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Exception;
 
 /**
@@ -23,7 +21,7 @@ class TExceptionView
     /**
      * Constructor method
      */
-    function __construct(Exception $e)
+    public function __construct(Exception $e)
     {
         $error_array = $e->getTrace();
         $table = new TTable;
@@ -32,8 +30,7 @@ class TExceptionView
         $row=$table->addRow();
         $row->addCell('&nbsp;');
         
-        foreach ($error_array as $error)
-        {
+        foreach ($error_array as $error) {
             $file = isset($error['file']) ? $error['file'] : '';
             $line = isset($error['line']) ? $error['line'] : '';
             $file = str_replace(PATH, '', $file);
@@ -42,36 +39,23 @@ class TExceptionView
             $row->addCell('File: '.$file. ' : '. $line);
             $row=$table->addRow();
             $args = array();
-            if ($error['args'])
-            {
-                foreach ($error['args'] as $arg)
-                {
-                    if (is_object($arg))
-                    {
+            if ($error['args']) {
+                foreach ($error['args'] as $arg) {
+                    if (is_object($arg)) {
                         $args[] = get_class($arg). ' object';
-                    }
-                    else if (is_array($arg))
-                    {
+                    } elseif (is_array($arg)) {
                         $array_param = array();
-                        foreach ($arg as $value)
-                        {
-                            if (is_object($value))
-                            {
+                        foreach ($arg as $value) {
+                            if (is_object($value)) {
                                 $array_param[] = get_class($value);
-                            }
-                            else if (is_array($value))
-                            {
+                            } elseif (is_array($value)) {
                                 $array_param[] = 'array';
-                            }
-                            else
-                            {
+                            } else {
                                 $array_param[] = $value;
                             }
                         }
                         $args[] = implode(',', $array_param);
-                    }
-                    else
-                    {
+                    } else {
                         $args[] = (string) $arg;
                     }
                 }
@@ -89,6 +73,6 @@ class TExceptionView
         $table->show();
         $content = ob_get_clean();
         
-        new TMessage('error', $content, NULL, AdiantiCoreTranslator::translate('Exception'));
+        new TMessage('error', $content, null, AdiantiCoreTranslator::translate('Exception'));
     }
 }

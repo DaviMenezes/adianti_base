@@ -1,9 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * Frame Widget: creates a bordered area with a title located at its top-left corner
@@ -25,7 +24,7 @@ class TFrame extends TElement
      * Class Constructor
      * @param  $value text label
      */
-    public function __construct($width = NULL, $height = NULL)
+    public function __construct($width = null, $height = null)
     {
         parent::__construct('fieldset');
         $this->{'id'}    = 'tfieldset_' . mt_rand(1000000000, 1999999999);
@@ -34,14 +33,12 @@ class TFrame extends TElement
         $this->width  = $width;
         $this->height = $height;
         
-        if ($width)
-        {
-            $this->{'style'} .= (strstr($width, '%') !== FALSE) ? ";width:{$width}" : ";width:{$width}px";
+        if ($width) {
+            $this->{'style'} .= (strstr($width, '%') !== false) ? ";width:{$width}" : ";width:{$width}px";
         }
         
-        if ($height)
-        {
-            $this->{'style'} .= (strstr($height, '%') !== FALSE) ? ";height:{$height}" : ";height:{$height}px";
+        if ($height) {
+            $this->{'style'} .= (strstr($height, '%') !== false) ? ";height:{$height}" : ";height:{$height}px";
         }
     }
     

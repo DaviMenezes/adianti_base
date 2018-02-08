@@ -1,25 +1,25 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\TStandardList;
-use Adianti\Control\TAction;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Container\THBox;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TTable;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Datagrid\TDataGrid;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Adianti\Widget\Form\TButton;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Template\THtmlRenderer;
-use Adianti\Widget\Util\TBreadCrumb;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Base\TStandardList;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TTable;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Form\TButton;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
+use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 
 /**
  * SystemMessageList

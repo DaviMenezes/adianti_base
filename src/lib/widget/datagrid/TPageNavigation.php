@@ -1,11 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Control\TAction;
-use Adianti\Widget\Container\TTable;
-
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Exception;
 
 /**
@@ -138,7 +136,7 @@ class TPageNavigation
     {
         $order      = isset($properties['order'])  ? addslashes($properties['order'])  : '';
         $page       = isset($properties['page'])   ? $properties['page']   : 1;
-        $direction  = (isset($properties['direction']) AND in_array($properties['direction'], array('asc', 'desc')))  ? $properties['direction']   : NULL;
+        $direction  = (isset($properties['direction']) and in_array($properties['direction'], array('asc', 'desc')))  ? $properties['direction']   : null;
         $first_page = isset($properties['first_page']) ? $properties['first_page']: 1;
         
         $this->setOrder($order);
@@ -161,13 +159,11 @@ class TPageNavigation
      */
     public function show()
     {
-        if ($this->hidden)
-        {
+        if ($this->hidden) {
             return;
         }
         
-        if (!$this->action instanceof TAction)
-        {
+        if (!$this->action instanceof TAction) {
             throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 before add this component', __CLASS__ . '::' . 'setAction()'));
         }
         
@@ -177,22 +173,17 @@ class TPageNavigation
         $max = 10;
         $registros = $this->count;
         
-        if (!$registros)
-        {
+        if (!$registros) {
             $registros = 0;
         }
         
-        if ($page_size > 0)
-        {
+        if ($page_size > 0) {
             $pages = (int) ($registros / $page_size) - $first_page +1;
-        }
-        else
-        {
+        } else {
             $pages = 1;
         }
         
-        if ($page_size>0)
-        {
+        if ($page_size>0) {
             $resto = $registros % $page_size;
         }
         
@@ -217,35 +208,31 @@ class TPageNavigation
         $item->add($link);
         $link->add($span);
         
-        if ($first_page > 1)
-        {
+        if ($first_page > 1) {
             $this->action->setParameter('offset', ($first_page - $max -1) * $page_size);
-            $this->action->setParameter('limit',  $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',   $first_page - $max);
+            $this->action->setParameter('page', $first_page - $max);
             $this->action->setParameter('first_page', $first_page - $max);
             $this->action->setParameter('order', $this->order);
             
             $link-> href      = $this->action->serialize();
             $link-> generator = 'adianti';
             $span->add('&laquo;');
-        }
-        else
-        {
+        } else {
             $span->add('&nbsp;');
         }
         
-        for ($n = $first_page; $n <= $last_page + $first_page -1; $n++)
-        {
+        for ($n = $first_page; $n <= $last_page + $first_page -1; $n++) {
             $offset = ($n -1) * $page_size;
             $item = new TElement('li');
             $link = new TElement('a');
             $span = new TElement('span');
             
             $this->action->setParameter('offset', $offset);
-            $this->action->setParameter('limit',  $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',   $n);
+            $this->action->setParameter('page', $n);
             $this->action->setParameter('first_page', $first_page);
             $this->action->setParameter('order', $this->order);
             
@@ -257,14 +244,12 @@ class TPageNavigation
             $link->add($span);
             $span->add($n);
             
-            if($this->page == $n)
-            {
+            if ($this->page == $n) {
                 $item->{'class'} = 'active';
             }
         }
         
-        for ($z=$n; $z<=10; $z++)
-        {
+        for ($z=$n; $z<=10; $z++) {
             $item = new TElement('li');
             $link = new TElement('a');
             $span = new TElement('span');
@@ -283,24 +268,21 @@ class TPageNavigation
         $item->add($link);
         $link->add($span);
         
-        if ($pages > $max)
-        {
+        if ($pages > $max) {
             $offset = ($n -1) * $page_size;
             $first_page = $n;
             
-            $this->action->setParameter('offset',  $offset);
-            $this->action->setParameter('limit',   $page_size);
+            $this->action->setParameter('offset', $offset);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',    $n);
+            $this->action->setParameter('page', $n);
             $this->action->setParameter('first_page', $first_page);
             $this->action->setParameter('order', $this->order);
             $link-> href      = $this->action->serialize();
             $link-> generator = 'adianti';
             
             $span->add('&raquo;');
-        }
-        else
-        {
+        } else {
             $span->add('&nbsp;');
         }
         

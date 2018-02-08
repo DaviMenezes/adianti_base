@@ -1,16 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Control\TAction;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TRadioButton;
-
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
 
 /**
@@ -45,10 +39,10 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     public function __construct($name)
     {
         parent::__construct($name);
-        parent::setSize(NULL);
+        parent::setSize(null);
         $this->labelClass = 'tcheckgroup_label ';
-        $this->useButton  = FALSE;
-        $this->is_boolean = FALSE;
+        $this->useButton  = false;
+        $this->is_boolean = false;
     }
     
     /**
@@ -56,14 +50,12 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function __clone()
     {
-        if (is_array($this->items))
-        {
+        if (is_array($this->items)) {
             $oldbuttons = $this->buttons;
             $this->buttons = array();
             $this->labels  = array();
 
-            foreach ($this->items as $key => $value)
-            {
+            foreach ($this->items as $key => $value) {
                 $button = new TRadioButton($this->name);
                 $button->setValue($key);
                 $button->setProperty('onchange', $oldbuttons[$key]->getProperty('onchange'));
@@ -81,8 +73,8 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     public function setBooleanMode()
     {
         $this->is_boolean = true;
-        $this->addItems( [ '1' => AdiantiCoreTranslator::translate('Yes'),
-                           '2' => AdiantiCoreTranslator::translate('No') ] );
+        $this->addItems([ '1' => AdiantiCoreTranslator::translate('Yes'),
+                           '2' => AdiantiCoreTranslator::translate('No') ]);
         $this->setLayout('horizontal');
         $this->setUseButton();
     }
@@ -93,12 +85,9 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($this->is_boolean)
-        {
+        if ($this->is_boolean) {
             $this->value = $value ? '1' : '2';
-        }
-        else
-        {
+        } else {
             parent::setValue($value);
         }
     }
@@ -108,12 +97,9 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function getValue()
     {
-        if ($this->is_boolean)
-        {
+        if ($this->is_boolean) {
             return $this->value == '1' ? true : false;
-        }
-        else
-        {
+        } else {
             return parent::getValue();
         }
     }
@@ -123,13 +109,10 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if ($this->is_boolean)
-        {
+        if ($this->is_boolean) {
             $data = parent::getPostData();
             return $data == '1' ? true : false;
-        }
-        else
-        {
+        } else {
             return parent::getPostData();
         }
     }
@@ -164,8 +147,8 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function setUseButton()
     {
-       $this->labelClass = 'btn btn-default ';
-       $this->useButton  = TRUE;
+        $this->labelClass = 'btn btn-default ';
+        $this->useButton  = true;
     }
     
     /**
@@ -174,14 +157,12 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function addItems($items)
     {
-        if (is_array($items))
-        {
+        if (is_array($items)) {
             $this->items = $items;
             $this->buttons = array();
             $this->labels  = array();
 
-            foreach ($items as $key => $value)
-            {
+            foreach ($items as $key => $value) {
                 $button = new TRadioButton($this->name);
                 $button->setValue($key);
 
@@ -222,12 +203,9 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function setChangeAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->changeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -248,7 +226,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tradiogroup_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tradiogroup_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -258,7 +236,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tradiogroup_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tradiogroup_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -268,7 +246,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tradiogroup_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tradiogroup_clear_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -276,83 +254,65 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
      */
     public function show()
     {
-        if ($this->useButton)
-        {
+        if ($this->useButton) {
             echo '<div data-toggle="buttons">';
-            if (strpos($this->getSize(), '%') !== FALSE)
-            {
+            if (strpos($this->getSize(), '%') !== false) {
                 echo '<div class="btn-group" style="clear:both;float:left;width:100%">';
-            }
-            else
-            {
+            } else {
                 echo '<div class="btn-group" style="clear:both;float:left">';
             }
         }
         
-        if ($this->items)
-        {
+        if ($this->items) {
             // iterate the RadioButton options
             $i = 0;
-            foreach ($this->items as $index => $label)
-            {
+            foreach ($this->items as $index => $label) {
                 $button = $this->buttons[$index];
                 $button->setName($this->name);
-                $active = FALSE;
+                $active = false;
                 
                 // check if contains any value
-                if ($this->value == $index)
-                {
+                if ($this->value == $index) {
                     // mark as checked
                     $button->setProperty('checked', '1');
-                    $active = TRUE;
+                    $active = true;
                 }
                 
                 // create the label for the button
                 $obj = $this->labels[$index];
                 $obj->{'class'} = $this->labelClass. ($active?'active':'');
                 
-                if ($this->getSize() AND !$obj->getSize())
-                {
+                if ($this->getSize() and !$obj->getSize()) {
                     $obj->setSize($this->getSize());
                 }
                 
-                if ($this->getSize() AND $this->useButton)
-                {
-                    if (strpos($this->getSize(), '%') !== FALSE)
-                    {
+                if ($this->getSize() and $this->useButton) {
+                    if (strpos($this->getSize(), '%') !== false) {
                         $size = str_replace('%', '', $this->getSize());
-                        $obj->setSize( ($size / count($this->items)) . '%');
-                    }
-                    else
-                    {
+                        $obj->setSize(($size / count($this->items)) . '%');
+                    } else {
                         $obj->setSize($this->getSize());
                     }
                 }
                 
                 // check whether the widget is non-editable
-                if (parent::getEditable())
-                {
-                    if (isset($this->changeAction))
-                    {
-                        if (!TForm::getFormByName($this->formName) instanceof TForm)
-                        {
-                            throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+                if (parent::getEditable()) {
+                    if (isset($this->changeAction)) {
+                        if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                            throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                         }
-                        $string_action = $this->changeAction->serialize(FALSE);
+                        $string_action = $this->changeAction->serialize(false);
                         
                         $button->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
-                        $button->setProperty('onChange', $button->getProperty('changeaction'), FALSE);
+                        $button->setProperty('onChange', $button->getProperty('changeaction'), false);
                     }
                     
-                    if (isset($this->changeFunction))
-                    {
-                        $button->setProperty('changeaction', $this->changeFunction, FALSE);
-                        $button->setProperty('onChange', $this->changeFunction, FALSE);
+                    if (isset($this->changeFunction)) {
+                        $button->setProperty('changeaction', $this->changeFunction, false);
+                        $button->setProperty('onChange', $this->changeFunction, false);
                     }
-                }
-                else
-                {
-                    $button->setEditable(FALSE);
+                } else {
+                    $button->setEditable(false);
                     $obj->setFontColor('gray');
                 }
                 
@@ -360,16 +320,12 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
                 $obj->show();
                 $i ++;
                 
-                if ($this->layout == 'vertical' OR ($this->breakItems == $i))
-                {
+                if ($this->layout == 'vertical' or ($this->breakItems == $i)) {
                     $i = 0;
-                    if ($this->useButton)
-                    {
-                       echo '</div>';
-                       echo '<div class="btn-group" style="clear:both;float:left">';
-                    }
-                    else
-                    {
+                    if ($this->useButton) {
+                        echo '</div>';
+                        echo '<div class="btn-group" style="clear:both;float:left">';
+                    } else {
                         // shows a line break
                         $br = new TElement('br');
                         $br->show();
@@ -379,8 +335,7 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
             }
         }
         
-        if ($this->useButton)
-        {
+        if ($this->useButton) {
             echo '</div>';
             echo '</div>';
         }

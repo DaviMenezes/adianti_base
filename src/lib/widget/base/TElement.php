@@ -29,9 +29,9 @@ class TElement
     {
         // define the element name
         $this->tagname = $tagname;
-        $this->useLineBreaks = TRUE;
-        $this->useSingleQuotes = FALSE;
-        $this->wrapped = FALSE;
+        $this->useLineBreaks = true;
+        $this->useSingleQuotes = false;
+        $this->wrapped = false;
         $this->voidelements = array('area', 'base', 'br', 'col', 'command', 'embed', 'hr',
                                     'img', 'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr');
     }
@@ -42,26 +42,20 @@ class TElement
      * @param $value Element value
      * @param $attributes Element attributes
      */
-    public static function tag($tagname, $value, $attributes = NULL)
+    public static function tag($tagname, $value, $attributes = null)
     {
         $object = new TElement($tagname);
         
-        if (is_array($value))
-        {
-            foreach ($value as $element)
-            {
+        if (is_array($value)) {
+            foreach ($value as $element) {
                 $object->add($element);
             }
-        }
-        else
-        {
+        } else {
             $object->add($value);
         }
         
-        if ($attributes)
-        {
-            foreach ($attributes as $att_name => $att_value)
-            {
+        if ($attributes) {
+            foreach ($attributes as $att_name => $att_value) {
                 $object->$att_name = $att_value;
             }
         }
@@ -111,8 +105,7 @@ class TElement
     public function __set($name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value))
-        {              
+        if (is_scalar($value)) {
             // store the property's value
             $this->properties[$name] = $value;
         }
@@ -133,8 +126,7 @@ class TElement
      */
     public function __get($name)
     {
-        if (isset($this->properties[$name]))
-        {              
+        if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
     }
@@ -154,17 +146,12 @@ class TElement
     public function __clone()
     {
         // verify if the tag has child elements
-        if ($this->children)
-        {
+        if ($this->children) {
             // iterate all child elements
-            foreach ($this->children as $key => $child)
-            {
-                if (is_object($child))
-                {
+            foreach ($this->children as $key => $child) {
+                if (is_object($child)) {
                     $this->children[$key] = clone $child;
-                }
-                else
-                {
+                } else {
                     $this->children[$key] = $child;
                 }
             }
@@ -178,9 +165,8 @@ class TElement
     public function add($child)
     {
         $this->children[] = $child;
-        if ($child instanceof TElement)
-        {
-            $child->setIsWrapped( TRUE );
+        if ($child instanceof TElement) {
+            $child->setIsWrapped(true);
         }
     }
     
@@ -191,10 +177,9 @@ class TElement
      */
     public function insert($position, $child)
     {
-        array_splice( $this->children, $position, 0, array($child) );
-        if ($child instanceof TElement)
-        {
-            $child->setIsWrapped( TRUE );
+        array_splice($this->children, $position, 0, array($child));
+        if ($child instanceof TElement) {
+            $child->setIsWrapped(true);
         }
     }
     
@@ -222,10 +207,8 @@ class TElement
      */
     public function del($object)
     {
-        foreach ($this->children as $key => $child)
-        {
-            if ($child === $object) // same instance
-            {
+        foreach ($this->children as $key => $child) {
+            if ($child === $object) { // same instance
                 unset($this->children[$key]);
             }
         }
@@ -255,28 +238,20 @@ class TElement
     {
         // exibe a tag de abertura
         echo "<{$this->tagname}";
-        if ($this->properties)
-        {
+        if ($this->properties) {
             // percorre as propriedades
-            foreach ($this->properties as $name=>$value)
-            {
-                if ($this->useSingleQuotes)
-                {
+            foreach ($this->properties as $name=>$value) {
+                if ($this->useSingleQuotes) {
                     echo " {$name}='{$value}'";
-                }
-                else
-                {
+                } else {
                     echo " {$name}=\"{$value}\"";
                 }
             }
         }
         
-        if (in_array($this->tagname, $this->voidelements))
-        {
+        if (in_array($this->tagname, $this->voidelements)) {
             echo '/>';
-        }
-        else
-        {
+        } else {
             echo '>';
         }
     }
@@ -290,33 +265,26 @@ class TElement
         $this->open();
         
         // verify if the tag has child elements
-        if ($this->children)
-        {
-            if (count($this->children)>1)
-            {
-                if ($this->useLineBreaks)
-                {
+        if ($this->children) {
+            if (count($this->children)>1) {
+                if ($this->useLineBreaks) {
                     echo "\n";
                 }
             }
             // iterate all child elements
-            foreach ($this->children as $child)
-            {
+            foreach ($this->children as $child) {
                 // verify if the child is an object
-                if (is_object($child))
-                {
+                if (is_object($child)) {
                     $child->show();
                 }
                 // otherwise, the child is a scalar
-                else if ((is_string($child)) or (is_numeric($child)))
-                {
+                elseif ((is_string($child)) or (is_numeric($child))) {
                     echo $child;
                 }
             }
         }
         
-        if (!in_array($this->tagname, $this->voidelements))
-        {
+        if (!in_array($this->tagname, $this->voidelements)) {
             // closes the tag
             $this->close();
         }
@@ -328,8 +296,7 @@ class TElement
     public function close()
     {
         echo "</{$this->tagname}>";
-        if ($this->useLineBreaks)
-        {
+        if ($this->useLineBreaks) {
             echo "\n";
         }
     }

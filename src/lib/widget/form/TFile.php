@@ -1,15 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Core\AdiantiApplicationConfig;
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\THidden;
-
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
 
 /**
@@ -45,10 +41,10 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
         $this->uploaderClass = 'AdiantiUploaderService';
-        $this->fileHandling = FALSE;
+        $this->fileHandling = false;
         
         $ini = AdiantiApplicationConfig::get();
-        $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
+        $this->seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
     }
     
     /**
@@ -80,7 +76,7 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public function enableFileHandling()
     {
-        $this->fileHandling = TRUE;
+        $this->fileHandling = true;
     }
     
     /**
@@ -94,7 +90,7 @@ class TFile extends TField implements AdiantiWidgetInterface
     /**
      * Set field size
      */
-    public function setSize($width, $height = NULL)
+    public function setSize($width, $height = null)
     {
         $this->size   = $width;
     }
@@ -114,8 +110,7 @@ class TFile extends TField implements AdiantiWidgetInterface
     {
         $name = str_replace(['[',']'], ['',''], $this->name);
         
-        if (isset($_POST[$name]))
-        {
+        if (isset($_POST[$name])) {
             return $_POST[$name];
         }
     }
@@ -125,19 +120,13 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($this->fileHandling)
-        {
-            if (strpos($value, '%7B') === false)
-            {
+        if ($this->fileHandling) {
+            if (strpos($value, '%7B') === false) {
                 $this->value = urlencode(json_encode(['fileName'=>$value]));
-            }
-            else
-            {
+            } else {
                 parent::setValue($value);
             }
-        }
-        else
-        {
+        } else {
             parent::setValue($value);
         }
     }
@@ -153,14 +142,10 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->tag->{'value'} = $this->value; // tag value
         $this->tag->{'type'}  = 'file';       // input type
         
-        if (!empty($this->size))
-        {
-            if (strstr($this->size, '%') !== FALSE)
-            {
+        if (!empty($this->size)) {
+            if (strstr($this->size, '%') !== false) {
                 $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-            }
-            else
-            {
+            } else {
                 $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
             }
         }
@@ -168,26 +153,21 @@ class TFile extends TField implements AdiantiWidgetInterface
         $this->setProperty('style', "height:{$this->height}px;", false); //aggregate style info
         
         $hdFileName = new THidden($this->name);
-        $hdFileName->setValue( $this->value );
+        $hdFileName->setValue($this->value);
         
         $complete_action = "'undefined'";
         
         // verify if the widget is editable
-        if (parent::getEditable())
-        {
-            if (isset($this->completeAction))
-            {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if (parent::getEditable()) {
+            if (isset($this->completeAction)) {
+                if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                 }
                 
-                $string_action = $this->completeAction->serialize(FALSE);
+                $string_action = $this->completeAction->serialize(false);
                 $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); tfile_update_download_link('{$this->name}') }";
             }
-        }
-        else
-        {
+        } else {
             // make the field read-only
             $this->tag->{'readonly'} = "1";
             $this->tag->{'type'} = 'text';
@@ -198,20 +178,16 @@ class TFile extends TField implements AdiantiWidgetInterface
         $div->{'style'} = "display:inline;width:100%;";
         $div->{'id'} = 'div_file_'.mt_rand(1000000000, 1999999999);
         
-        $div->add( $hdFileName );
-        if ($this->placeHolder)
-        {
-            $div->add( $this->tag );
-            $div->add( $this->placeHolder );
+        $div->add($hdFileName);
+        if ($this->placeHolder) {
+            $div->add($this->tag);
+            $div->add($this->placeHolder);
             $this->tag->{'style'} = 'display:none';
-        }
-        else
-        {
-            $div->add( $this->tag );
+        } else {
+            $div->add($this->tag);
         }
         
-        if ($this->displayMode == 'file' AND file_exists($this->value))
-        {
+        if ($this->displayMode == 'file' and file_exists($this->value)) {
             $icon = TElement::tag('i', null, ['class' => 'fa fa-download']);
             $link = new TElement('a');
             $link->{'id'}     = 'view_'.$this->name;
@@ -220,17 +196,14 @@ class TFile extends TField implements AdiantiWidgetInterface
             $link->{'style'}  = 'padding: 4px; display: block';
             $link->add($icon);
             $link->add($this->value);
-            $div->add( $link );
+            $div->add($link);
         }
         
         $div->show();
         
-        if (empty($this->extensions))
-        {
+        if (empty($this->extensions)) {
             $action = "engine.php?class={$this->uploaderClass}";
-        }
-        else
-        {
+        } else {
             $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
             $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
         }
@@ -244,14 +217,11 @@ class TFile extends TField implements AdiantiWidgetInterface
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
      */
-    function setCompleteAction(TAction $action)
+    public function setCompleteAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->completeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -264,7 +234,7 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tfile_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfile_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -274,7 +244,7 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tfile_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfile_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -284,6 +254,6 @@ class TFile extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tfile_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfile_clear_field('{$form_name}', '{$field}'); ");
     }
 }

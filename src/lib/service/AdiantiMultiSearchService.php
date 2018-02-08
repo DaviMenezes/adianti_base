@@ -1,14 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Service;
 
-use Adianti\Core\AdiantiApplicationConfig;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRepository;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Database\TExpression;
-
-use StdClass;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TExpression;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
 use Exception;
 
 /**

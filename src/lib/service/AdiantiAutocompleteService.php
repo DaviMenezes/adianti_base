@@ -1,12 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Service;
 
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRepository;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-
-use StdClass;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
 use Exception;
 
 /**
@@ -23,82 +21,67 @@ class AdiantiAutocompleteService
     /**
      * Search by the given word inside a model
      */
-	public static function onSearch($param = null)
-	{
+    public static function onSearch($param = null)
+    {
         $seed = APPLICATION_NAME.'s8dkld83kf73kf094';
         $hash = md5("{$seed}{$param['database']}{$param['column']}{$param['model']}");
         $operator = $param['operator'] ? $param['operator'] : 'like';
         
-        if ($hash == $param['hash'])
-        {
-            try
-            {
+        if ($hash == $param['hash']) {
+            try {
                 TTransaction::open($param['database']);
                 $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
-                if ($param['criteria'])
-                {
+                if ($param['criteria']) {
                     $criteria = unserialize(base64_decode($param['criteria']));
                 }
     
                 $column = $param['column'];
-                if (stristr(strtolower($operator),'like') !== FALSE)
-                {
+                if (stristr(strtolower($operator), 'like') !== false) {
                     $filter = new TFilter($column, $operator, "NOESC:'%{$param['query']}%'");
-                }
-                else
-                {
+                } else {
                     $filter = new TFilter($column, $operator, "NOESC:'{$param['query']}'");
                 }
                 
                 $criteria->add($filter);
                 $criteria->setProperty('order', $param['orderColumn']);
                 $criteria->setProperty('limit', 1000);
-                $collection = $repository->load($criteria, FALSE);
+                $collection = $repository->load($criteria, false);
                 
                 $items = array();
                 
-                if ($collection)
-                {
-                    foreach ($collection as $object)
-                    {
-                    	$c = $object->$column;
-                    	if($c != null )
-                    	{
-                            if (utf8_encode(utf8_decode($c)) !== $c ) // SE NÃO UTF8
-                        	{
-                            	$c = utf8_encode($c);
-                        	}
-                            if (!empty($c))
-                            {
-                        	   $items[] = $c;
+                if ($collection) {
+                    foreach ($collection as $object) {
+                        $c = $object->$column;
+                        if ($c != null) {
+                            if (utf8_encode(utf8_decode($c)) !== $c) { // SE NÃO UTF8
+                                $c = utf8_encode($c);
                             }
-                    	}
+                            if (!empty($c)) {
+                                $items[] = $c;
+                            }
+                        }
                     }
                 }
                 
-        		$ret = array();
-            	$ret['query'] = 'Unit';
-            	$ret['suggestions'] = $items;
-        		
-            	echo json_encode($ret);
+                $ret = array();
+                $ret['query'] = 'Unit';
+                $ret['suggestions'] = $items;
+                
+                echo json_encode($ret);
                 TTransaction::close();
-            }
-            catch (Exception $e)
-            {
-        		$ret = array();
-            	$ret['query'] = 'Unit';
-            	$ret['suggestions'] = array($e->getMessage());
+            } catch (Exception $e) {
+                $ret = array();
+                $ret['query'] = 'Unit';
+                $ret['suggestions'] = array($e->getMessage());
                 
                 echo json_encode($ret);
             }
-        }
-        else
-        {
-    		$ret = array();
-        	$ret['query'] = 'Unit';
-        	$ret['suggestions'] = NULL;
+        } else {
+            $ret = array();
+            $ret['query'] = 'Unit';
+            $ret['suggestions'] = null;
             echo json_encode($ret);
         }
-	}
+    }
 }

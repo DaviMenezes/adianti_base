@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Control;
 
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Dvi\Adianti\Route;
 use Exception;
 use ReflectionMethod;

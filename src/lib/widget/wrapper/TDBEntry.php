@@ -1,12 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Database\TCriteria;
-
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Form\TEntry;
 use Exception;
 
 /**
@@ -38,25 +36,22 @@ class TDBEntry extends TEntry
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
+    public function __construct($name, $database, $model, $value, $orderColumn = null, TCriteria $criteria = null)
     {
         // executes the parent class constructor
         parent::__construct($name);
         
         $value = trim($value);
         
-        if (empty($database))
-        {
+        if (empty($database)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
         }
         
-        if (empty($model))
-        {
+        if (empty($model)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'model', __CLASS__));
         }
         
-        if (empty($value))
-        {
+        if (empty($value)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'value', __CLASS__));
         }
         
@@ -65,7 +60,7 @@ class TDBEntry extends TEntry
         $this->model = $model;
         $this->column = $value;
         $this->operator = 'like';
-        $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
+        $this->orderColumn = isset($orderColumn) ? $orderColumn : null;
         $this->criteria = $criteria;
     }
     
@@ -96,8 +91,7 @@ class TDBEntry extends TEntry
         $min = $this->minLength;
         $orderColumn = isset($this->orderColumn) ? $this->orderColumn : $this->column;
         $criteria = '';
-        if ($this->criteria)
-        {
+        if ($this->criteria) {
             $criteria = base64_encode(serialize($this->criteria));
         }
         

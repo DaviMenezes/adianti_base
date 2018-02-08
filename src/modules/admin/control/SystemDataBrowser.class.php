@@ -1,22 +1,22 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Control\TPage;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Database\TSqlSelect;
-use Adianti\Database\TTransaction;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Datagrid\TDataGrid;
-use Adianti\Widget\Datagrid\TDataGridColumn;
-use Adianti\Widget\Datagrid\TPageNavigation;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TSqlSelect;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Exception;
 
 /**

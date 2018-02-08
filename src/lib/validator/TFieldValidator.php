@@ -18,5 +18,5 @@ abstract class TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation
      */
-    abstract public function validate($label, $value, $parameters = NULL);
+    abstract public function validate($label, $value, $parameters = null);
 }

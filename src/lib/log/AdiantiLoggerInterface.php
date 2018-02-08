@@ -12,5 +12,5 @@ namespace Adianti\Base\Lib\Log;
  */
 interface AdiantiLoggerInterface
 {
-    function write($message);
+    public function write($message);
 }

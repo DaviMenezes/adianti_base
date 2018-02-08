@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
-use Adianti\Validator\TFieldValidator;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
@@ -22,12 +21,11 @@ class TMinLengthValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (length)
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, $parameters = null)
     {
         $length = $parameters[0];
         
-        if (strlen(trim($value)) < $length)
-        {
+        if (strlen(trim($value)) < $length) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 can not be less than ^2 characters', $label, $length));
         }
     }

@@ -1,12 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Form\TCombo;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TRepository;
-use Adianti\Database\TCriteria;
-
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Form\TCombo;
 use Exception;
 
 /**

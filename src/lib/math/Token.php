@@ -9,7 +9,6 @@ namespace Adianti\Base\Lib\Math;
  */
 class Token
 {
-
     const T_OPERATOR = 1;
     const T_OPERAND = 2;
     const T_LEFT_BRACKET = 3;
@@ -31,7 +30,7 @@ class Token
 
     /**
      * Create new "Value object" which represent one token
-     * 
+     *
      * @param integer|string $value
      * @param integer $type
      * @throws \InvalidArgumentException
@@ -54,7 +53,7 @@ class Token
 
     /**
      * Return token value
-     * 
+     *
      * @return string|integer
      */
     public function getValue()
@@ -74,12 +73,11 @@ class Token
 
     /**
      * Return string representation of this token.
-     * 
+     *
      * @return string
      */
     public function __toString()
     {
         return (string) $this->getValue();
     }
-
 }

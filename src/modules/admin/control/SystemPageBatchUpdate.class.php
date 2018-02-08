@@ -1,11 +1,11 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TPage;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Exception;
 use SystemPageService;
 

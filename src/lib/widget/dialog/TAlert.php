@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Dialog;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Alert

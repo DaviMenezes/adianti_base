@@ -1,19 +1,18 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Control\TAction;
-use Adianti\Control\TPage;
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Registry\TSession;
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TFile;
-use Adianti\Widget\Form\THidden;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TFile;
+use Adianti\Base\Lib\Widget\Form\THidden;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Exception;
 use stdClass;
 

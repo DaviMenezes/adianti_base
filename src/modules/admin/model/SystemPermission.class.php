@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Model;
 
-use Adianti\Registry\TSession;
+use Adianti\Base\Lib\Registry\TSession;
 
 /**
  * SystemPermission

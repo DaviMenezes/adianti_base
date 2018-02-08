@@ -2,13 +2,13 @@
 namespace Adianti\Base\Modules\Admin\Control;
 
 use Adianti\App\Service\SystemDatabaseInformationService;
-use Adianti\Control\TPage;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Datagrid\TDataGridAction;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Wrapper\TQuickGrid;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Exception;
 use function Adianti\App\Lib\Util\_t;
 

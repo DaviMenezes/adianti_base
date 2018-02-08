@@ -1,8 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Database\TTransaction;
-
 /**
  * Provides an Interface to create UPDATE statements
  *

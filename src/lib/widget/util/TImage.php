@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Image Widget
@@ -23,54 +23,41 @@ class TImage extends TElement
      */
     public function __construct($source)
     {
-        if (substr($source,0,3) == 'bs:')
-        {
+        if (substr($source, 0, 3) == 'bs:') {
             parent::__construct('i');
-            $this->{'class'} = 'glyphicon glyphicon-'.substr($source,3);
+            $this->{'class'} = 'glyphicon glyphicon-'.substr($source, 3);
             parent::add('');
-        }
-        else if (substr($source,0,3) == 'fa:')
-        {
+        } elseif (substr($source, 0, 3) == 'fa:') {
             parent::__construct('i');
             
-            $fa_class = substr($source,3);
-            if (strstr($source, '#') !== FALSE)
-            {
+            $fa_class = substr($source, 3);
+            if (strstr($source, '#') !== false) {
                 $pieces = explode('#', $fa_class);
                 $fa_class = $pieces[0];
                 $fa_color = $pieces[1];
             }
             $this->{'style'} = 'padding-right:4px';
             $this->{'class'} = 'fa fa-'.$fa_class;
-            if (isset($fa_color))
-            {
+            if (isset($fa_color)) {
                 $this->{'style'} .= "; color: #{$fa_color}";
             }
             parent::add('');
-        }
-        else if (file_exists($source))
-        {
+        } elseif (file_exists($source)) {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = $source;
             $this->{'border'} = 0;
-        }
-        else if (file_exists("app/images/{$source}"))
-        {
+        } elseif (file_exists("app/images/{$source}")) {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = "app/images/{$source}";
             $this->{'border'} = 0;
-        }
-        else if (file_exists("lib/adianti/images/{$source}"))
-        {
+        } elseif (file_exists("lib/adianti/images/{$source}")) {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = "lib/adianti/images/{$source}";
             $this->{'border'} = 0;
-        }
-        else
-        {
+        } else {
             parent::__construct('i');
         }
     }

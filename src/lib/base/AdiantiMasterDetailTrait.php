@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Registry\TSession;
-use Exception;
+use Adianti\Base\Lib\Registry\TSession;
 
 /**
  * Master Detail Trait

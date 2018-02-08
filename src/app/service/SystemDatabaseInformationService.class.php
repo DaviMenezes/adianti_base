@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\App\Service;
 
-use Adianti\Database\TConnection;
-use Adianti\Database\TTransaction;
+use Adianti\Base\Lib\Database\TConnection;
+use Adianti\Base\Lib\Database\TTransaction;
 
 /**
  * Database Information Service
@@ -33,8 +33,7 @@ class SystemDatabaseInformationService
         $query['oracle'] = "SELECT table_name FROM cat where table_type in ('TABLE', 'VIEW') AND table_name not like '%$%'";
         $query['mssql']  = "select name from sysobjects where (type = 'U' or type='V') order by name";
         
-        if (in_array($info['type'], [ 'pgsql', 'mysql', 'sqlite', 'oracle', 'mssql'] ))
-        {
+        if (in_array($info['type'], [ 'pgsql', 'mysql', 'sqlite', 'oracle', 'mssql'])) {
             $table_list = [];
             $sql = $query[ $info['type'] ];
                      
@@ -43,8 +42,7 @@ class SystemDatabaseInformationService
             $result = $conn->query($sql);
             TTransaction::close();
             $tables = $result->fetchAll();
-            foreach ($tables as $row)
-            {
+            foreach ($tables as $row) {
                 $table_name = $row[0];
                 $table_list[ $table_name ] = $table_name;
             }

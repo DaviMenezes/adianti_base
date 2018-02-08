@@ -2,7 +2,6 @@
 namespace Adianti\Base\App\Lib\Util;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 /**
  * TMail
@@ -20,7 +19,7 @@ class TMail
     /**
      * Class Constructor
      */
-    function __construct()
+    public function __construct()
     {
         $this->pm = new PHPMailer(true);
         
@@ -38,7 +37,7 @@ class TMail
     /**
      * Turn ON/OFF the debug
      */
-    function setDebug($bool)
+    public function setDebug($bool)
     {
         $this->pm-> SMTPDebug    = $bool;
     }
@@ -48,12 +47,11 @@ class TMail
      * @param  $from = from email
      * @param  $name = from name
      */
-    function setFrom($from, $name = null)
+    public function setFrom($from, $name = null)
     {
         $this->pm-> From     = $from;
         
-        if ($name)
-        {
+        if ($name) {
             $this->pm-> FromName = $name;
         }
     }
@@ -63,7 +61,7 @@ class TMail
      * @param  $email = reply-to email
      * @param  $name  = reply-to name
      */
-    function setReplyTo($address, $name = '')
+    public function setReplyTo($address, $name = '')
     {
         $this->pm-> AddReplyTo($address, $name = '');
     }
@@ -72,7 +70,7 @@ class TMail
      * Set the message subject
      * @param  $subject of the message
      */
-    function setSubject($subject)
+    public function setSubject($subject)
     {
         $this->pm-> Subject = $subject;
     }
@@ -81,7 +79,7 @@ class TMail
      * Set the email text body
      * @param  $body = text body
      */
-    function setTextBody($body)
+    public function setTextBody($body)
     {
         $this->pm-> Body = $body;
         $this->pm-> IsHTML(false);
@@ -91,7 +89,7 @@ class TMail
      * Set the email html body
      * @param  $body = html body
      */
-    function setHtmlBody($html)
+    public function setHtmlBody($html)
     {
         $this->pm-> MsgHTML($html);
     }
@@ -103,8 +101,7 @@ class TMail
      */
     public function addAddress($address, $name = '')
     {
-        if (!$name)
-        {
+        if (!$name) {
             // search by pattern: nome <email@mail.com>
             list($address, $name) = $this->parseMail($address);
         }
@@ -160,8 +157,7 @@ class TMail
         $this->pm-> Host = $host;
         $this->pm-> Port = $port;
         
-        if (strstr($this->pm-> Host, 'gmail') !== FALSE)
-        {
+        if (strstr($this->pm-> Host, 'gmail') !== false) {
             $this->pm-> SMTPSecure = "ssl";
         }
     }
@@ -183,8 +179,7 @@ class TMail
     public function parseMail($fullmail)
     {
         $pos = strpos($fullmail, '<');
-        if ( $pos !== FALSE )
-        {
+        if ($pos !== false) {
             $name  = trim(substr($fullmail, 0, $pos-1));
             $email = trim(substr($fullmail, $pos+1, -1));
             $name  = str_replace("'", "''", $name);
@@ -201,6 +196,6 @@ class TMail
     public function send()
     {
         $this->pm-> Send();
-        return TRUE;
+        return true;
     }
 }

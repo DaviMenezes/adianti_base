@@ -1,18 +1,18 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Control\TPage;
-use Adianti\Core\AdiantiCoreApplication;
-use Adianti\Database\TTransaction;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Container\THBox;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Template\THtmlRenderer;
-use Adianti\Widget\Util\TBreadCrumb;
-use App\Model\Admin\SystemUser;
-use App\Model\Communication\SystemMessage;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
+use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use Exception;
 
 /**

@@ -1,29 +1,28 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Control\TAction;
-use Adianti\Control\TPage;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Database\TTransaction;
-use Adianti\Modules\Admin\Model\SystemGroup;
-use Adianti\Modules\Admin\Model\SystemUser;
-use Adianti\Modules\Communication\Model\SystemDocumentCategory;
-use Adianti\Registry\TSession;
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TDate;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\THidden;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Form\TText;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Widget\Wrapper\TDBCheckGroup;
-use Adianti\Widget\Wrapper\TDBCombo;
-use Adianti\Widget\Wrapper\TDBMultiSearch;
-use Adianti\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TDate;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\THidden;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Widget\Wrapper\TDBCheckGroup;
+use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
+use Adianti\Base\Lib\Widget\Wrapper\TDBMultiSearch;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Modules\Admin\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
 use Exception;
 
 /**

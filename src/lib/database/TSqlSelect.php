@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Database\TSqlStatement;
-use Adianti\Database\TTransaction;
-
 use PDO;
 
 /**
@@ -33,26 +30,19 @@ final class TSqlSelect extends TSqlStatement
      * Returns the SELECT statement as an string according to the database driver
      * @param $prepared Return a prepared Statement
      */
-    public function getInstruction( $prepared = FALSE)
+    public function getInstruction($prepared = false)
     {
         $conn = TTransaction::get();
         $driver = $conn->getAttribute(PDO::ATTR_DRIVER_NAME);
         
-        if (in_array($driver, array('mssql', 'dblib', 'sqlsrv')))
-        {
-            return $this->getSqlServerInstruction( $prepared );
-        }
-        else if (in_array($driver, array('oci', 'oci8')))
-        {
-            return $this->getOracleInstruction( $prepared );
-        }
-        else if (in_array($driver, array('firebird')))
-        {
-            return $this->getInterbaseInstruction( $prepared );
-        }
-        else
-        {
-            return $this->getStandardInstruction( $prepared );
+        if (in_array($driver, array('mssql', 'dblib', 'sqlsrv'))) {
+            return $this->getSqlServerInstruction($prepared);
+        } elseif (in_array($driver, array('oci', 'oci8'))) {
+            return $this->getOracleInstruction($prepared);
+        } elseif (in_array($driver, array('firebird'))) {
+            return $this->getInterbaseInstruction($prepared);
+        } else {
+            return $this->getStandardInstruction($prepared);
         }
     }
     
@@ -60,7 +50,7 @@ final class TSqlSelect extends TSqlStatement
      * Returns the SELECT statement as an string for standard open source drivers
      * @param $prepared Return a prepared Statement
      */
-    public function getStandardInstruction( $prepared )
+    public function getStandardInstruction($prepared)
     {
         // creates the SELECT instruction
         $this->sql  = 'SELECT ';
@@ -70,11 +60,9 @@ final class TSqlSelect extends TSqlStatement
         $this->sql .= ' FROM ' . $this->entity;
         
         // concatenate the criteria (WHERE)
-        if ($this->criteria)
-        {
-            $expression = $this->criteria->dump( $prepared );
-            if ($expression)
-            {
+        if ($this->criteria) {
+            $expression = $this->criteria->dump($prepared);
+            if ($expression) {
                 $this->sql .= ' WHERE ' . $expression;
             }
             
@@ -84,16 +72,13 @@ final class TSqlSelect extends TSqlStatement
             $offset    = (int) $this->criteria->getProperty('offset');
             $direction = in_array($this->criteria->getProperty('direction'), array('asc', 'desc')) ? $this->criteria->getProperty('direction') : '';
             
-            if ($order)
-            {
+            if ($order) {
                 $this->sql .= ' ORDER BY ' . $order . ' ' . $direction;
             }
-            if ($limit)
-            {
+            if ($limit) {
                 $this->sql .= ' LIMIT ' . $limit;
             }
-            if ($offset)
-            {
+            if ($offset) {
                 $this->sql .= ' OFFSET ' . $offset;
             }
         }
@@ -105,22 +90,19 @@ final class TSqlSelect extends TSqlStatement
      * Returns the SELECT statement as an string for standard open source drivers
      * @param $prepared Return a prepared Statement
      */
-    public function getInterbaseInstruction( $prepared )
+    public function getInterbaseInstruction($prepared)
     {
         // creates the SELECT instruction
         $this->sql  = 'SELECT ';
         
-        if ($this->criteria)
-        {
+        if ($this->criteria) {
             $limit     = (int) $this->criteria->getProperty('limit');
             $offset    = (int) $this->criteria->getProperty('offset');
             
-            if ($limit)
-            {
+            if ($limit) {
                 $this->sql .= ' FIRST ' . $limit;
             }
-            if ($offset)
-            {
+            if ($offset) {
                 $this->sql .= ' SKIP ' . $offset;
             }
         }
@@ -132,11 +114,9 @@ final class TSqlSelect extends TSqlStatement
         $this->sql .= ' FROM ' . $this->entity;
         
         // concatenate the criteria (WHERE)
-        if ($this->criteria)
-        {
-            $expression = $this->criteria->dump( $prepared );
-            if ($expression)
-            {
+        if ($this->criteria) {
+            $expression = $this->criteria->dump($prepared);
+            if ($expression) {
                 $this->sql .= ' WHERE ' . $expression;
             }
             
@@ -144,8 +124,7 @@ final class TSqlSelect extends TSqlStatement
             $order     = $this->criteria->getProperty('order');
             $direction = in_array($this->criteria->getProperty('direction'), array('asc', 'desc')) ? $this->criteria->getProperty('direction') : '';
             
-            if ($order)
-            {
+            if ($order) {
                 $this->sql .= ' ORDER BY ' . $order . ' ' . $direction;
             }
         }
@@ -158,12 +137,11 @@ final class TSqlSelect extends TSqlStatement
      * Returns the SELECT statement as an string for mssql/dblib drivers
      * @param $prepared Return a prepared Statement
      */
-    public function getSqlServerInstruction( $prepared )
+    public function getSqlServerInstruction($prepared)
     {
         // obtém a cláusula WHERE do objeto criteria.
-        if ($this->criteria)
-        {
-            $expression = $this->criteria->dump( $prepared );
+        if ($this->criteria) {
+            $expression = $this->criteria->dump($prepared);
             
             // obtém as propriedades do critério
             $order    = $this->criteria->getProperty('order');
@@ -173,10 +151,8 @@ final class TSqlSelect extends TSqlStatement
         }
         $columns = implode(',', $this->columns);
         
-        if ((isset($limit) OR isset($offset)) AND ($limit>0 OR $offset>0))
-        {
-            if (empty($order))
-            {
+        if ((isset($limit) or isset($offset)) and ($limit>0 or $offset>0)) {
+            if (empty($order)) {
                 $order = '(SELECT NULL)';
             }
             $this->sql = "SELECT {$columns}
@@ -185,42 +161,33 @@ final class TSqlSelect extends TSqlStatement
                              SELECT ROW_NUMBER() OVER (order by {$order} {$direction}) AS __ROWNUMBER__,
                              {$columns}
                              FROM {$this->entity}";
-            if (!empty($expression))
-            {
+            if (!empty($expression)) {
                 $this->sql.= "    WHERE {$expression} ";
             }
             $this->sql .= " ) AS TAB2";
-            if ((isset($limit) OR isset($offset)) AND ($limit>0 OR $offset>0))
-            {
+            if ((isset($limit) or isset($offset)) and ($limit>0 or $offset>0)) {
                 $this->sql .= " WHERE";
             }
             
-            if ($limit >0 )
-            {
+            if ($limit >0) {
                 $total = $offset + $limit;
                 $this->sql .= " __ROWNUMBER__ <= {$total} ";
                 
-                if ($offset)
-                {
+                if ($offset) {
                     $this->sql .= " AND ";
                 }
             }
-            if ($offset > 0)
-            {
+            if ($offset > 0) {
                 $this->sql .= " __ROWNUMBER__ > {$offset} ";
             }
-        }
-        else
-        {
+        } else {
             $this->sql  = 'SELECT ';
             $this->sql .= $columns;
             $this->sql .= ' FROM ' . $this->entity;
-            if (!empty($expression))
-            {
+            if (!empty($expression)) {
                 $this->sql .= ' WHERE ' . $expression;
             }
-            if (isset($order) AND !empty($order))
-            {
+            if (isset($order) and !empty($order)) {
                 $this->sql .= ' ORDER BY ' . $order . ' ' . $direction;
             }
         }
@@ -231,12 +198,11 @@ final class TSqlSelect extends TSqlStatement
      * Returns the SELECT statement as an string for oci8 drivers
      * @param $prepared Return a prepared Statement
      */
-    public function getOracleInstruction( $prepared )
+    public function getOracleInstruction($prepared)
     {
         // obtém a cláusula WHERE do objeto criteria.
-        if ($this->criteria)
-        {
-            $expression = $this->criteria->dump( $prepared );
+        if ($this->criteria) {
+            $expression = $this->criteria->dump($prepared);
             
             // obtém as propriedades do critério
             $order    = $this->criteria->getProperty('order');
@@ -250,34 +216,27 @@ final class TSqlSelect extends TSqlStatement
         $basicsql .= $columns;
         $basicsql .= ' FROM ' . $this->entity;
         
-        if (!empty($expression))
-        {
+        if (!empty($expression)) {
             $basicsql .= ' WHERE ' . $expression;
         }
-        if (isset($order) AND !empty($order))
-        {
+        if (isset($order) and !empty($order)) {
             $basicsql .= ' ORDER BY ' . $order . ' ' . $direction;
         }
         
-        if ((isset($limit) OR isset($offset)) AND ($limit>0 OR $offset>0))
-        {
+        if ((isset($limit) or isset($offset)) and ($limit>0 or $offset>0)) {
             $this->sql = "SELECT {$columns} ";
             $this->sql.= "  FROM (";
             $this->sql.= "       SELECT rownum \"__ROWNUMBER__\", A.{$columns} FROM ({$basicsql}) A";
             
-            if ($limit >0 )
-            {
+            if ($limit >0) {
                 $total = $offset + $limit;
                 $this->sql .= " WHERE rownum <= {$total} ";
             }
             $this->sql.= ")";
-            if ($offset > 0)
-            {
+            if ($offset > 0) {
                 $this->sql .= " WHERE \"__ROWNUMBER__\" > {$offset} ";
             }
-        }
-        else
-        {
+        } else {
             $this->sql = $basicsql;
         }
         

@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
-use Adianti\Control\TAction;
+use Adianti\Base\Lib\Control\TAction;
 
 /**
  * Represents an action inside a datagrid
@@ -78,7 +78,7 @@ class TDataGridAction extends TAction
     }
     
     /**
-     * Returns the Active Record's property that 
+     * Returns the Active Record's property that
      * will be passed along with the action
      */
     public function getField()
@@ -87,7 +87,7 @@ class TDataGridAction extends TAction
     }
     
     /**
-     * Returns the Active Record's properties that 
+     * Returns the Active Record's properties that
      * will be passed along with the action
      */
     public function getFields()
@@ -133,7 +133,7 @@ class TDataGridAction extends TAction
      * Define a callback that must be valid to show the action
      * @param Callback $displayCondition Action display condition
      */
-    public function setDisplayCondition( /*Callable*/ $displayCondition )
+    public function setDisplayCondition(/*Callable*/ $displayCondition)
     {
         $this->displayCondition = $displayCondition;
     }
@@ -150,34 +150,27 @@ class TDataGridAction extends TAction
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
      */
-    public function serialize($format_action = TRUE)
+    public function serialize($format_action = true)
     {
-        if (is_array($this->action) AND is_object($this->action[0]))
-        {
-            if (isset( $_REQUEST['offset'] ))
-            {
-                $this->setParameter('offset',     $_REQUEST['offset'] );
+        if (is_array($this->action) and is_object($this->action[0])) {
+            if (isset($_REQUEST['offset'])) {
+                $this->setParameter('offset', $_REQUEST['offset']);
             }
-            if (isset( $_REQUEST['limit'] ))
-            {
-                $this->setParameter('limit',      $_REQUEST['limit'] );
+            if (isset($_REQUEST['limit'])) {
+                $this->setParameter('limit', $_REQUEST['limit']);
             }
-            if (isset( $_REQUEST['page'] ))
-            {
-                $this->setParameter('page',       $_REQUEST['page'] );
+            if (isset($_REQUEST['page'])) {
+                $this->setParameter('page', $_REQUEST['page']);
             }
-            if (isset( $_REQUEST['first_page'] ))
-            {
-                $this->setParameter('first_page', $_REQUEST['first_page'] );
+            if (isset($_REQUEST['first_page'])) {
+                $this->setParameter('first_page', $_REQUEST['first_page']);
             }
-            if (isset( $_REQUEST['order'] ))
-            {
-                $this->setParameter('order',      $_REQUEST['order'] );
+            if (isset($_REQUEST['order'])) {
+                $this->setParameter('order', $_REQUEST['order']);
             }
         }
-        if (parent::isStatic())
-        {
-            $this->setParameter('static',     '1' );
+        if (parent::isStatic()) {
+            $this->setParameter('static', '1');
         }
         return parent::serialize($format_action);
     }

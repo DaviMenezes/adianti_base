@@ -1,11 +1,10 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Model;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Database\TRecord;
-use Adianti\Database\TRepository;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TRepository;
 use Exception;
 
 /**

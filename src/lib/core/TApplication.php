@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
-use Adianti\Registry\TSession;
-use Adianti\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
 
 class TApplication extends AdiantiCoreApplication
 {

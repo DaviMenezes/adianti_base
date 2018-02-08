@@ -1,10 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\THBox;
-use Adianti\Widget\Container\TTableCell;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
 use Exception;
 
 /**
@@ -34,12 +32,9 @@ class TTableRow extends TElement
      */
     public function addCell($value)
     {
-        if (is_null($value))
-        {
+        if (is_null($value)) {
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 does not accept null values', __METHOD__));
-        }
-        else
-        {
+        } else {
             // creates a new Table Cell
             $cell = new TTableCell($value);
             parent::add($cell);
@@ -57,10 +52,8 @@ class TTableRow extends TElement
         $wrapper = new THBox;
         
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $wrapper->add($arg);
             }
         }

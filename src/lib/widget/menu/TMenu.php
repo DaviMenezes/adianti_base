@@ -1,9 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Menu;
 
-use Adianti\Widget\Menu\TMenuItem;
-use Adianti\Widget\Base\TElement;
-
+use Adianti\Base\Lib\Widget\Base\TElement;
 use SimpleXMLElement;
 
 /**

@@ -1,12 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Base\TStyle;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TStyle;
 
 /**
  * ComboBox Widget with an entry
@@ -68,8 +65,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
      */
     public function addItems($items)
     {
-        if (is_array($items))
-        {
+        if (is_array($items)) {
             $this->items = $items;
         }
     }
@@ -81,7 +77,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tcombocombined_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcombocombined_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -91,7 +87,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tcombocombined_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcombocombined_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -101,7 +97,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tcombocombined_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcombocombined_clear_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -110,7 +106,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
     public function show()
     {
         $tag = new TEntry($this->name);
-        $tag->setEditable(FALSE);
+        $tag->setEditable(false);
         $tag->setProperty('id', $this->name);
         $tag->setSize(40);
         $tag->setProperty('onchange', "aux = document.getElementsByName('{$this->text_name}'); aux[0].value = this.value;");
@@ -119,7 +115,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
         // define the tag properties
         $this->tag-> name  = $this->text_name;
         $this->tag-> onchange = "aux_entry = document.getElementById('{$this->name}'); aux_entry.value = this.value;";
-        $this->setProperty('style', "width:{$this->size}px", FALSE); //aggregate style info
+        $this->setProperty('style', "width:{$this->size}px", false); //aggregate style info
         $this->tag-> auxiliar = 1;
         
         // creates an empty <option> tag
@@ -129,19 +125,16 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
         // add the option tag to the combo
         $this->tag->add($option);
         
-        if ($this->items)
-        {
+        if ($this->items) {
             // iterate the combobox items
-            foreach ($this->items as $chave => $item)
-            {
+            foreach ($this->items as $chave => $item) {
                 // creates an <option> tag
                 $option = new TElement('option');
                 $option-> value = $chave;  // define the index
                 $option->add($item);      // add the item label
                 
                 // verify if this option is selected
-                if ($chave == $this->value)
-                {
+                if ($chave == $this->value) {
                     // mark as selected
                     $option-> selected = 1;
                 }
@@ -151,8 +144,7 @@ class TComboCombined extends TField implements AdiantiWidgetInterface
         }
         
         // verify whether the widget is editable
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             // make the widget read-only
             $this->tag-> readonly = "1";
             $this->tag->{'class'} = 'tfield_disabled'; // CSS

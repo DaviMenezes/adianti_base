@@ -1,10 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Menu;
 
-use Adianti\Widget\Menu\TMenu;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use SimpleXMLElement;
 
 /**
@@ -31,17 +29,13 @@ class TMenuBar extends TElement
      * @param $xml_file path for the file
      * @param $permission_callback check permission callback
      */
-    public static function newFromXML($xml_file, $permission_callback = NULL, $bar_class = 'nav navbar-nav', $menu_class = 'dropdown-menu', $item_class = '')
+    public static function newFromXML($xml_file, $permission_callback = null, $bar_class = 'nav navbar-nav', $menu_class = 'dropdown-menu', $item_class = '')
     {
-        if (file_exists($xml_file))
-        {
+        if (file_exists($xml_file)) {
             $menu_string = file_get_contents($xml_file);
-            if (utf8_encode(utf8_decode($menu_string)) == $menu_string ) // SE UTF8
-            {
+            if (utf8_encode(utf8_decode($menu_string)) == $menu_string) { // SE UTF8
                 $xml = new SimpleXMLElement($menu_string);
-            }
-            else
-            {
+            } else {
                 $xml = new SimpleXMLElement(utf8_encode($menu_string));
             }
             
@@ -49,8 +43,7 @@ class TMenuBar extends TElement
             $ul = new TElement('ul');
             $ul->{'class'} = $bar_class;
             $menubar->add($ul);
-            foreach ($xml as $xmlElement)
-            {
+            foreach ($xml as $xmlElement) {
                 $atts   = $xmlElement->attributes();
                 $label  = (string) $atts['label'];
                 $action = (string) $xmlElement-> action;
@@ -60,14 +53,11 @@ class TMenuBar extends TElement
                 $menu = new TMenu($xmlElement-> menu-> menuitem, $permission_callback, 1, $menu_class, $item_class);
 
                 // check children count (permissions)
-                if (count($menu->getMenuItems()) >0)
-                {
+                if (count($menu->getMenuItems()) >0) {
                     $item->setMenu($menu);
                     $item->{'class'} = 'active';
                     $ul->add($item);
-                }
-                else if ($action)
-                {
+                } elseif ($action) {
                     $ul->add($item);
                 }
             }
@@ -81,7 +71,7 @@ class TMenuBar extends TElement
      */
     public function show()
     {
-        TScript::create( 'tmenubar_start();' );
+        TScript::create('tmenubar_start();');
         parent::show();
     }
 }

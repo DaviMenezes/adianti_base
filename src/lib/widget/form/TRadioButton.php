@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Form\TField;
-
 /**
  * RadioButton Widget
  *
@@ -30,8 +27,7 @@ class TRadioButton extends TField implements AdiantiWidgetInterface
         $this->tag->{'class'} = '';
         
         // verify if the field is not editable
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             // make the widget read-only
             //$this->tag-> disabled   = "1"; // the value don't post
             $this->tag->{'onclick'} = "return false;";

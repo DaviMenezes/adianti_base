@@ -1,6 +1,12 @@
 <?php
 namespace Adianti\Base\App\Lib\Reports;
 
+use Exception;
+use PHPRtfLite;
+use PHPRtfLite_Border;
+use PHPRtfLite_Font;
+use PHPRtfLite_ParFormat;
+
 /**
  * Write tables in RTF
  * @author Pablo Dall'Oglio
@@ -13,12 +19,14 @@ class TTableWriterRTF implements ITableWriter
     private $rowcounter;
     private $colcounter;
     private $widths;
-    
+
     /**
      * Constructor
      * @param $widths Array with column widths
+     * @param string $orientation
+     * @param string $format
      */
-    public function __construct($widths, $orientation='P', $format = 'A4')
+    public function __construct($widths, $orientation = 'P', $format = 'A4')
     {
         // armazena as larguras
         $this->widths = $widths;
@@ -38,19 +46,15 @@ class TTableWriterRTF implements ITableWriter
         $pagesize['Letter'] = array(21.59, 27.94);
         $pagesize['Legal']  = array(21.59, 35.57);
         
-        if (isset($pagesize[$format]))
-        {
+        if (isset($pagesize[$format])) {
             $size = $pagesize[$format];
             
-            if ($orientation == 'P')
-            {
-                $this->rtf-> setPaperWidth ($size[0]);
-                $this->rtf-> setPaperHeight ($size[1]);
-            }
-            else
-            {
-                $this->rtf-> setPaperWidth ($size[1]);
-                $this->rtf-> setPaperHeight ($size[0]);
+            if ($orientation == 'P') {
+                $this->rtf-> setPaperWidth($size[0]);
+                $this->rtf-> setPaperHeight($size[1]);
+            } else {
+                $this->rtf-> setPaperWidth($size[1]);
+                $this->rtf-> setPaperHeight($size[0]);
             }
         }
         
@@ -61,8 +65,7 @@ class TTableWriterRTF implements ITableWriter
         $this->table = $section->addTable();
         
         // acrescenta as colunas na tabela
-        foreach ($widths as $columnwidth)
-        {
+        foreach ($widths as $columnwidth) {
             $this->table->addColumn($columnwidth / 28);
         }
     }
@@ -106,42 +109,54 @@ class TTableWriterRTF implements ITableWriter
         $this->colcounter = 1;
         $this->table->addRow();
     }
-    
+
     /**
      * Add a new cell inside the current row
      * @param $content   cell content
      * @param $align     cell align
      * @param $stylename style to be used
-     * @param $colspan   colspan (merge) 
+     * @param $colspan   colspan (merge)
+     * @throws Exception
      */
     public function addCell($content, $align, $stylename, $colspan = 1)
     {
-        if (is_null($stylename) OR !isset($this->styles[$stylename]) )
-        {
-            throw new Exception(TAdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__ ) );
+        if (is_null($stylename) or !isset($this->styles[$stylename])) {
+            throw new Exception(TAdiantiCoreTranslator::translate('Style ^1 not found in ^2', $stylename, __METHOD__));
         }
         
         // obtém a fonte e a cor de preenchimento
         $font      = $this->styles[$stylename]['font'];
         $fillcolor = $this->styles[$stylename]['bgcolor'];
-        if (utf8_encode(utf8_decode($content)) !== $content ) // SE NÃO UTF8
-        {
+        if (utf8_encode(utf8_decode($content)) !== $content) { // SE NÃO UTF8
             $content = utf8_encode($content);
         }
         
         // escreve o conteúdo na célula utilizando a fonte e alinhamento
-        $this->table->writeToCell($this->rowcounter, $this->colcounter,
-                      $content, $font, new PHPRtfLite_ParFormat($align));
+        $this->table->writeToCell(
+            $this->rowcounter,
+            $this->colcounter,
+            $content,
+            $font,
+            new PHPRtfLite_ParFormat($align)
+        );
                       
         // define a cor de fundo para a célula
-        $this->table->setBackgroundForCellRange($fillcolor, $this->rowcounter, $this->colcounter,
-                                                $this->rowcounter, $this->colcounter);
+        $this->table->setBackgroundForCellRange(
+            $fillcolor,
+            $this->rowcounter,
+            $this->colcounter,
+            $this->rowcounter,
+            $this->colcounter
+        );
 
-        if ($colspan>1)
-        {
+        if ($colspan>1) {
             // mescla as células caso necessário
-            $this->table->mergeCellRange($this->rowcounter, $this->colcounter,
-                                         $this->rowcounter, $this->colcounter + $colspan -1);
+            $this->table->mergeCellRange(
+                $this->rowcounter,
+                $this->colcounter,
+                $this->rowcounter,
+                $this->colcounter + $colspan -1
+            );
         }
         $this->colcounter += $colspan;
     }
@@ -155,13 +170,17 @@ class TTableWriterRTF implements ITableWriter
         // instancia um objeto para estilo de borda
         $border    = PHPRtfLite_Border::create($this->rtf, 0.7, '#000000');
         
-        // liga as bordas na tabela  
-        $this->table->setBorderForCellRange($border, 1, 1, $this->table->getRowsCount(),
-                                            $this->table->getColumnsCount());
+        // liga as bordas na tabela
+        $this->table->setBorderForCellRange(
+            $border,
+            1,
+            1,
+            $this->table->getRowsCount(),
+            $this->table->getColumnsCount()
+        );
         
         // armazena o documento em um arquivo
         $this->rtf->save($filename);
-        return TRUE;
+        return true;
     }
 }
-?>

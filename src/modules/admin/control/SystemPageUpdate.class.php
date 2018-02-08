@@ -1,18 +1,18 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Control\TWindow;
-use Adianti\Database\TTransaction;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\THidden;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Menu\TMenuParser;
-use Adianti\Widget\Util\TSourceCode;
-use Adianti\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TWindow;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\THidden;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Menu\TMenuParser;
+use Adianti\Base\Lib\Widget\Util\TSourceCode;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use App\Model\Admin\SystemGroup;
 use App\Model\Admin\SystemProgram;
 use Exception;

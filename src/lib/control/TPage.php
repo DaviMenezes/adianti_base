@@ -1,10 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Control;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Dvi\Adianti\Route;
 use Exception;
 

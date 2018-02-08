@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Wrapper;
 
-use FPDF;
 use Exception;
+use FPDF;
 use SimpleXMLIterator;
 
 /**

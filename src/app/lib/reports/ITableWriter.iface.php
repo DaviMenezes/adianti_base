@@ -13,4 +13,3 @@ interface ITableWriter
     public function addCell($content, $align, $stylename, $colspan = 1);
     public function save($filename);
 }
-?>

@@ -1,8 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
-use Adianti\Validator\TFieldValidator;
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
@@ -22,7 +21,7 @@ class TCPFValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, $parameters = null)
     {
         // cpfs inválidos
         $nulos = array("12345678909","11111111111","22222222222","33333333333",
@@ -31,50 +30,43 @@ class TCPFValidator extends TFieldValidator
         // Retira todos os caracteres que nao sejam 0-9
         $cpf = preg_replace("/[^0-9]/", "", $value);
         
-        if (strlen($cpf) <> 11)
-        {
+        if (strlen($cpf) <> 11) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
         }
         
         // Retorna falso se houver letras no cpf
-        if (!(preg_match("/[0-9]/",$cpf)))
-        {
+        if (!(preg_match("/[0-9]/", $cpf))) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
         }
 
         // Retorna falso se o cpf for nulo
-        if( in_array($cpf, $nulos) )
-        {
+        if (in_array($cpf, $nulos)) {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
         }
 
         // Calcula o penúltimo dígito verificador
         $acum=0;
-        for($i=0; $i<9; $i++)
-        {
-          $acum+= $cpf[$i]*(10-$i);
+        for ($i=0; $i<9; $i++) {
+            $acum+= $cpf[$i]*(10-$i);
         }
 
         $x=$acum % 11;
         $acum = ($x>1) ? (11 - $x) : 0;
         // Retorna falso se o digito calculado eh diferente do passado na string
-        if ($acum != $cpf[9])
-        {
-          throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
+        if ($acum != $cpf[9]) {
+            throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
         }
         // Calcula o último dígito verificador
         $acum=0;
-        for ($i=0; $i<10; $i++)
-        {
-          $acum+= $cpf[$i]*(11-$i);
-        }  
+        for ($i=0; $i<10; $i++) {
+            $acum+= $cpf[$i]*(11-$i);
+        }
 
         $x=$acum % 11;
         $acum = ($x > 1) ? (11-$x) : 0;
         // Retorna falso se o digito calculado eh diferente do passado na string
-        if ( $acum != $cpf[10])
-        {
-          throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
-        }  
+        if ($acum != $cpf[10]) {
+            throw new Exception(AdiantiCoreTranslator::translate('The field ^1 has not a valid CPF', $label));
+        }
     }
 }

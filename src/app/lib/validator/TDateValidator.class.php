@@ -1,6 +1,9 @@
 <?php
 namespace Adianti\Base\App\Lib\Validator;
 
+use Adianti\Base\Lib\Validator\TFieldValidator;
+use Exception;
+
 /**
  * Date validation
  *
@@ -18,7 +21,7 @@ class TDateValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (ex: mask)
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, $parameters = null)
     {
         $mask = $parameters[0];
         $year_pos  = strpos($mask, 'yyyy');
@@ -29,10 +32,8 @@ class TDateValidator extends TFieldValidator
         $month     = substr($value, $month_pos, 2);
         $day       = substr($value, $day_pos, 2);
         
-        if (!checkdate((int) $month, (int) $day, (int) $year))
-        {
+        if (!checkdate((int) $month, (int) $day, (int) $year)) {
             throw new Exception("The field $label is not a valid date ($mask)");
         }
     }
 }
-?>

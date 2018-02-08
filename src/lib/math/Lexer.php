@@ -12,7 +12,7 @@ class Lexer
 
     /**
      * Collection of Token instances
-     * 
+     *
      * @var array
      */
     protected $tokens;
@@ -44,7 +44,7 @@ class Lexer
     
     /**
      * Tokenize matematical expression.
-     * 
+     *
      * @param type $code
      * @return array Collection of Token instances
      * @throws \InvalidArgumentException
@@ -76,13 +76,13 @@ class Lexer
                 );
             } elseif (is_numeric($t)) {
                 $token = new Token((float) $t, Token::T_OPERAND);
-            }elseif('(' === $t) {
+            } elseif ('(' === $t) {
                 $token = new Token($t, Token::T_LEFT_BRACKET);
-            }elseif(')' === $t) {
+            } elseif (')' === $t) {
                 $token = new Token($t, Token::T_RIGHT_BRACKET);
-            }elseif('' === $t) {
+            } elseif ('' === $t) {
                 continue;
-            }else {
+            } else {
                 throw new \InvalidArgumentException(sprintf('Syntax error: unknown token "%s"', $t));
             }
 
@@ -91,5 +91,4 @@ class Lexer
 
         return $this->tokens;
     }
-
 }

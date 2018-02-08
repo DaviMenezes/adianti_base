@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * TableCell: Represents a cell inside a table

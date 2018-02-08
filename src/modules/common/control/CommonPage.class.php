@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Modules\Common\Control;
 
-use Adianti\Control\TPage;
-use Adianti\Widget\Form\TLabel;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * CommonPage

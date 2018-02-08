@@ -1,12 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
-use Adianti\Widget\Wrapper\TQuickForm;
-use Adianti\Widget\Container\TTable;
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Base\TElement;
-use Adianti\Control\TAction;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Container\TNotebook;
+use Adianti\Base\Lib\Widget\Container\TTable;
+use Adianti\Base\Lib\Widget\Container\TVBox;
 
 /**
  * Create quick forms with a notebook wrapper
@@ -35,7 +33,7 @@ class TQuickNotebookForm extends TQuickForm
         $this->vertical_box = new TVBox;
         $this->vertical_box->{'style'} = 'width: 100%';
         $this->notebook = new TNotebook;
-        $this->hasAction = FALSE;
+        $this->hasAction = false;
         
         $this->fieldsByRow = 1;
     }
@@ -64,16 +62,14 @@ class TQuickNotebookForm extends TQuickForm
      * @param $title     Page title
      * @param $cotnainer Page container
      */
-    public function appendPage($title, $container = NULL)
+    public function appendPage($title, $container = null)
     {
-        if (empty($container))
-        {
+        if (empty($container)) {
             $container = new TTable;
             $container->{'width'} = '100%';
         }
         
-        if ($this->notebook->getPageCount() == 0)
-        {
+        if ($this->notebook->getPageCount() == 0) {
             $this->vertical_box->add($this->notebook);
         }
         

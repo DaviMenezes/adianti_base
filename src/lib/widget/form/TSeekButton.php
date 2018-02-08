@@ -1,16 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Control\TAction;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TForm;
-use Adianti\Widget\Form\TField;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Util\TImage;
-
-use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Util\TImage;
 use Exception;
 use ReflectionClass;
 
@@ -144,7 +139,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                     if (is_object($callback[0])) {
                         $rc = new ReflectionClass($callback[0]);
                         $classname = $rc->name;
-//                        $classname = $rc->getShortName();
+                        //                        $classname = $rc->getShortName();
                     } else {
                         $classname  = $callback[0];
                     }

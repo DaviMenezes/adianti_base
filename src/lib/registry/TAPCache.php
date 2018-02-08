@@ -1,8 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Registry;
 
-use Adianti\Registry\AdiantiRegistryInterface;
-
 /**
  * Adianti APC Record Cache
  *

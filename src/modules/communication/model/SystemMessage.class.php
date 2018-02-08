@@ -1,10 +1,9 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Model;
 
-
-use Adianti\Database\TRecord;
-use Adianti\Registry\TSession;
-use App\Model\Admin\SystemUser;
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 
 /**
  * SystemMessage

@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TStyle;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TStyle;
 
 /**
  * Panel Container: Allows to organize the widgets using fixed (absolute) positions

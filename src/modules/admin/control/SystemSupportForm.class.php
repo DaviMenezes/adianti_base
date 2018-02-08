@@ -1,18 +1,18 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TAction;
-use Adianti\Control\TWindow;
-use Adianti\Database\TTransaction;
-use Adianti\Registry\TSession;
-use Adianti\Validator\TRequiredValidator;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TText;
-use Adianti\Widget\Wrapper\TQuickForm;
-use Adianti\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TWindow;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TText;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
+use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use App\Model\Admin\SystemPreference;
 use Exception;
 use TMail;

@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Control\TPage;
+use Adianti\Base\Lib\Control\TPage;
 
 /**
  * Standard page controller for forms

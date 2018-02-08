@@ -1,17 +1,17 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Control\TPage;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Container\TPanelGroup;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TAlert;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Widget\Wrapper\TQuickGrid;
-use Adianti\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TAlert;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use stdClass;
+use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemPHPErrorLogView

@@ -1,12 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Menu;
 
-use function Adianti\App\Lib\Util\_t;
-use Adianti\Core\AdiantiCoreTranslator;
-use SimpleXMLElement;
-use Exception;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use DomDocument;
 use DomElement;
+use Exception;
+use SimpleXMLElement;
 
 /**
  * Menu Parser
@@ -31,34 +30,26 @@ class TMenuParser
     {
         $this->path = $xml_file;
         
-        if (file_exists($xml_file))
-        {
+        if (file_exists($xml_file)) {
             $menu_string = file_get_contents($xml_file);
-            if (utf8_encode(utf8_decode($menu_string)) == $menu_string ) // SE UTF8
-            {
+            if (utf8_encode(utf8_decode($menu_string)) == $menu_string) { // SE UTF8
                 $xml = new SimpleXMLElement($menu_string);
-            }
-            else
-            {
+            } else {
                 $xml = new SimpleXMLElement(utf8_encode($menu_string));
             }
             
-            foreach ($xml as $xmlElement)
-            {
+            foreach ($xml as $xmlElement) {
                 $atts   = $xmlElement->attributes();
                 $label  = (string) $atts['label'];
                 $action = (string) $xmlElement-> action;
                 $icon   = (string) $xmlElement-> icon;
                 
-                if (substr($label, 0, 3) == '_t{')
-                {
-                    $label = _t(substr($label,3,-1), 3, -1);
+                if (substr($label, 0, 3) == '_t{') {
+                    $label = _t(substr($label, 3, -1), 3, -1);
                 }
                 $this->parse($xmlElement-> menu-> menuitem, array($label));
             }
-        }
-        else
-        {
+        } else {
             throw new Exception(AdiantiCoreTranslator::translate('File not found') . ': ' . $xml_file);
         }
     }
@@ -70,33 +61,27 @@ class TMenuParser
     private function parse($xml, $path)
     {
         $i = 0;
-        if ($xml)
-        {
-            foreach ($xml as $xmlElement)
-            {
+        if ($xml) {
+            foreach ($xml as $xmlElement) {
                 $atts   = $xmlElement->attributes();
                 $label  = (string) $atts['label'];
                 $action = (string) $xmlElement-> action;
                 
-                if (substr($label, 0, 3) == '_t{')
-                {
-                    $label = _t(substr($label,3,-1), 3, -1);
+                if (substr($label, 0, 3) == '_t{') {
+                    $label = _t(substr($label, 3, -1), 3, -1);
                 }
                 
-                if (strpos($action, '#') !== FALSE)
-                {
+                if (strpos($action, '#') !== false) {
                     list($action, $method) = explode('#', $action);
                 }
                 $icon   = (string) $xmlElement-> icon;
                 
-                if ($xmlElement->menu)
-                {
+                if ($xmlElement->menu) {
                     $this->parse($xmlElement-> menu-> menuitem, array_merge($path, array($label)));
                 }
                 
                 // just child nodes have actions
-                if ($action)
-                {
+                if ($action) {
                     $this->paths[$action] = array_merge($path, array($label));
                 }
             }
@@ -109,8 +94,7 @@ class TMenuParser
     public function getIndexedPrograms()
     {
         $programs = [];
-        foreach ($this->paths as $action => $path)
-        {
+        foreach ($this->paths as $action => $path) {
             $programs[$action] = array_pop($path);
         }
         return $programs;
@@ -129,24 +113,18 @@ class TMenuParser
      */
     public function appendPage($module, $label, $action, $icon)
     {
-        if (empty($this->paths[$action]))
-        {
+        if (empty($this->paths[$action])) {
             $xml_doc = new DomDocument;
             $xml_doc->preserveWhiteSpace = false;
             $xml_doc->formatOutput = true;
             $xml_doc->load($this->path);
             
-            foreach ($xml_doc->getElementsByTagName('menuitem') as $node)
-            {
+            foreach ($xml_doc->getElementsByTagName('menuitem') as $node) {
                 $node_label = $node->getAttribute('label');
-                foreach ($node->childNodes as $subnode)
-                {
-                    if ($subnode instanceof DOMElement)
-                    {
-                        if ($subnode->tagName == 'menu')
-                        {
-                            if ($node_label == $module)
-                            {
+                foreach ($node->childNodes as $subnode) {
+                    if ($subnode instanceof DOMElement) {
+                        if ($subnode->tagName == 'menu') {
+                            if ($node_label == $module) {
                                 $menuitem = $xml_doc->createElement("menuitem");
                                 $menuitem->setAttribute('label', $label);
                                 $subnode->appendChild($menuitem);

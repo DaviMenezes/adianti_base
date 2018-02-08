@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Wrapper;
 
-use Adianti\Widget\Container\TNotebook;
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\TNotebook;
 
 /**
  * Bootstrap datagrid decorator for Adianti Framework
@@ -37,7 +37,7 @@ class BootstrapNotebookWrapper
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array(array($this->decorated, $method),$parameters);
+        return call_user_func_array(array($this->decorated, $method), $parameters);
     }
     
     /**
@@ -54,14 +54,12 @@ class BootstrapNotebookWrapper
      */
     public function setTabsDirection($direction, $divisions = null)
     {
-        if ($direction)
-        {
+        if ($direction) {
             $this->direction = 'tabs-'.$direction;
-            if ($divisions)
-            {
+            if ($divisions) {
                 $this->divisions = $divisions;
             }
-        } 
+        }
     }
     
     /**
@@ -74,36 +72,29 @@ class BootstrapNotebookWrapper
         unset($rendered->{'class'});
         $rendered->{'class'} = 'tabwrapper';
         
-        foreach ($this->properties as $property => $value)
-        {
+        foreach ($this->properties as $property => $value) {
             $rendered->$property = $value;
         }
         
         $sessions = $rendered->getChildren();
-        if ($sessions)
-        {
-            foreach ($sessions as $section)
-            {
-                if ($section->{'class'} == 'tabs')
-                {
+        if ($sessions) {
+            foreach ($sessions as $section) {
+                if ($section->{'class'} == 'tabs') {
                     $section->{'class'} = "nav nav-tabs " . $this->direction;
                     $section->{'role'}  = "tablist";
                     $tabs = $section;
                 }
-                if ($section->{'class'} == 'spacer')
-                {
+                if ($section->{'class'} == 'spacer') {
                     $section->{'style'} = "display:none";
                 }
-                if ($section->{'class'}  == 'frame tab-content')
-                {
+                if ($section->{'class'}  == 'frame tab-content') {
                     $section->{'class'} = 'tab-content';
                     $panel = $section;
                 }
             }
         }
         
-        if ($this->direction == 'tabs-left')
-        {
+        if ($this->direction == 'tabs-left') {
             $rendered->clearChildren();
             $left_pack = TElement::tag('div', '', array('class'=> 'left-pack col-xs-'.$this->divisions[0], 'style' => 'padding:0'));
             $right_pack = TElement::tag('div', '', array('class'=> 'right-pack col-xs-'.$this->divisions[1], 'style' => 'padding-right:0; margin-right:0'));
@@ -111,9 +102,7 @@ class BootstrapNotebookWrapper
             $rendered->add($right_pack);
             $left_pack->add($tabs);
             $right_pack->add($panel);
-        }
-        else if ($this->direction == 'tabs-right')
-        {
+        } elseif ($this->direction == 'tabs-right') {
             $rendered->clearChildren();
             $left_pack = TElement::tag('div', '', array('class'=> 'left-pack col-xs-'.$this->divisions[1]));
             $right_pack = TElement::tag('div', '', array('class'=> 'right-pack col-xs-'.$this->divisions[0]));

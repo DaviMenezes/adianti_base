@@ -1,21 +1,21 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use function Adianti\App\Lib\Util\_t;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Container\TVBox;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TCombo;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TPassword;
+use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Modules\Admin\Model\SystemPreference;
 use Adianti\Base\TStandardForm;
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Database\TTransaction;
-use Adianti\Modules\Admin\Model\SystemPreference;
-use Adianti\Widget\Container\TVBox;
-use Adianti\Widget\Dialog\TMessage;
-use Adianti\Widget\Form\TCombo;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Widget\Form\TLabel;
-use Adianti\Widget\Form\TPassword;
-use Adianti\Widget\Util\TXMLBreadCrumb;
-use Adianti\Wrapper\BootstrapFormBuilder;
 use Exception;
+use function Adianti\App\Lib\Util\_t;
 
 /**
  * SystemPreferenceForm

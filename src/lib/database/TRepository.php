@@ -1,17 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Database\TRecord;
-use Adianti\Database\TCriteria;
-use Adianti\Database\TFilter;
-use Adianti\Database\TSqlSelect;
-
-use Dvi\Adianti\Route;
-use PDO;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
+use PDO;
 use ReflectionMethod;
-use ReflectionClass;
 
 /**
  * Implements the Repository Pattern to deal with collections of Active Records

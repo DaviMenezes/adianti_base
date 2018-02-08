@@ -1,9 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Control\TAction;
-use Adianti\Widget\Container\TTable;
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Container\TTable;
+use function Adianti\Base\App\Lib\Util\_t;
 
 /**
  * Calendar Widget
@@ -24,7 +25,7 @@ class TCalendar extends TElement
     private $height;
     private $action;
     private $selectedDays;
-    
+
     /**
      * Class Constructor
      */
@@ -36,20 +37,20 @@ class TCalendar extends TElement
         $this->height = 300;
         $this->selectedDays = array();
         $this->months = array(_t('January'), _t('February'), _t('March'), _t('April'), _t('May'), _t('June'),
-                              _t('July'), _t('August'), _t('September'), _t('October'), _t('November'), _t('December'));
+            _t('July'), _t('August'), _t('September'), _t('October'), _t('November'), _t('December'));
     }
-    
+
     /**
      * Define the calendar's size
-     * @param  $width  Window's width
+     * @param  $width Window's width
      * @param  $height Window's height
      */
     public function setSize($width, $height)
     {
-        $this->width  = $width;
+        $this->width = $width;
         $this->height = $height;
     }
-    
+
     /**
      * Define the current month to display
      * @param  $month Month to display
@@ -58,7 +59,7 @@ class TCalendar extends TElement
     {
         $this->month = $month;
     }
-    
+
     /**
      * Define the current year to display
      * @param  $year Year to display
@@ -67,7 +68,7 @@ class TCalendar extends TElement
     {
         $this->year = $year;
     }
-    
+
     /**
      * Return the current month
      */
@@ -75,7 +76,7 @@ class TCalendar extends TElement
     {
         return $this->month;
     }
-    
+
     /**
      * Return the current year
      */
@@ -83,7 +84,7 @@ class TCalendar extends TElement
     {
         return $this->year;
     }
-    
+
     /**
      * Define the action when click at some day
      * @param  $action TAction object
@@ -92,7 +93,7 @@ class TCalendar extends TElement
     {
         $this->action = $action;
     }
-    
+
     /**
      * Select a collection of days
      * @param  $days Collection of days
@@ -101,90 +102,79 @@ class TCalendar extends TElement
     {
         $this->selectedDays = $days;
     }
-    
+
     /**
      * Show the calendar
      */
     public function show()
     {
-        $this-> style = "width: {$this->width}px; height: {$this->height}px";
-        
+        $this->style = "width: {$this->width}px; height: {$this->height}px";
+
         $this->month = $this->month ? $this->month : date('m');
         $this->year = $this->year ? $this->year : date('Y');
-        
+
         $table = new TTable;
-        $table-> width = '100%';
+        $table->width = '100%';
         parent::add($table);
-        
+
         $row = $table->addRow();
-        $cell = $row->addCell($this->months[$this->month -1] . ' ' . $this->year);
-        $cell-> colspan = 7;
-        $cell-> class = 'calendar-header';
-        
+        $cell = $row->addCell($this->months[$this->month - 1] . ' ' . $this->year);
+        $cell->colspan = 7;
+        $cell->class = 'calendar-header';
+
         $row = $table->addRow();
-        $row->addCell('S')->class='calendar-header';
-        $row->addCell('M')->class='calendar-header';
-        $row->addCell('T')->class='calendar-header';
-        $row->addCell('W')->class='calendar-header';
-        $row->addCell('T')->class='calendar-header';
-        $row->addCell('F')->class='calendar-header';
-        $row->addCell('S')->class='calendar-header';
-        
-        
+        $row->addCell('S')->class = 'calendar-header';
+        $row->addCell('M')->class = 'calendar-header';
+        $row->addCell('T')->class = 'calendar-header';
+        $row->addCell('W')->class = 'calendar-header';
+        $row->addCell('T')->class = 'calendar-header';
+        $row->addCell('F')->class = 'calendar-header';
+        $row->addCell('S')->class = 'calendar-header';
+
+
         $prev_year = $this->year;
         $next_year = $this->year;
         $prev_month = $this->month - 1;
         $next_month = $this->month + 1;
-         
-        if ($prev_month == 0 )
-        {
+
+        if ($prev_month == 0) {
             $prev_month = 12;
             $prev_year = $this->year - 1;
         }
-        
-        if ($next_month == 13 )
-        {
+
+        if ($next_month == 13) {
             $next_month = 1;
             $next_year = $this->year + 1;
         }
-        
-        $timestamp = mktime( 0, 0, 0, $this->month, 1, $this->year );
+
+        $timestamp = mktime(0, 0, 0, $this->month, 1, $this->year);
         $maxday = date("t", $timestamp);
-        $thismonth = getdate ($timestamp);
+        $thismonth = getdate($timestamp);
         $startday = $thismonth['wday'];
-        for ($i=0; $i<($maxday + $startday); $i++)
-        {
-            if (($i % 7) == 0 )
-            {
+        for ($i = 0; $i < ($maxday + $startday); $i++) {
+            if (($i % 7) == 0) {
                 $row = $table->addRow();
-                $row-> class = 'calendar-rowdata';
+                $row->class = 'calendar-rowdata';
             }
-            
-            if ($i < $startday)
-            {
+
+            if ($i < $startday) {
                 $row->addCell('');
-            }
-            else
-            {
+            } else {
                 $current_day = ($i - $startday + 1);
-                $cell = $row->addCell( $current_day );
-                if (in_array($current_day, $this->selectedDays))
-                {
-                    $cell-> class = 'calendar-data calendar-selected';
+                $cell = $row->addCell($current_day);
+                if (in_array($current_day, $this->selectedDays)) {
+                    $cell->class = 'calendar-data calendar-selected';
+                } else {
+                    $cell->class = 'calendar-data';
                 }
-                else
-                {
-                    $cell-> class = 'calendar-data';
-                }
-                $cell-> valign = 'middle';
-                
-                if ($this->action instanceof TAction)
-                {
-                    $this->action->setParameter('year', $this->year); 
+                $cell->valign = 'middle';
+
+                if ($this->action instanceof TAction) {
+                    $this->action->setParameter('year', $this->year);
                     $this->action->setParameter('month', $this->month);
                     $this->action->setParameter('day', $current_day);
-                    $string_action = $this->action->serialize(FALSE);
-                    $cell-> onclick = "__adianti_ajax_exec('{$string_action}')";
+                    $string_action = $this->action->serialize(false);
+                    $cell->onclick = "__adianti_ajax_exec('{$string_action}')";
                 }
             }
         }

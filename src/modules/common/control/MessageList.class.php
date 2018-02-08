@@ -1,12 +1,12 @@
 <?php
 namespace Adianti\Base\Modules\Common\Control;
 
-use Adianti\Database\TTransaction;
-use Adianti\Modules\Admin\Model\SystemUser;
-use Adianti\Modules\Communication\Model\SystemMessage;
-use Adianti\Registry\TSession;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use DateTime;
 use Exception;
 

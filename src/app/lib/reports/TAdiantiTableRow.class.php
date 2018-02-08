@@ -31,4 +31,3 @@ class TAdiantiTableRow extends TAdiantiElement
         return $cell;
     }
 }
-?>

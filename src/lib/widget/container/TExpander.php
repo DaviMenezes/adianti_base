@@ -1,8 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 
 /**
  * Expander Widget
@@ -100,19 +100,14 @@ class TExpander extends TElement
      */
     public function show()
     {
-        if ($this->caret_side == 'left')
-        {
+        if ($this->caret_side == 'left') {
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
             $this->button->add($this->label);
-        }
-        else if ($this->caret_side == 'right')
-        {
+        } elseif ($this->caret_side == 'right') {
             $this->button->add($this->label);
             $this->button->add('&nbsp');
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
-        }
-        else
-        {
+        } else {
             $this->button->add($this->label);
         }
         

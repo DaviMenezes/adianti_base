@@ -18,7 +18,7 @@ class Operator extends Token
 
     /**
      * Create new "Value object" which represent one mathematical operator.
-     * 
+     *
      * @param string $value string representation of this operator
      * @param integer $priority priority value of this token
      * @param integer $associativity one of Operator associative constants
@@ -26,7 +26,7 @@ class Operator extends Token
      */
     public function __construct($value, $priority, $associativity)
     {
-        if(!in_array($associativity, array(self::O_LEFT_ASSOCIATIVE, self::O_NONE_ASSOCIATIVE, self::O_RIGHT_ASSOCIATIVE))) {
+        if (!in_array($associativity, array(self::O_LEFT_ASSOCIATIVE, self::O_NONE_ASSOCIATIVE, self::O_RIGHT_ASSOCIATIVE))) {
             throw new \InvalidArgumentException(sprintf('Invalid associativity: %s', $associativity));
         }
 
@@ -37,7 +37,7 @@ class Operator extends Token
     
     /**
      * Return associativity of this operator.
-     * 
+     *
      * @return integer
      */
     public function getAssociativity()
@@ -47,7 +47,7 @@ class Operator extends Token
 
     /**
      * Return priority of this operator.
-     * 
+     *
      * @return integer
      */
     public function getPriority()
@@ -57,7 +57,7 @@ class Operator extends Token
 
     /**
      * Return true if this operator has lower priority of operator $o.
-     * 
+     *
      * @param \Math\Operator $o
      * @return boolean
      */

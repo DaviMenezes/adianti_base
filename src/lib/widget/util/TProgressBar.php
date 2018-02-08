@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * TProgressBar
@@ -20,7 +20,7 @@ class TProgressBar extends TElement
     private $mask;
     private $className;
     
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct('div');
         $this->{'class'} = 'progress';
@@ -48,17 +48,17 @@ class TProgressBar extends TElement
     
     /**
      * Set the value of progress bar
-     */ 
+     */
     public function setValue($value)
     {
-       $this->value = $value;
+        $this->value = $value;
     }
             
     /**
      * Shows the widget at the screen
-     */       
+     */
     public function show()
-    {                   
+    {
         $progressBar = new TElement('div');
         $progressBar->{'class'} = "progress-bar progress-bar-{$this->className}";
         $progressBar->{'role'} = 'progressbar';

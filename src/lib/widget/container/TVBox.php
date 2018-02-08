@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Vertical Box
@@ -44,10 +44,8 @@ class TVBox extends TElement
     public function addColSet()
     {
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $this->add($arg);
             }
         }
@@ -61,10 +59,8 @@ class TVBox extends TElement
     {
         $box = new self;
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $box->add($arg);
             }
         }

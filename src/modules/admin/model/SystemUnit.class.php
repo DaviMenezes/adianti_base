@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Model;
 
-use Adianti\Database\TRecord;
+use Adianti\Base\Lib\Database\TRecord;
 
 /**
  * SystemUnit

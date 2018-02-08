@@ -1,13 +1,11 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TStyle;
-use Adianti\Widget\Util\TSourceCode;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Scrolled Window: Allows to add another containers inside, creating scrollbars when its content is bigger than its visual area
- * 
+ *
  * @version    5.0
  * @package    widget
  * @subpackage container
@@ -29,7 +27,7 @@ class TScroll extends TElement
     {
         $this->{'id'} = 'tscroll_' . mt_rand(1000000000, 1999999999);
         $this->margin = 2;
-        $this->transparency = FALSE;
+        $this->transparency = false;
         parent::__construct('div');
     }
     
@@ -53,7 +51,7 @@ class TScroll extends TElement
         $this->margin = $margin;
     }
     
-    /** 
+    /**
      * compability reasons
      */
     public function setTransparency($bool)
@@ -66,21 +64,18 @@ class TScroll extends TElement
      */
     public function show()
     {
-        if (!$this->transparency)
-        {
+        if (!$this->transparency) {
             $this->{'style'} .= ';border: 1px solid #c2c2c2';
             $this->{'style'} .= ';background: #ffffff';
         }
         $this->{'style'} .= ";padding: {$this->margin}px";
         
-        if ($this->width)
-        {
-            $this->{'style'} .= (strstr($this->width, '%') !== FALSE) ? ";width:{$this->width}" : ";width:{$this->width}px";
+        if ($this->width) {
+            $this->{'style'} .= (strstr($this->width, '%') !== false) ? ";width:{$this->width}" : ";width:{$this->width}px";
         }
         
-        if ($this->height)
-        {
-            $this->{'style'} .= (strstr($this->height, '%') !== FALSE) ? ";height:{$this->height}" : ";height:{$this->height}px";
+        if ($this->height) {
+            $this->{'style'} .= (strstr($this->height, '%') !== false) ? ";height:{$this->height}" : ";height:{$this->height}px";
         }
         
         $this->{'class'} .= " tscroll";

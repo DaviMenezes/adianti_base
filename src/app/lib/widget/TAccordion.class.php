@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\App\Lib\Widget;
 
+use Adianti\Base\Lib\Widget\Base\TElement;
+
 /**
  * TAccordion Container
  * Copyright (c) 2006-2010 Pablo Dall'Oglio
@@ -36,8 +38,7 @@ class TAccordion extends TElement
      */
     public function show()
     {
-        foreach ($this->elements as $child)
-        {
+        foreach ($this->elements as $child) {
             $title = new TElement('h3');
             $title->add($child[0]);
             

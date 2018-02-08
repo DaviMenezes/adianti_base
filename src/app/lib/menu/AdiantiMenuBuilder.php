@@ -1,18 +1,17 @@
 <?php
 namespace Adianti\Base\App\Lib\Menu;
 
-use Adianti\Modules\Admin\Model\SystemPermission;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Menu\TMenu;
-use Adianti\Widget\Menu\TMenuBar;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Menu\TMenu;
+use Adianti\Base\Lib\Widget\Menu\TMenuBar;
+use Adianti\Base\Modules\Admin\Model\SystemPermission;
 use SimpleXMLElement;
 
 class AdiantiMenuBuilder
 {
     public static function parse($file, $theme)
     {
-        switch ($theme)
-        {
+        switch ($theme) {
             case 'theme1':
                 ob_start();
                 $callback = array(SystemPermission::class, 'checkPermission');

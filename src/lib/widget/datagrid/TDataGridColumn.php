@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
-use Adianti\Control\TAction;
+use Adianti\Base\Lib\Control\TAction;
 
 /**
  * Representes a DataGrid column
@@ -32,7 +32,7 @@ class TDataGridColumn
      * @param  $align = Column align (left, center, right)
      * @param  $width = Column Width (pixels)
      */
-    public function __construct($name, $label, $align, $width = NULL)
+    public function __construct($name, $label, $align, $width = null)
     {
         $this->name  = $name;
         $this->label = $label;
@@ -57,8 +57,7 @@ class TDataGridColumn
      */
     public function getProperty($name)
     {
-        if (isset($this->properties[$name]))
-        {
+        if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
     }
@@ -79,8 +78,7 @@ class TDataGridColumn
     public function __set($name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value))
-        {              
+        if (is_scalar($value)) {
             // store the property's value
             $this->setProperty($name, $value);
         }
@@ -145,8 +143,7 @@ class TDataGridColumn
     public function getAction()
     {
         // verify if the column has an actions
-        if ($this->action)
-        {
+        if ($this->action) {
             return $this->action;
         }
     }
@@ -169,8 +166,7 @@ class TDataGridColumn
     public function getEditAction()
     {
         // verify if the column has an actions
-        if ($this->editaction)
-        {
+        if ($this->editaction) {
             return $this->editaction;
         }
     }
@@ -179,7 +175,7 @@ class TDataGridColumn
      * Define a callback function to be applyed over the column's data
      * @param $callback  A function name of a method of an object
      */
-    public function setTransformer(Callable $callback)
+    public function setTransformer(callable $callback)
     {
         $this->transformer = $callback;
     }
@@ -196,7 +192,7 @@ class TDataGridColumn
      * Define a callback function to totalize column
      * @param $callback  A function name of a method of an object
      */
-    public function setTotalFunction(Callable $callback)
+    public function setTotalFunction(callable $callback)
     {
         $this->totalFunction = $callback;
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Control\TPage;
+use Adianti\Base\Lib\Control\TPage;
 
 class EmptyPage extends TPage
 {

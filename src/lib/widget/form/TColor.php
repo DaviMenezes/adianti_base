@@ -1,11 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TEntry;
-use Adianti\Control\TAction;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 
 /**
  * Color Widget
@@ -45,7 +43,7 @@ class TColor extends TEntry implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tcolor_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcolor_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -55,7 +53,7 @@ class TColor extends TEntry implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tcolor_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcolor_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -88,20 +86,17 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         $span->{'class'} = 'input-group-addon tcolor';
         
         $outer_size = 'undefined';
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $outer_size = $this->size;
             $this->size = '100%';
         }
         
-        if ($this->changeAction)
-        {
-            if (!TForm::getFormByName($this->formName) instanceof TForm)
-            {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if ($this->changeAction) {
+            if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
             }
             
-            $string_action = $this->changeAction->serialize(FALSE);
+            $string_action = $this->changeAction->serialize(false);
             $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
             $this->changeFunction = $this->getProperty('changeaction');
         }
@@ -119,8 +114,7 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         
         TScript::create("tcolor_start('{$this->id}', '{$outer_size}', function(color) { {$this->changeFunction} }); ");
         
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             self::disableField($this->formName, $this->name);
         }
     }

@@ -1,13 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Control\TPage;
-use Adianti\Control\TAction;
-use Adianti\Core\AdiantiCoreTranslator;
-use Adianti\Widget\Base\TElement;
-use Adianti\Widget\Base\TScript;
-use Adianti\Widget\Form\TField;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
 
 /**
@@ -54,11 +50,10 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
      * @param  $width   Widget's width
      * @param  $height  Widget's height
      */
-    public function setSize($width, $height = NULL)
+    public function setSize($width, $height = null)
     {
         $this->size   = $width;
-        if ($height)
-        {
+        if ($height) {
             $this->height = $height;
         }
     }
@@ -78,7 +73,7 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tmultisearch_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultisearch_enable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -88,7 +83,7 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tmultisearch_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultisearch_disable_field('{$form_name}', '{$field}'); ");
     }
 
     /**
@@ -98,26 +93,23 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create( " tmultisearch_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultisearch_clear_field('{$form_name}', '{$field}'); ");
     }
     
     /**
      * Render items
      */
-    protected function renderItems( $with_titles = true)
+    protected function renderItems($with_titles = true)
     {
-        if (parent::getValue())
-        {
+        if (parent::getValue()) {
             // iterate the combobox items
-            foreach (parent::getValue() as $item)
-            {
+            foreach (parent::getValue() as $item) {
                 // creates an <option> tag
                 $option = new TElement('option');
                 $option->{'value'} = $item;  // define the index
                 $option->add($item);      // add the item label
                 
-                if ($with_titles)
-                {
+                if ($with_titles) {
                     $option->{'title'} = $item;  // define the title
                 }
                 
@@ -138,13 +130,10 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
         $this->tag->{'name'}  = $this->name.'[]';    // tag name
         $this->tag->{'id'}  = $this->id;    // tag name
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
             $size  = "{$this->size}";
-        }
-        else
-        {
+        } else {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
             $size  = "{$this->size}px";
         }
@@ -152,29 +141,22 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
         $search_word = AdiantiCoreTranslator::translate('Search');
         $change_action = 'function() {}';
         
-        $this->renderItems( false );
+        $this->renderItems(false);
         
-        if ($this->editable)
-        {
-            if (isset($this->changeAction))
-            {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if ($this->editable) {
+            if (isset($this->changeAction)) {
+                if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                 }
                 
-                $string_action = $this->changeAction->serialize(FALSE);
+                $string_action = $this->changeAction->serialize(false);
                 $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
-            }
-            else if (isset($this->changeFunction))
-            {
+            } elseif (isset($this->changeFunction)) {
                 $change_action = "function() { $this->changeFunction }";
             }
             $this->tag->show();
             TScript::create(" tmultientry_start( '{$this->id}', '{$this->maxSize}', '{$size}', '{$this->height}px', $change_action ); ");
-        }
-        else
-        {
+        } else {
             $this->tag->show();
             TScript::create(" tmultientry_start( '{$this->id}', '{$this->maxSize}', '{$size}', '{$this->height}px', $change_action ); ");
             TScript::create(" tmultientry_disable_field( '{$this->formName}', '{$this->name}'); ");

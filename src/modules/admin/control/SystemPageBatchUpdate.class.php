@@ -3,11 +3,13 @@ namespace Adianti\Base\Modules\Admin\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Exception;
-use SystemPageService;
+use Adianti\Base\App\Service\SystemPageService;
 
 /**
  * SystemPageBatchUpdate
@@ -36,7 +38,7 @@ class SystemPageBatchUpdate extends TPage
         }
         
         // creates one datagrid
-        $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid);
+        $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid());
         
         // add the columns
         $this->datagrid->addQuickColumn(_t('Name'), 'name', 'left');

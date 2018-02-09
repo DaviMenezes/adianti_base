@@ -8,6 +8,7 @@ use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Menu\TMenuParser;
 use Adianti\Base\Modules\Admin\Model\SystemUser;

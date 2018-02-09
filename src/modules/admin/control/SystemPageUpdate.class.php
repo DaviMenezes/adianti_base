@@ -13,11 +13,11 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Menu\TMenuParser;
 use Adianti\Base\Lib\Widget\Util\TSourceCode;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
-use App\Model\Admin\SystemGroup;
-use App\Model\Admin\SystemProgram;
+use Adianti\Base\Modules\Admin\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\Model\SystemProgram;
 use Exception;
 use stdClass;
-use SystemPageService;
+use Adianti\Base\App\Service\SystemPageService;
 
 /**
  * SystemPageUpdate

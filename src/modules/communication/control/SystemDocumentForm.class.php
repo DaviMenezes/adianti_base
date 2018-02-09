@@ -22,6 +22,7 @@ use Adianti\Base\Lib\Widget\Wrapper\TDBMultiSearch;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
 use Exception;
 
@@ -118,7 +119,7 @@ class SystemDocumentForm extends TPage
             TTransaction::open('communication'); // open a transaction
             $this->form->validate(); // validate form data
             
-            $object = new SystemDocument;  // create an empty object
+            $object = new SystemDocument();  // create an empty object
             $data = $this->form->getData(); // get form data as array
             $object->fromArray((array) $data); // load the object with data
             $object->system_user_id = TSession::getValue('userid');

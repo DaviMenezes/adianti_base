@@ -2,6 +2,7 @@
 namespace Adianti\Base\Modules\Communication\Model;
 
 use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TTransaction;
 
 /**
  * SystemNotification

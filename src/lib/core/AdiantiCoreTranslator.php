@@ -253,10 +253,11 @@ class AdiantiCoreTranslator
         $instance = self::getInstance();
         return $instance->lang;
     }
-    
+
     /**
      * Translate a word to the target language
      * @param $word     Word to be translated
+     * @return mixed|string
      */
     public static function translate($word, $param1 = null, $param2 = null, $param3 = null, $param4 = null)
     {

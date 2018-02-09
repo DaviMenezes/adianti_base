@@ -30,10 +30,11 @@ abstract class TField
     protected $formName;
     protected $label;
     private $validations;
-    
+
     /**
      * Class Constructor
      * @param  $name name of the field
+     * @throws Exception
      */
     public function __construct($name)
     {
@@ -41,7 +42,8 @@ abstract class TField
         $classname = $rc->getShortName();
         
         if (empty($name)) {
-            throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 constructor is required', 'name', $classname));
+            $str = 'The parameter (^1) of ^2 constructor is required';
+            throw new Exception(AdiantiCoreTranslator::translate($str, 'name', $classname));
         }
         
         // define some default properties

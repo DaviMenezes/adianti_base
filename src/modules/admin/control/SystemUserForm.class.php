@@ -190,7 +190,7 @@ class SystemUserForm extends TPage
             $senha = $object->password;
             
             if (empty($object->login)) {
-                throw new Exception(TAdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')));
+                throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')));
             }
             
             if (empty($object->id)) {
@@ -199,7 +199,7 @@ class SystemUserForm extends TPage
                 }
                 
                 if (empty($object->password)) {
-                    throw new Exception(TAdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')));
+                    throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')));
                 }
                 
                 $object->active = 'Y';

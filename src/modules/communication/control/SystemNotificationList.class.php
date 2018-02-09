@@ -13,6 +13,7 @@ use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TLabel;
@@ -128,7 +129,7 @@ class SystemNotificationList extends TStandardList
         $this->datagrid->createModel();
         
         // create the page navigation
-        $this->pageNavigation = new TPageNavigation;
+        $this->pageNavigation = new TPageNavigation();
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         

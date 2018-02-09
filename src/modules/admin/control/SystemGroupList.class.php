@@ -35,9 +35,10 @@ class SystemGroupList extends TStandardList
     protected $formgrid;
     protected $deleteButton;
     protected $transformCallback;
-    
+
     /**
      * Page constructor
+     * @throws \Exception
      */
     public function __construct()
     {

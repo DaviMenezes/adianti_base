@@ -4,6 +4,7 @@ namespace Adianti\Base\Modules\Log\Model;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
+use Adianti\Base\Lib\Registry\TSession;
 
 /**
  * SystemSqlLog

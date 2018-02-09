@@ -41,10 +41,11 @@ class SystemGroupForm extends TPage
 {
     protected $form; // form
     protected $program_list;
-    
+
     /**
      * Class constructor
      * Creates the page and the registration form
+     * @throws Exception
      */
     public function __construct()
     {

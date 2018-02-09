@@ -230,9 +230,10 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     {
         TScript::create(" tmultifield_clear_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Show the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {

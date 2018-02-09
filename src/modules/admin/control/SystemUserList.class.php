@@ -199,7 +199,7 @@ class SystemUserList extends TStandardList
             TTransaction::close();
             
             $this->onReload($param);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             new TMessage('error', $e->getMessage());
             TTransaction::rollback();
         }

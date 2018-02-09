@@ -1,5 +1,5 @@
 {
-	"name": "adianti_base",
+	"name": "dvi/adianti_base",
 	"description": "Base classes of Adianti framework",
 	"type":"library",
 	"authors": [ {

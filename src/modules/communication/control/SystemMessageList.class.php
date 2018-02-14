@@ -20,6 +20,7 @@ use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Modules\Communication\Model\SystemMessage;
 
 /**
  * SystemMessageList
@@ -49,7 +50,7 @@ class SystemMessageList extends TStandardList
         parent::__construct();
         
         parent::setDatabase('communication');            // defines the database
-        parent::setActiveRecord('SystemMessage');   // defines the active record
+        parent::setActiveRecord(SystemMessage::class);   // defines the active record
         parent::setDefaultOrder('id', 'desc');         // defines the default order
         parent::addFilterField('checked', 'like', 'checked'); // filterField, operator, formField
         parent::addFilterField('subject', 'like', 'subject'); // filterField, operator, formField

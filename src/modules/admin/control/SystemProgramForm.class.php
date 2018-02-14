@@ -15,6 +15,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
 use Adianti\Base\Lib\Base\TStandardForm;
 use Dvi\Adianti\Modules;
+use Dvi\Adianti\Route;
 use Exception;
 
 /**
@@ -107,6 +108,11 @@ class SystemProgramForm extends TStandardForm
                     $entries[$class] = $class;
                 }
             }
+        }
+
+        $normal_files = Route::getRoutes();
+        foreach ($normal_files as $key => $file) {
+            $entries[$key] = $key;
         }
 
         ksort($entries);

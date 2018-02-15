@@ -69,6 +69,7 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'The field ^1 has not a valid CNPJ';
         $this->messages['en'][] = 'The field ^1 has not a valid CPF';
         $this->messages['en'][] = 'The field ^1 contains an invalid e-mail';
+        $this->messages['en'][] = 'The field ^1 contains an invalid url';
         $this->messages['en'][] = 'The field ^1 must be numeric';
         $this->messages['en'][] = 'No active transactions';
         $this->messages['en'][] = 'Object not found';
@@ -168,6 +169,7 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'O campo ^1 não contém um CNPJ válido';
         $this->messages['pt'][] = 'O campo ^1 não contém um CPF válido';
         $this->messages['pt'][] = 'O campo ^1 contém um e-mail inválido';
+        $this->messages['pt'][] = 'O campo ^1 contém um url inválido';
         $this->messages['pt'][] = 'O campo ^1 deve ser numérico';
         $this->messages['pt'][] = 'Sem transação ativa com a base de dados';
         $this->messages['pt'][] = 'Objeto não encontrado';

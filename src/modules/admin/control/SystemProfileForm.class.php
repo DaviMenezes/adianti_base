@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
-use App\Model\Admin\SystemUser;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Exception;
 
 /**

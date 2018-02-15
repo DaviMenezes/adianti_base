@@ -3,6 +3,7 @@ namespace Adianti\Base\Modules\Admin\Control;
 
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;

@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
+use Adianti\Base\Lib\Base\TStandardForm;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TTransaction;
@@ -13,9 +14,8 @@ use Adianti\Base\Lib\Widget\Form\TUniqueSearch;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
-use Adianti\Base\Lib\Base\TStandardForm;
+use App\Config\MyRoutes;
 use Dvi\Adianti\Modules;
-use Dvi\Adianti\Route;
 use Exception;
 
 /**
@@ -97,21 +97,8 @@ class SystemProgramForm extends TStandardForm
     {
         $entries = array();
 
-        $module_files = Modules::getFiles();
-
-        foreach ($module_files as $file) {
-            foreach ($file as $key => $arquivo) {
-                if (substr($arquivo, -4) == '.php') {
-                    $name = $arquivo->getFileName();
-                    $pieces = explode('.', $name);
-                    $class = (string) $pieces[0];
-                    $entries[$class] = $class;
-                }
-            }
-        }
-
-        $normal_files = Route::getRoutes();
-        foreach ($normal_files as $key => $file) {
+        $controllers = MyRoutes::getRoutes();
+        foreach ($controllers as $key => $file) {
             $entries[$key] = $key;
         }
 

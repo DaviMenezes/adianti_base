@@ -338,9 +338,10 @@ abstract class TRecord
         $content = $parser->evaluate(substr($content, 1));
         return $content;
     }
-    
+
     /**
      * Register an persisted attribute
+     * @throws Exception
      */
     public function addAttribute($attribute)
     {
@@ -971,7 +972,7 @@ abstract class TRecord
         $objects = $repository->load($criteria, false);
         if ($objects) {
             foreach ($objects as $object) {
-                if (isset($object->$valueColumn)) {
+                if (isset($object->{$valueColumn})) {
                     $indexedArray[ $object->$indexColumn ] = $object->$valueColumn;
                 } else {
                     $indexedArray[ $object->$indexColumn ] = $object->render($valueColumn);

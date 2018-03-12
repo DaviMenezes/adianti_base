@@ -120,7 +120,7 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'Constructor';
         $this->messages['en'][] = 'Records';
         $this->messages['en'][] = 'Description';
-        
+
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
         $this->messages['pt'][] = 'Buscar';

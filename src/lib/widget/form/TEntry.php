@@ -93,6 +93,8 @@ class TEntry extends TField implements AdiantiWidgetInterface
         } else {
             $this->value = $value;
         }
+
+        parent::setValue($this->value);
     }
     
     /**

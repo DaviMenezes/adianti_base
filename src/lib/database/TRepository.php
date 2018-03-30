@@ -58,7 +58,7 @@ final class TRepository
      * @param  $logicOperator = logical operator (TExpression::AND_OPERATOR, TExpression::OR_OPERATOR)
      * @return A TRepository object
      */
-    public function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR)
+    public function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR):TRepository
     {
         $this->criteria->add(new TFilter($variable, $operator, $value), $logicOperator);
         

@@ -3,6 +3,7 @@ namespace Adianti\Base\Lib\Database;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
+use App\Config\MyRoutes;
 use Closure;
 use Exception;
 use PDO;
@@ -61,7 +62,7 @@ final class TTransaction
         }
         
         if (!empty(self::$dbinfo[self::$counter]['slog'])) {
-            $logClass = self::$dbinfo[self::$counter]['slog'];
+            $logClass = MyRoutes::getPath(self::$dbinfo[self::$counter]['slog']);
             if (class_exists($logClass)) {
                 self::setLogger(new $logClass);
             }

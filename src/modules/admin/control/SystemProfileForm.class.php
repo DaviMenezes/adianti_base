@@ -3,6 +3,7 @@ namespace Adianti\Base\Modules\Admin\Control;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
@@ -99,7 +100,7 @@ class SystemProfileForm extends TPage
             
             $this->form->setData($object);
             
-            new TMessage('info', TAdiantiCoreTranslator::translate('Record saved'));
+            new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
             
             TTransaction::close();
         } catch (Exception $e) {

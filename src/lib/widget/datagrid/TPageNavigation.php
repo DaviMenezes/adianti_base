@@ -18,16 +18,16 @@ use Exception;
  */
 class TPageNavigation
 {
-    private $limit;
-    private $count;
-    private $order;
-    private $page;
-    private $first_page;
-    private $action;
-    private $width;
-    private $direction;
-    private $hidden;
-    
+    protected $limit;
+    protected $count;
+    protected $order;
+    protected $page;
+    protected $first_page;
+    protected $action;
+    protected $width;
+    protected $direction;
+    protected $hidden;
+
     public function __construct()
     {
         $this->hidden = false;

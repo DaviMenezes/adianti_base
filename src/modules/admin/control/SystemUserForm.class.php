@@ -210,7 +210,7 @@ class SystemUserForm extends TPage
                     throw new Exception(_t('The passwords do not match'));
                 }
                 
-                $object->password = md5($object->password);
+                $object->password = password_hash($object->password, PASSWORD_BCRYPT);
             } else {
                 unset($object->password);
             }

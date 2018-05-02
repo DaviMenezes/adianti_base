@@ -91,7 +91,7 @@ class SystemProfileForm extends TPage
                     throw new Exception(_t('The passwords do not match'));
                 }
                 
-                $user->password = md5($object->password1);
+                $user->password = password_hash($object->password1, PASSWORD_BCRYPT);
             } else {
                 unset($user->password);
             }

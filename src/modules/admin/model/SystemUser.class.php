@@ -246,7 +246,7 @@ class SystemUser extends TRecord
         if ($user instanceof SystemUser) {
             if ($user->active == 'N') {
                 throw new Exception(_t('Inactive user'));
-            } elseif (isset($user->password) and ($user->password == md5($password))) {
+            } elseif (isset($user->password) and (password_verify($password, $user->password))) {
                 return $user;
             } else {
                 throw new Exception(_t('Wrong password'));

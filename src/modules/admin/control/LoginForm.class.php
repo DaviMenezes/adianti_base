@@ -9,15 +9,24 @@ use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Validator\TEmailValidator;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Dialog\TAlert;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Modules\Admin\Model\SystemPreference;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Adianti\Base\Modules\Log\Model\SystemAccessLog;
+use App\Control\Pessoa\ResetPassword;
+use App\Model\Pessoa\EntityQuery;
+use Dvi\Adianti\Database\DTransaction;
+use Dvi\Adianti\Helpers\DviMail;
 use Exception;
 
 /**
@@ -32,7 +41,9 @@ use Exception;
  */
 class LoginForm extends TPage
 {
-    protected $form; // form
+    protected $form;
+    private $wrapper;
+
     
     /**
      * Class constructor
@@ -60,7 +71,7 @@ class LoginForm extends TPage
         $login->style = 'height:35px; font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
         $password->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
         
-        $login->placeholder = _t('User');
+        $login->placeholder = 'Login';
         $password->placeholder = _t('Password');
 
         $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
@@ -78,19 +89,36 @@ class LoginForm extends TPage
             $login->setExitAction(new TAction([$this, 'onExitUser']));
         }
         
-        $btn = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
-        $btn->class = 'btn btn-primary';
-        $btn->style = 'height: 40px;width: 90%;display: block;margin: auto;font-size:17px;';
-        
-        $wrapper = new TElement('div');
-        $wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
-        $wrapper->id    = 'login-wrapper';
-        $wrapper->add($this->form);
+        $btn_login = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
+        $btn_login->class = 'btn btn-primary';
+        $btn_login->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+
+        $btn_reset = $this->form->addAction('Esqueci a senha', new TAction(array($this, 'onReset')), '');
+        $btn_reset->class = 'btn btn-primary';
+        $btn_reset->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+
+        $this->wrapper = new TElement('div');
+        $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
+        $this->wrapper->id    = 'login-wrapper';
+        $this->wrapper->add($this->form);
         
         // add the form to the page
-        parent::add($wrapper);
+        parent::add($this->wrapper);
     }
-    
+
+    protected static function setUserSessions($data, $user, $programs)
+    {
+        TSession::setValue('logged', true);
+        TSession::setValue('login', $data->login);
+        TSession::setValue('userid', $user->id);
+        TSession::setValue('usergroupids', $user->getSystemUserGroupIds());
+        TSession::setValue('userunitids', $user->getSystemUserUnitIds());
+        TSession::setValue('username', $user->name);
+        TSession::setValue('usermail', $user->email);
+        TSession::setValue('frontpage', '');
+        TSession::setValue('programs', $programs);
+    }
+
     /**
      * user exit action
      * Populate unit combo
@@ -144,17 +172,9 @@ class LoginForm extends TPage
                 TSession::regenerate();
                 $programs = $user->getPrograms();
                 $programs['LoginForm'] = true;
-                
-                TSession::setValue('logged', true);
-                TSession::setValue('login', $data->login);
-                TSession::setValue('userid', $user->id);
-                TSession::setValue('usergroupids', $user->getSystemUserGroupIds());
-                TSession::setValue('userunitids', $user->getSystemUserUnitIds());
-                TSession::setValue('username', $user->name);
-                TSession::setValue('usermail', $user->email);
-                TSession::setValue('frontpage', '');
-                TSession::setValue('programs', $programs);
-                
+
+                self::setUserSessions($data, $user, $programs);
+
                 if (!empty($user->unit)) {
                     TSession::setValue('userunitid', $user->unit->id);
                 }

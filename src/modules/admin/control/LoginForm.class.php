@@ -109,7 +109,7 @@ class LoginForm extends TPage
     protected static function setUserSessions($data, $user, $programs)
     {
         TSession::setValue('logged', true);
-        TSession::setValue('login', $data->login);
+        TSession::setValue('login', $user->login);
         TSession::setValue('userid', $user->id);
         TSession::setValue('usergroupids', $user->getSystemUserGroupIds());
         TSession::setValue('userunitids', $user->getSystemUserUnitIds());

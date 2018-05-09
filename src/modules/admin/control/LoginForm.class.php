@@ -42,7 +42,7 @@ use Exception;
 class LoginForm extends TPage
 {
     protected $form;
-    private $wrapper;
+    protected $wrapper;
 
     
     /**
@@ -52,57 +52,9 @@ class LoginForm extends TPage
     public function __construct($param)
     {
         parent::__construct();
-        
-        $ini  = AdiantiApplicationConfig::get();
-        
-        $this->style = 'clear:both';
-        // creates the form
-        $this->form = new BootstrapFormBuilder('form_login');
-        $this->form->setFormTitle('LOG IN');
-        
-        // create the form fields
-        $login = new TEntry('login');
-        $password = new TPassword('password');
-        
-        // define the sizes
-        $login->setSize('70%', 40);
-        $password->setSize('70%', 40);
 
-        $login->style = 'height:35px; font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
-        $password->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+        $this->createLoginForm();
         
-        $login->placeholder = 'Login';
-        $password->placeholder = _t('Password');
-
-        $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
-        $locker = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-lock"></span></span>';
-        $unit = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="fa fa-university"></span></span>';
-        
-        $this->form->addFields([$user, $login]);
-        $this->form->addFields([$locker, $password]);
-        
-        if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1') {
-            $unit_id = new TCombo('unit_id');
-            $unit_id->setSize('70%');
-            $unit_id->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
-            $this->form->addFields([$unit, $unit_id]);
-            $login->setExitAction(new TAction([$this, 'onExitUser']));
-        }
-        
-        $btn_login = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
-        $btn_login->class = 'btn btn-primary';
-        $btn_login->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
-
-        $btn_reset = $this->form->addAction('Esqueci a senha', new TAction(array($this, 'onReset')), '');
-        $btn_reset->class = 'btn btn-primary';
-        $btn_reset->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
-
-        $this->wrapper = new TElement('div');
-        $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
-        $this->wrapper->id    = 'login-wrapper';
-        $this->wrapper->add($this->form);
-        
-        // add the form to the page
         parent::add($this->wrapper);
     }
 
@@ -235,5 +187,60 @@ class LoginForm extends TPage
         SystemAccessLog::registerLogout();
         TSession::freeSession();
         AdiantiCoreApplication::gotoPage('LoginForm', '');
+    }
+
+    protected function createLoginForm()
+    {
+        $this->style = 'clear:both';
+        // creates the form
+        $this->form = new BootstrapFormBuilder('form_login');
+        $this->form->setFormTitle('LOG IN');
+
+        // create the form fields
+        $login = new TEntry('login');
+        $password = new TPassword('password');
+
+        // define the sizes
+        $login->setSize('70%', 40);
+        $password->setSize('70%', 40);
+
+        $login->style = 'height:35px; font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+        $password->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+
+        $login->placeholder = 'Login';
+        $password->placeholder = _t('Password');
+
+        $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
+        $locker = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-lock"></span></span>';
+        $unit = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="fa fa-university"></span></span>';
+
+        $this->form->addFields([$user, $login]);
+        $this->form->addFields([$locker, $password]);
+
+        $ini = AdiantiApplicationConfig::get();
+        if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1') {
+            $unit_id = new TCombo('unit_id');
+            $unit_id->setSize('70%');
+            $unit_id->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+            $this->form->addFields([$unit, $unit_id]);
+            $login->setExitAction(new TAction([$this, 'onExitUser']));
+        }
+
+        $btn_login = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
+        $btn_login->class = 'btn btn-primary';
+        $btn_login->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+
+        $btn_reset = $this->form->addAction('Esqueci a senha', new TAction(array($this, 'onReset')), '');
+        $btn_reset->class = 'btn btn-primary';
+        $btn_reset->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+
+        $btn_register = $this->form->addAction('Registre-se', new TAction(array($this, 'onRegister')), '');
+        $btn_register->class = 'btn btn-primary';
+        $btn_register->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+
+        $this->wrapper = new TElement('div');
+        $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
+        $this->wrapper->id = 'login-wrapper';
+        $this->wrapper->add($this->form);
     }
 }

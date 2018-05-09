@@ -184,61 +184,59 @@ class SystemUserForm extends TPage
             // open a transaction with database 'permission'
             TTransaction::open('permission');
             
-            $object = new SystemUser;
-            $object->fromArray($param);
+            $user = new SystemUser;
+            $user->fromArray($param);
             
-            $senha = $object->password;
-            
-            if (empty($object->login)) {
+            if (empty($user->login)) {
                 throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')));
             }
             
-            if (empty($object->id)) {
-                if (SystemUser::newFromLogin($object->login) instanceof SystemUser) {
+            if (empty($user->id)) {
+                if (SystemUser::newFromLogin($user->login) instanceof SystemUser) {
                     throw new Exception(_t('An user with this login is already registered'));
                 }
                 
-                if (empty($object->password)) {
+                if (empty($user->password)) {
                     throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')));
                 }
                 
-                $object->active = 'Y';
+                $user->active = 'Y';
             }
             
-            if ($object->password) {
-                if ($object->password !== $param['repassword']) {
+            if ($user->password) {
+                if ($user->password !== $param['repassword']) {
                     throw new Exception(_t('The passwords do not match'));
                 }
                 
-                $object->password = password_hash($object->password, PASSWORD_BCRYPT);
+                $user->password = password_hash($user->password, PASSWORD_BCRYPT);
             } else {
-                unset($object->password);
+                unset($user->password);
             }
-            
-            $object->store();
-            $object->clearParts();
+
+            $user->store();
+            $user->clearParts();
             
             if (!empty($param['groups'])) {
                 foreach ($param['groups'] as $group_id) {
-                    $object->addSystemUserGroup(new SystemGroup($group_id));
+                    $user->addSystemUserGroup(new SystemGroup($group_id));
                 }
             }
             
             if (!empty($param['units'])) {
                 foreach ($param['units'] as $unit_id) {
-                    $object->addSystemUserUnit(new SystemUnit($unit_id));
+                    $user->addSystemUserUnit(new SystemUnit($unit_id));
                 }
             }
             
             $programs = TSession::getValue('program_list');
             if (!empty($programs)) {
                 foreach ($programs as $program) {
-                    $object->addSystemUserProgram(new SystemProgram($program['id']));
+                    $user->addSystemUserProgram(new SystemProgram($program['id']));
                 }
             }
             
             $data = new stdClass;
-            $data->id = $object->id;
+            $data->id = $user->id;
             TForm::sendData('form_System_user', $data);
             
             // close the transaction
@@ -246,6 +244,8 @@ class SystemUserForm extends TPage
             
             // shows the success message
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
+
+            return $user;
         } catch (Exception $e) { // in case of exception
             // shows the exception error message
             new TMessage('error', $e->getMessage());

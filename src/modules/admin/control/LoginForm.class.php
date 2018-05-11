@@ -234,10 +234,6 @@ class LoginForm extends TPage
         $btn_reset->class = 'btn btn-primary';
         $btn_reset->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
 
-        $btn_register = $this->form->addAction('Registre-se', new TAction(array($this, 'onRegister')), '');
-        $btn_register->class = 'btn btn-primary';
-        $btn_register->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
-
         $this->wrapper = new TElement('div');
         $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
         $this->wrapper->id = 'login-wrapper';

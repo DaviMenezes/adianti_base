@@ -228,11 +228,7 @@ class LoginForm extends TPage
 
         $btn_login = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
         $btn_login->class = 'btn btn-primary';
-        $btn_login->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
-
-        $btn_reset = $this->form->addAction('Esqueci a senha', new TAction(array($this, 'onReset')), '');
-        $btn_reset->class = 'btn btn-primary';
-        $btn_reset->style = 'height: 40px;width: 48%;margin: auto;font-size:17px;';
+        $btn_login->style = 'height: 40px;width: 100%;margin: auto;font-size:17px;';
 
         $this->wrapper = new TElement('div');
         $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';

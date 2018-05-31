@@ -35,6 +35,7 @@ class ApplicationTranslator
         $this->messages['en'][] = 'Open';
         $this->messages['en'][] = 'New';
         $this->messages['en'][] = 'Save';
+        $this->messages['en'][] = 'Register';
         $this->messages['en'][] = 'Find';
         $this->messages['en'][] = 'Edit';
         $this->messages['en'][] = 'Delete';
@@ -245,6 +246,7 @@ class ApplicationTranslator
         $this->messages['pt'][] = 'Abrir';
         $this->messages['pt'][] = 'Novo';
         $this->messages['pt'][] = 'Salvar';
+        $this->messages['pt'][] = 'Cadastrar';
         $this->messages['pt'][] = 'Buscar';
         $this->messages['pt'][] = 'Editar';
         $this->messages['pt'][] = 'Excluir';

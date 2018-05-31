@@ -27,7 +27,7 @@ class TDropDown extends TElement
     public function __construct($label, $icon = null, $use_caret = true, $title = '', $height = null)
     {
         parent::__construct('div');
-        $this->{'class'} = 'btn-group';
+        $this->{'class'} = 'btn-group dropup';
         $this->{'style'} = 'display:inline-block; -moz-user-select: none; -webkit-user-select:none; user-select:none;';
         
         $button = new TElement('button');

@@ -177,7 +177,7 @@ final class TRepository
             
             if ($result) {
                 // iterate the results as objects
-                while ($raw = $result-> fetchObject()) {
+                while ($raw = $result->fetchObject()) {
                     $object = new $this->class;
                     if (method_exists($object, 'onAfterLoadCollection')) {
                         $object->onAfterLoadCollection($raw);

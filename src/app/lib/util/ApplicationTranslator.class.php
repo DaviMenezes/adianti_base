@@ -232,7 +232,9 @@ class ApplicationTranslator
         $this->messages['en'][] = 'Invalid return';
         $this->messages['en'][] = 'Page';
         $this->messages['en'][] = 'Connection failed';
-        
+        $this->messages['en'][] = 'Create';
+        $this->messages['en'][] = 'Add';
+
         $this->messages['pt'][] = 'Arquivo não encontrado';
         $this->messages['pt'][] = 'Buscar';
         $this->messages['pt'][] = 'Cadastrar';
@@ -443,7 +445,9 @@ class ApplicationTranslator
         $this->messages['pt'][] = 'Retorno inválido';
         $this->messages['pt'][] = 'Página';
         $this->messages['pt'][] = 'Falhas na conexão';
-        
+        $this->messages['pt'][] = 'Criar';
+        $this->messages['pt'][] = 'Adicionar';
+
         $this->enWords = [];
         foreach ($this->messages['en'] as $key => $value) {
             $this->enWords[$value] = $key;

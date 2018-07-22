@@ -36,7 +36,6 @@ class TImage extends TElement
                 $fa_class = $pieces[0];
                 $fa_color = $pieces[1];
             }
-            $this->{'style'} = 'padding-right:4px';
             $this->{'class'} = 'fa fa-'.$fa_class;
             if (isset($fa_color)) {
                 $this->{'style'} .= "; color: #{$fa_color}";

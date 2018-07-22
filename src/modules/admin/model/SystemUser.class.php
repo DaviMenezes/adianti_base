@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
+use Dvi\Adianti\Model\DviModel;
 use Exception;
 
 /**
@@ -17,7 +18,7 @@ use Exception;
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class SystemUser extends TRecord
+class SystemUser extends DviModel
 {
     const TABLENAME = 'sys_user';
     const PRIMARYKEY= 'id';

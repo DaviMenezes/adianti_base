@@ -9,7 +9,7 @@ use Adianti\Base\Lib\Widget\Container\TVBox;
 /**
  * Create quick forms with a notebook wrapper
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -33,7 +33,7 @@ class TQuickNotebookForm extends TQuickForm
         $this->vertical_box = new TVBox;
         $this->vertical_box->{'style'} = 'width: 100%';
         $this->notebook = new TNotebook;
-        $this->hasAction = false;
+        $this->hasAction = FALSE;
         
         $this->fieldsByRow = 1;
     }
@@ -62,14 +62,16 @@ class TQuickNotebookForm extends TQuickForm
      * @param $title     Page title
      * @param $cotnainer Page container
      */
-    public function appendPage($title, $container = null)
+    public function appendPage($title, $container = NULL)
     {
-        if (empty($container)) {
+        if (empty($container))
+        {
             $container = new TTable;
             $container->{'width'} = '100%';
         }
         
-        if ($this->notebook->getPageCount() == 0) {
+        if ($this->notebook->getPageCount() == 0)
+        {
             $this->vertical_box->add($this->notebook);
         }
         

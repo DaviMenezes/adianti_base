@@ -38,7 +38,8 @@ class SystemPageBatchUpdate extends TPage
         }
         
         // creates one datagrid
-        $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid());
+        $this->datagrid = new BootstrapDatagridWrapper(new TQuickGrid);
+        $this->datagrid->width = '100%';
         
         // add the columns
         $this->datagrid->addQuickColumn(_t('Name'), 'name', 'left');
@@ -53,17 +54,20 @@ class SystemPageBatchUpdate extends TPage
         // creates the datagrid model
         $this->datagrid->createModel();
         
-        try {
-            $pages = SystemPageService::getPageCodes();
-            if ($pages) {
-                foreach ($pages['data'] as $page) {
-                    if ($page->type == 'control') {
-                        $page->controller = pathinfo($page->controller, PATHINFO_FILENAME);
-                        $this->datagrid->addItem((object) $page);
-                    }
+        try
+        {
+            $pages = SystemPageService::getPages();
+            if ($pages)
+            {
+                foreach ($pages['data'] as $page)
+                {
+                    $page->controller = pathinfo($page->controller, PATHINFO_FILENAME);
+                    $this->datagrid->addItem((object) $page);
                 }
             }
-        } catch (Exception $e) {
+        }
+        catch (Exception $e)
+        {
             new TMessage('error', $e->getMessage());
         }
         $panel = new TPanelGroup('Page Batch update');

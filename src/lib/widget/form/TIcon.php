@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 /**
  * Color Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -38,7 +38,7 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" ticon_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " ticon_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -48,7 +48,7 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" ticon_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " ticon_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -69,14 +69,16 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
         $span = new TElement('span');
         $span->{'class'} = 'input-group-addon';
         
-        if (!empty($this->exitAction)) {
-            $this->setChangeFunction($this->changeFunction . "; tform_fire_field_actions('{$this->formName}', '{$this->name}'); ");
+        if (!empty($this->exitAction))
+        {
+            $this->setChangeFunction( $this->changeFunction . "; tform_fire_field_actions('{$this->formName}', '{$this->name}'); " );
         }
         
         $i = new TElement('i');
         $span->add($i);
         
-        if (strstr($this->size, '%') !== false) {
+        if (strstr($this->size, '%') !== FALSE)
+        {
             $outer_size = $this->size;
             $this->size = '100%';
             $wrapper->{'style'} = "width: $outer_size";
@@ -91,10 +93,14 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
         $wrapper->add($span);
         $wrapper->show();
         
-        if (parent::getEditable()) {
-            if ($this->changeFunction) {
-                TScript::create(" ticon_start('{$this->id}',function(icon){ {$this->changeFunction} }); ");
-            } else {
+        if (parent::getEditable())
+        {
+            if($this->changeFunction)
+            {
+                TScript::create(" ticon_start('{$this->id}',function(icon){ {$this->changeFunction} }); ");   
+            }
+            else
+            {
                 TScript::create(" ticon_start('{$this->id}',false); ");
             }
         }

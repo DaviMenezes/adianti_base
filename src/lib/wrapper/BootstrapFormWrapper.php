@@ -6,12 +6,13 @@ use Adianti\Base\Lib\Widget\Form\AdiantiFormInterface;
 use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Wrapper\AdiantiFormBuilder;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 
 /**
  * Bootstrap form decorator for Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -53,7 +54,7 @@ class BootstrapFormWrapper implements AdiantiFormInterface
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array(array($this->decorated, $method), $parameters);
+        return call_user_func_array(array($this->decorated, $method),$parameters);
     }
     
     /**
@@ -158,7 +159,8 @@ class BootstrapFormWrapper implements AdiantiFormInterface
     public function show()
     {
         $fieldsByRow = $this->decorated->getFieldsByRow();
-        if ($this->element->{'class'} == 'form-horizontal') {
+        if ($this->element->{'class'} == 'form-horizontal')
+        {
             $classWidth  = array(1=>array(3,9), 2=>array(2,4), 3=>array(2,2));
             $labelClass  = $classWidth[$fieldsByRow][0];
             $fieldClass  = $classWidth[$fieldsByRow][1];
@@ -168,62 +170,90 @@ class BootstrapFormWrapper implements AdiantiFormInterface
         
         $input_rows = $this->decorated->getInputRows();
         
-        if ($input_rows) {
-            foreach ($input_rows as $input_row) {
-                $field_label = $input_row[0];
-                $fields      = $input_row[1];
-                $required    = $input_row[2];
+        if ($input_rows)
+        {
+            foreach ($input_rows as $input_row)
+            {
+                $field_label  = $input_row[0];
+                $fields       = $input_row[1];
+                $required     = $input_row[2];
+                $original_row = $input_row[3];
                 
                 // form vertical doesn't group elements, just change form group grid class
-                if (empty($this->currentGroup) or ($fieldCount % $fieldsByRow) == 0 or (strpos($this->element->{'class'}, 'form-vertical') !== false)) {
+                if ( empty($this->currentGroup) OR ( $fieldCount % $fieldsByRow ) == 0 OR (strpos($this->element->{'class'}, 'form-vertical') !== FALSE) )
+                {
                     // add the field to the container
                     $this->currentGroup = new TElement('div');
+                    
+                    foreach ($original_row->getProperties() as $property => $value)
+                    {
+                        $this->currentGroup->$property = $value;
+                    }
+                    
                     $this->currentGroup->{'class'}  = 'tformrow form-group';
-                    $this->currentGroup->{'class'} .= ((strpos($this->element->{'class'}, 'form-vertical') !== false) ? ' col-sm-'.(12/$fieldsByRow) : '');
+                    $this->currentGroup->{'class'} .= ( ( strpos($this->element->{'class'}, 'form-vertical') !== FALSE ) ? ' col-sm-'.(12/$fieldsByRow) : '');
                     $this->element->add($this->currentGroup);
                 }
                 
                 $group = $this->currentGroup;
                 
-                if ($field_label instanceof TLabel) {
+                if ($field_label instanceof TLabel)
+                {
                     $label = $field_label;
-                } else {
+                }
+                else
+                {
                     $label = new TElement('label');
-                    $label->add($field_label);
+                    $label->add( $field_label );
                 }
                 
-                if ($this->element->{'class'} == 'form-inline') {
+                if ($this->element->{'class'} == 'form-inline')
+                {
                     $label->{'style'} = 'padding-left: 3px; font-weight: bold';
-                } else {
+                }
+                else
+                {
                     $label->{'style'} = 'font-weight: bold; margin-bottom: 3px';
-                    if ($this->element->{'class'} == 'form-horizontal') {
+                    if ($this->element->{'class'} == 'form-horizontal')
+                    {
                         $label->{'class'} = 'col-sm-'.$labelClass.' control-label';
-                    } else {
+                    }
+                    else
+                    {
                         $label->{'class'} = ' control-label';
                     }
                 }
                 
-                if (count($fields)==1 and $fields[0] instanceof THidden) {
+                if (count($fields)==1 AND $fields[0] instanceof THidden)
+                {
                     $group->add('');
                     $group->{'style'} = 'display:none';
-                } else {
+                }
+                else
+                {
                     $group->add($label);
                 }
                 
-                if ($this->element->{'class'} !== 'form-inline') {
+                if ($this->element->{'class'} !== 'form-inline')
+                {
                     $col = new TElement('div');
-                    if ($this->element->{'class'} == 'form-horizontal') {
+                    if ($this->element->{'class'} == 'form-horizontal')
+                    {
                         $col->{'class'} = 'col-sm-'.$fieldClass . ' fb-field-container';
                     }
                     
                     $group->add($col);
                 }
                 
-                foreach ($fields as $field) {
-                    if ($this->element->{'class'} == 'form-inline') {
+                foreach ($fields as $field)
+                {
+                    if ($this->element->{'class'} == 'form-inline')
+                    {
                         $label->{'style'} .= ';float:left';
                         $group->add(BootstrapFormBuilder::wrapField($field, 'inline-block'));
-                    } else {
+                    }
+                    else
+                    {
                         $col->add(BootstrapFormBuilder::wrapField($field, 'inline-block'));
                     }
                 }
@@ -231,17 +261,20 @@ class BootstrapFormWrapper implements AdiantiFormInterface
             }
         }
         
-        if ($this->decorated->getActionButtons()) {
+        if ($this->decorated->getActionButtons())
+        {
             $group = new TElement('div');
             $group->{'class'} = 'form-group';
             $col = new TElement('div');
             
-            if ($this->element->{'class'} == 'form-horizontal') {
+            if ($this->element->{'class'} == 'form-horizontal')
+            {
                 $col->{'class'} = 'col-sm-offset-'.$labelClass.' col-sm-'.$fieldClass;
             }
             
             $i = 0;
-            foreach ($this->decorated->getActionButtons() as $action) {
+            foreach ($this->decorated->getActionButtons() as $action)
+            {
                 $col->add($action);
                 $i ++;
             }

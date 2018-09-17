@@ -1,12 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Service;
 
-use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 
 /**
  * File uploader listener
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Nataniel Rabaioli
  * @author     Pablo Dall'Oglio
@@ -15,40 +15,46 @@ use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
  */
 class AdiantiUploaderService
 {
-    public function show($param)
+    function show($param)
     {
         $ini  = AdiantiApplicationConfig::get();
-        $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
+        $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $block_extensions = ['php', 'php3', 'php4', 'phtml', 'pl', 'py', 'jsp', 'asp', 'htm', 'shtml', 'sh', 'cgi', 'htaccess'];
         
         $folder = 'tmp/';
         $response = array();
-        if (isset($_FILES['fileName'])) {
+        if (isset($_FILES['fileName']))
+        {
             $file = $_FILES['fileName'];
             
-            if ($file['error'] === 0 && $file['size'] > 0) {
+            if( $file['error'] === 0 && $file['size'] > 0 )
+            {
                 $path = $folder.$file['name'];
                 
                 // check blocked file extension, not using finfo because file.php.2 problem
-                foreach ($block_extensions as $block_extension) {
-                    if (strpos(strtolower($file['name']), ".{$block_extension}")) {
+                foreach ($block_extensions as $block_extension)
+                {
+                    if (strpos(strtolower($file['name']), ".{$block_extension}"))
+                    {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Extension not allowed";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Extension not allowed');
                         echo json_encode($response);
                         return;
                     }
                 }
                 
-                if (!empty($param['extensions'])) {
+                if (!empty($param['extensions']))
+                {
                     $name = $param['name'];
-                    $extensions = unserialize(base64_decode($param['extensions']));
+                    $extensions = unserialize(base64_decode( $param['extensions'] ));
                     $hash = md5("{$seed}{$name}".base64_encode(serialize($extensions)));
                     
-                    if ($hash !== $param['hash']) {
+                    if ($hash !== $param['hash'])
+                    {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Hash error";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Hash error');
                         echo json_encode($response);
                         return;
                     }
@@ -56,26 +62,33 @@ class AdiantiUploaderService
                     // check allowed file extension
                     $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                     
-                    if (!in_array(strtolower($ext), $extensions)) {
+                    if (!in_array(strtolower($ext),  $extensions))
+                    {
                         $response = array();
                         $response['type'] = 'error';
-                        $response['msg'] = "Extension not allowed";
+                        $response['msg']  = AdiantiCoreTranslator::translate('Extension not allowed');
                         echo json_encode($response);
                         return;
                     }
                 }
                 
-                if (is_writable($folder)) {
-                    if (move_uploaded_file($file['tmp_name'], $path)) {
+                if (is_writable($folder) )
+                {
+                    if( move_uploaded_file( $file['tmp_name'], $path ) )
+                    {
                         $response['type'] = 'success';
                         $response['fileName'] = $file['name'];
-                    } else {
+                    }
+                    else
+                    {
                         $response['type'] = 'error';
                         $response['msg'] = '';
                     }
-                } else {
+                }
+                else
+                {
                     $response['type'] = 'error';
-                    $response['msg'] = "Permission denied: {$path}";
+                    $response['msg']  = AdiantiCoreTranslator::translate('Permission denied') . ": {$path}";
                 }
                 echo json_encode($response);
             }

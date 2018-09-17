@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Database\TRecord;
  */
 class SystemDocumentUser extends TRecord
 {
-    const TABLENAME = 'sys_document_user';
+    const TABLENAME = 'system_document_user';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     

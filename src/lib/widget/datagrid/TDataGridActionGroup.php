@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Control\TAction;
 /**
  * Represents a group of Actions for datagrids
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -27,7 +27,7 @@ class TDataGridActionGroup
      * @param $label Action Group label
      * @param $icon  Action Group icon
      */
-    public function __construct($label, $icon = null)
+    public function __construct( $label, $icon = NULL)
     {
         $this->index = 0;
         $this->actions = array();
@@ -66,7 +66,7 @@ class TDataGridActionGroup
      */
     public function addSeparator()
     {
-        $this->separators[ $this->index ] = true;
+        $this->separators[ $this->index ] = TRUE;
         $this->index ++;
     }
     

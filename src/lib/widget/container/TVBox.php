@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Vertical Box
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -44,8 +44,10 @@ class TVBox extends TElement
     public function addColSet()
     {
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
                 $this->add($arg);
             }
         }
@@ -59,8 +61,10 @@ class TVBox extends TElement
     {
         $box = new self;
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
                 $box->add($arg);
             }
         }

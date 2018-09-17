@@ -1,10 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
+use Adianti\Core\AdiantiApplicationLoader;
+use Adianti\Core\AdiantiClassMap;
+
 /**
  * Framework class autoloader
  *
- * @version    5.0
+ * @version    5.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -12,7 +15,7 @@ namespace Adianti\Base\Lib\Core;
  */
 class AdiantiCoreLoader
 {
-    private static $classMap;
+    static private $classMap;
     
     /**
      * Load the class map
@@ -22,9 +25,12 @@ class AdiantiCoreLoader
         self::$classMap = AdiantiClassMap::getMap();
         $aliases = AdiantiClassMap::getAliases();
         
-        if ($aliases) {
-            foreach ($aliases as $old_class => $new_class) {
-                if (class_exists($new_class)) {
+        if ($aliases)
+        {
+            foreach ($aliases as $old_class => $new_class)
+            {
+                if (class_exists($new_class))
+                {
                     class_alias($new_class, $old_class);
                 }
             }
@@ -50,7 +56,8 @@ class AdiantiCoreLoader
         $className = ltrim($className, '\\');
         $fileName  = '';
         $namespace = '';
-        if (strrpos($className, '\\') !== false) {
+        if (strrpos($className, '\\') !== FALSE)
+        {
             $pieces    = explode('\\', $className);
             $className = array_pop($pieces);
             $namespace = implode('\\', $pieces);
@@ -58,14 +65,20 @@ class AdiantiCoreLoader
         $fileName = 'lib'.'\\'.strtolower($namespace).'\\'.$className.'.php';
         $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $fileName);
         
-        if (file_exists($fileName)) {
+        if (file_exists($fileName))
+        {
             //echo "PSR: $className <br>";
             require_once $fileName;
             self::globalScope($className);
-        } else {
-            if (!self::legacyAutoload($className)) {
-                if (!AdiantiApplicationLoader::autoload($className)) {
-                    if (file_exists('vendor/autoload_extras.php')) {
+        }
+        else
+        {
+            if (!self::legacyAutoload($className))
+            {
+                if (!AdiantiApplicationLoader::autoload($className))
+                {
+                    if (file_exists('vendor/autoload_extras.php'))
+                    {
                         require_once 'vendor/autoload_extras.php';
                     }
                 }
@@ -79,13 +92,15 @@ class AdiantiCoreLoader
      */
     public static function legacyAutoload($class)
     {
-        if (isset(self::$classMap[$class])) {
-            if (file_exists(self::$classMap[$class])) {
+        if (isset(self::$classMap[$class]))
+        {
+            if (file_exists(self::$classMap[$class]))
+            {
                 //echo 'Classmap '.self::$classMap[$class] . '<br>';
                 require_once self::$classMap[$class];
                 
                 self::globalScope($class);
-                return true;
+                return TRUE;
             }
         }
     }
@@ -95,8 +110,10 @@ class AdiantiCoreLoader
      */
     public static function globalScope($class)
     {
-        if (isset(self::$classMap[$class]) and self::$classMap[$class]) {
-            if (!class_exists($class, false)) {
+        if (isset(self::$classMap[$class]) AND self::$classMap[$class])
+        {
+            if (!class_exists($class, FALSE))
+            {
                 $ns = self::$classMap[$class];
                 $ns = str_replace('/', '\\', $ns);
                 $ns = str_replace('lib\\adianti', 'Adianti', $ns);
@@ -104,8 +121,9 @@ class AdiantiCoreLoader
                 $ns = str_replace('.php', '', $ns);
                 
                 //echo "&nbsp;&nbsp;&nbsp;&nbsp;Mapping: $ns, $class<br>";
-                if (class_exists($ns) or interface_exists($ns)) {
-                    class_alias($ns, $class, false);
+                if (class_exists($ns) OR interface_exists($ns))
+                {
+                    class_alias($ns, $class, FALSE);
                 }
             }
         }

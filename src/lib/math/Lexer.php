@@ -1,6 +1,6 @@
 <?php
 
-namespace Adianti\Base\Lib\Math;
+namespace Math;
 
 /**
  * Tokenize mathematical expression.
@@ -44,7 +44,7 @@ class Lexer
     
     /**
      * Tokenize matematical expression.
-     *
+     * 
      * @param type $code
      * @return array Collection of Token instances
      * @throws \InvalidArgumentException
@@ -70,19 +70,19 @@ class Lexer
         foreach ($tokenArray as $t) {
             if (array_key_exists($t, static::$operatorsMap)) {
                 $token = new Operator(
-                    $t,
-                    static::$operatorsMap[$t]['priority'],
-                    static::$operatorsMap[$t]['associativity']
+                        $t,
+                        static::$operatorsMap[$t]['priority'],
+                        static::$operatorsMap[$t]['associativity']
                 );
             } elseif (is_numeric($t)) {
                 $token = new Token((float) $t, Token::T_OPERAND);
-            } elseif ('(' === $t) {
+            }elseif('(' === $t) {
                 $token = new Token($t, Token::T_LEFT_BRACKET);
-            } elseif (')' === $t) {
+            }elseif(')' === $t) {
                 $token = new Token($t, Token::T_RIGHT_BRACKET);
-            } elseif ('' === $t) {
+            }elseif('' === $t) {
                 continue;
-            } else {
+            }else {
                 throw new \InvalidArgumentException(sprintf('Syntax error: unknown token "%s"', $t));
             }
 
@@ -91,4 +91,5 @@ class Lexer
 
         return $this->tokens;
     }
+
 }

@@ -2,11 +2,12 @@
 namespace Adianti\Base\Lib\Registry;
 
 use SessionHandlerInterface;
+use Adianti\Base\Lib\Registry\AdiantiRegistryInterface;
 
 /**
  * Session Data Handler
  *
- * @version    5.0
+ * @version    5.5
  * @package    registry
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -17,18 +18,21 @@ class TSession implements AdiantiRegistryInterface
     /**
      * Class Constructor
      */
-    public function __construct(SessionHandlerInterface $handler = null, $path = null)
+    public function __construct(SessionHandlerInterface $handler = NULL, $path = NULL)
     {
-        if ($path) {
+        if ($path)
+        {
             session_save_path($path);
         }
         
-        if ($handler) {
+        if ($handler)
+        {
             session_set_save_handler($handler, true);
         }
-        
+		
         // if there's no opened session
-        if (!session_id()) {
+        if (!session_id())
+        {
             session_start();
         }
     }
@@ -38,10 +42,11 @@ class TSession implements AdiantiRegistryInterface
      */
     public static function enabled()
     {
-        if (!session_id()) {
+        if (!session_id())
+        {
             return session_start();
         }
-        return true;
+        return TRUE;
     }
     
     /**
@@ -51,9 +56,12 @@ class TSession implements AdiantiRegistryInterface
      */
     public static function setValue($var, $value)
     {
-        if (defined('APPLICATION_NAME')) {
+        if (defined('APPLICATION_NAME'))
+        {
             $_SESSION[APPLICATION_NAME][$var] = $value;
-        } else {
+        }
+        else
+        {
             $_SESSION[$var] = $value;
         }
     }
@@ -64,12 +72,17 @@ class TSession implements AdiantiRegistryInterface
      */
     public static function getValue($var)
     {
-        if (defined('APPLICATION_NAME')) {
-            if (isset($_SESSION[APPLICATION_NAME][$var])) {
+        if (defined('APPLICATION_NAME'))
+        {
+            if (isset($_SESSION[APPLICATION_NAME][$var]))
+            {
                 return $_SESSION[APPLICATION_NAME][$var];
             }
-        } else {
-            if (isset($_SESSION[$var])) {
+        }
+        else
+        {
+            if (isset($_SESSION[$var]))
+            {
                 return $_SESSION[$var];
             }
         }
@@ -81,9 +94,12 @@ class TSession implements AdiantiRegistryInterface
      */
     public static function delValue($var)
     {
-        if (defined('APPLICATION_NAME')) {
+        if (defined('APPLICATION_NAME'))
+        {
             unset($_SESSION[APPLICATION_NAME][$var]);
-        } else {
+        }
+        else
+        {
             unset($_SESSION[$var]);
         }
     }
@@ -110,9 +126,12 @@ class TSession implements AdiantiRegistryInterface
      */
     public static function freeSession()
     {
-        if (defined('APPLICATION_NAME')) {
+        if (defined('APPLICATION_NAME'))
+        {
             $_SESSION[APPLICATION_NAME] = array();
-        } else {
+        }
+        else
+        {
             $_SESSION[] = array();
         }
     }

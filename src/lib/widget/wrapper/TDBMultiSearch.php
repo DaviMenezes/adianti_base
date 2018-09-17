@@ -13,7 +13,7 @@ use Exception;
 /**
  * Database Multisearch Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -54,7 +54,7 @@ class TDBMultiSearch extends TMultiSearch
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $key, $value, $orderColumn = null, TCriteria $criteria = null)
+    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name);
@@ -63,19 +63,23 @@ class TDBMultiSearch extends TMultiSearch
         $key   = trim($key);
         $value = trim($value);
         
-        if (empty($database)) {
+        if (empty($database))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
         }
         
-        if (empty($model)) {
+        if (empty($model))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'model', __CLASS__));
         }
         
-        if (empty($key)) {
+        if (empty($key))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'key', __CLASS__));
         }
         
-        if (empty($value)) {
+        if (empty($value))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'value', __CLASS__));
         }
         
@@ -85,12 +89,12 @@ class TDBMultiSearch extends TMultiSearch
         $this->model = $model;
         $this->key = $key;
         $this->column = $value;
-        $this->operator = 'like';
-        $this->orderColumn = isset($orderColumn) ? $orderColumn : null;
+        $this->operator = null;
+        $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
         $this->mask = '{'.$value.'}';
         $this->service = 'AdiantiMultiSearchService';
-        $this->seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
+        $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $this->tag->{'widget'} = 'tdbmultisearch';
         $this->idSearch = true;
     }
@@ -137,21 +141,41 @@ class TDBMultiSearch extends TMultiSearch
     public function setValue($values)
     {
         $ini = AdiantiApplicationConfig::get();
-
-        if (isset($ini['general']['compat']) and $ini['general']['compat'] ==  '4') {
-            if ($values) {
-                parent::setValue($values);
-                parent::addItems($values);
+        
+        if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+        {
+            if ($values)
+            {
+                parent::setValue( $values );
+                parent::addItems( $values );
             }
-        } else {
+        }
+        else
+        {
             $items = [];
-            if ($values) {
+            if ($values)
+            {
                 TTransaction::open($this->database);
-                foreach ($values as $value) {
-                    if ($value) {
+                foreach ($values as $value)
+                {
+                    if ($value)
+                    {
                         $model = $this->model;
-                        $object = $model::find($value);
-                        if ($object) {
+                        
+                        $pk = constant("{$model}::PRIMARYKEY");
+                        
+                        if ($pk === $this->key) // key is the primary key (default)
+                        {
+                            // use find because it uses cache
+                            $object = $model::find( $value );
+                        }
+                        else // key is an alternative key (uses where->first)
+                        {
+                            $object = $model::where( $this->key, '=', $value )->first();
+                        }
+                        
+                        if ($object)
+                        {
                             $description = $object->render($this->mask);
                             $items[$value] = $description;
                         }
@@ -159,8 +183,8 @@ class TDBMultiSearch extends TMultiSearch
                 }
                 TTransaction::close();
                 
-                parent::addItems($items);
-                parent::setValue($values);
+                parent::addItems( $items );
+                parent::setValue( $values );
             }
         }
     }
@@ -172,18 +196,35 @@ class TDBMultiSearch extends TMultiSearch
     {
         $ini = AdiantiApplicationConfig::get();
         
-        if (isset($_POST[$this->name])) {
+        if (isset($_POST[$this->name]))
+        {
             $values = $_POST[$this->name];
             
-            if (isset($ini['general']['compat']) and $ini['general']['compat'] ==  '4') {
+            if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+            {
                 $return = [];
-                if (is_array($values)) {
+                if (is_array($values))
+                {
                     TTransaction::open($this->database);
-                    foreach ($values as $value) {
-                        if ($value) {
+                    foreach ($values as $value)
+                    {
+                        if ($value)
+                        {
                             $model = $this->model;
-                            $object = $model::find($value);
-                            if ($object) {
+                            $pk = constant("{$model}::PRIMARYKEY");
+                            
+                            if ($pk === $this->key) // key is the primary key (default)
+                            {
+                                // use find because it uses cache
+                                $object = $model::find( $value );
+                            }
+                            else // key is an alternative key (uses where->first)
+                            {
+                                $object = $model::where( $this->key, '=', $value )->first();
+                            }
+                            
+                            if ($object)
+                            {
                                 $description = $object->render($this->mask);
                                 $return[$value] = $description;
                             }
@@ -191,10 +232,14 @@ class TDBMultiSearch extends TMultiSearch
                     }
                 }
                 return $return;
-            } else {
+            }
+            else
+            {
                 return $values;
             }
-        } else {
+        }
+        else
+        {
             return '';
         }
     }
@@ -204,15 +249,21 @@ class TDBMultiSearch extends TMultiSearch
      */
     public function show()
     {
-        $this->model = explode('\\', $this->model);
-        $this->model = implode('|', $this->model);
-
         // define the tag properties
-        $this->tag->{'id'}  = $this->id;    // tag name
-        if (strstr($this->size, '%') !== false) {
+        $this->tag->{'id'}    = $this->id; // tag id
+        
+        if (empty($this->tag->{'name'})) // may be defined by child classes
+        {
+            $this->tag->{'name'}  = $this->name.'[]';  // tag name
+        }
+        
+        if (strstr($this->size, '%') !== FALSE)
+        {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
             $size  = "{$this->size}";
-        } else {
+        }
+        else
+        {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
             $size  = "{$this->size}px";
         }
@@ -220,7 +271,8 @@ class TDBMultiSearch extends TMultiSearch
         $multiple = $this->maxSize == 1 ? 'false' : 'true';
         $orderColumn = isset($this->orderColumn) ? $this->orderColumn : $this->column;
         $criteria = '';
-        if ($this->criteria) {
+        if ($this->criteria)
+        {
             $criteria = str_replace(array('+', '/'), array('-', '_'), base64_encode(serialize($this->criteria)));
         }
         
@@ -232,32 +284,34 @@ class TDBMultiSearch extends TMultiSearch
         $method = $callback[1];
         $id_search_string = $this->idSearch ? '1' : '0';
         $search_word = AdiantiCoreTranslator::translate('Search');
-
-
-
         $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}&idsearch={$id_search_string}";
         $change_action = 'function() {}';
         
-        if (isset($this->changeAction)) {
-            if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+        if (isset($this->changeAction))
+        {
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
             }
             
-            $string_action = $this->changeAction->serialize(false);
+            $string_action = $this->changeAction->serialize(FALSE);
             $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
             $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
-        } elseif (isset($this->changeFunction)) {
+        }
+        else if (isset($this->changeFunction))
+        {
             $change_action = "function() { $this->changeFunction }";
-            $this->setProperty('changeaction', $this->changeFunction, false);
+            $this->setProperty('changeaction', $this->changeFunction, FALSE);
         }
         
         // shows the component
-        parent::renderItems(false);
+        parent::renderItems( false );
         $this->tag->show();
         
         TScript::create(" tdbmultisearch_start( '{$this->id}', '{$length}', '{$this->maxSize}', '{$search_word}', $multiple, '{$url}', '{$size}', '{$this->height}px', '{$hash}', {$change_action} ); ");
         
-        if (!$this->editable) {
+        if (!$this->editable)
+        {
             TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
         }
     }

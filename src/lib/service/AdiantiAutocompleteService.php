@@ -5,12 +5,14 @@ use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
+
+use StdClass;
 use Exception;
 
 /**
  * Autocomplete backend
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -21,43 +23,57 @@ class AdiantiAutocompleteService
     /**
      * Search by the given word inside a model
      */
-    public static function onSearch($param = null)
-    {
+	public static function onSearch($param = null)
+	{
         $seed = APPLICATION_NAME.'s8dkld83kf73kf094';
         $hash = md5("{$seed}{$param['database']}{$param['column']}{$param['model']}");
-        $operator = $param['operator'] ? $param['operator'] : 'like';
         
-        if ($hash == $param['hash']) {
-            try {
+        if ($hash == $param['hash'])
+        {
+            try
+            {
                 TTransaction::open($param['database']);
+                $info = TTransaction::getDatabaseInfo();
+                $default_op = $info['type'] == 'pgsql' ? 'ilike' : 'like';
+                $operator   = !empty($param['operator']) ? $param['operator'] : $default_op;
+                
                 $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
-                if ($param['criteria']) {
+                if ($param['criteria'])
+                {
                     $criteria = unserialize(base64_decode($param['criteria']));
                 }
     
                 $column = $param['column'];
-                if (stristr(strtolower($operator), 'like') !== false) {
+                if (stristr(strtolower($operator),'like') !== FALSE)
+                {
                     $filter = new TFilter($column, $operator, "NOESC:'%{$param['query']}%'");
-                } else {
+                }
+                else
+                {
                     $filter = new TFilter($column, $operator, "NOESC:'{$param['query']}'");
                 }
                 
                 $criteria->add($filter);
                 $criteria->setProperty('order', $param['orderColumn']);
                 $criteria->setProperty('limit', 1000);
-                $collection = $repository->load($criteria, false);
+                $collection = $repository->load($criteria, FALSE);
                 
                 $items = array();
                 
-                if ($collection) {
-                    foreach ($collection as $object) {
+                if ($collection)
+                {
+                    foreach ($collection as $object)
+                    {
                         $c = $object->$column;
-                        if ($c != null) {
-                            if (utf8_encode(utf8_decode($c)) !== $c) { // SE NÃO UTF8
+                        if ($c != null )
+                        {
+                            if (utf8_encode(utf8_decode($c)) !== $c ) // SE NÃO UTF8
+                            {
                                 $c = utf8_encode($c);
                             }
-                            if (!empty($c)) {
+                            if (!empty($c))
+                            {
                                 $items[] = $c;
                             }
                         }
@@ -70,18 +86,22 @@ class AdiantiAutocompleteService
                 
                 echo json_encode($ret);
                 TTransaction::close();
-            } catch (Exception $e) {
+            }
+            catch (Exception $e)
+            {
                 $ret = array();
                 $ret['query'] = 'Unit';
                 $ret['suggestions'] = array($e->getMessage());
                 
                 echo json_encode($ret);
             }
-        } else {
+        }
+        else
+        {
             $ret = array();
             $ret['query'] = 'Unit';
-            $ret['suggestions'] = null;
+            $ret['suggestions'] = NULL;
             echo json_encode($ret);
         }
-    }
+	}
 }

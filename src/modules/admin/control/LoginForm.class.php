@@ -41,52 +41,88 @@ use Exception;
  */
 class LoginForm extends TPage
 {
-    protected $form;
-    protected $wrapper;
-
+    protected $form; // form
     
     /**
      * Class constructor
      * Creates the page and the registration form
      */
-    public function __construct($param)
+    function __construct($param)
     {
         parent::__construct();
-
-        $this->createLoginForm();
         
-        parent::add($this->wrapper);
-    }
+        $ini  = AdiantiApplicationConfig::get();
+        
+        $this->style = 'clear:both';
+        // creates the form
+        $this->form = new BootstrapFormBuilder('form_login');
+        $this->form->setFormTitle( 'LOG IN' );
+        
+        // create the form fields
+        $login = new TEntry('login');
+        $password = new TPassword('password');
+        
+        // define the sizes
+        $login->setSize('70%', 40);
+        $password->setSize('70%', 40);
 
-    protected static function setUserSessions($data, $user, $programs)
-    {
-        TSession::setValue('logged', true);
-        TSession::setValue('login', $user->login);
-        TSession::setValue('userid', $user->id);
-        TSession::setValue('usergroupids', $user->getSystemUserGroupIds());
-        TSession::setValue('userunitids', $user->getSystemUserUnitIds());
-        TSession::setValue('username', $user->name);
-        TSession::setValue('usermail', $user->email);
-        TSession::setValue('frontpage', '');
-        TSession::setValue('programs', $programs);
-    }
+        $login->style = 'height:35px; font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+        $password->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+        
+        $login->placeholder = _t('User');
+        $password->placeholder = _t('Password');
+        
+        $login->autofocus = 'autofocus';
 
+        $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
+        $locker = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-lock"></span></span>';
+        $unit = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="fa fa-university"></span></span>';
+        
+        $this->form->addFields( [$user, $login] );
+        $this->form->addFields( [$locker, $password] );
+        
+        if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1')
+        {
+            $unit_id = new TCombo('unit_id');
+            $unit_id->setSize('70%');
+            $unit_id->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
+            $this->form->addFields( [$unit, $unit_id] );
+            $login->setExitAction(new TAction( [$this, 'onExitUser'] ) );
+        }
+        
+        $btn = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
+        $btn->class = 'btn btn-primary';
+        $btn->style = 'height: 40px;width: 90%;display: block;margin: auto;font-size:17px;';
+        
+        $wrapper = new TElement('div');
+        $wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
+        $wrapper->id    = 'login-wrapper';
+        $wrapper->add($this->form);
+        
+        // add the form to the page
+        parent::add($wrapper);
+    }
+    
     /**
      * user exit action
      * Populate unit combo
      */
     public static function onExitUser($param)
     {
-        try {
+        try
+        {
             TTransaction::open('permission');
             
-            $user = SystemUser::newFromLogin($param['login']);
-            if ($user instanceof SystemUser) {
+            $user = SystemUser::newFromLogin( $param['login'] );
+            if ($user instanceof SystemUser)
+            {
                 $units = $user->getSystemUserUnits();
                 $options = [];
                 
-                if ($units) {
-                    foreach ($units as $unit) {
+                if ($units)
+                {
+                    foreach ($units as $unit)
+                    {
                         $options[$unit->id] = $unit->name;
                     }
                 }
@@ -107,76 +143,126 @@ class LoginForm extends TPage
     {
         $ini  = AdiantiApplicationConfig::get();
         
-        try {
+        try
+        {
             TTransaction::open('permission');
             $data = (object) $param;
             
-            if (empty($data->login)) {
-                throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')));
+            if (empty($data->login))
+            {
+                throw new Exception( AdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')) );
             }
             
-            if (empty($data->password)) {
-                throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')));
+            if (empty($data->password))
+            {
+                throw new Exception( AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')) );
             }
             
-            $user = SystemUser::authenticate($data->login, $data->password);
-            if ($user) {
-                TSession::regenerate();
-                $programs = $user->getPrograms();
-                $programs['LoginForm'] = true;
-
-                self::setUserSessions($data, $user, $programs);
-
-                if (!empty($user->unit)) {
-                    TSession::setValue('userunitid', $user->unit->id);
+            if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1' and empty($data->unit_id))
+            {    
+                throw new Exception( AdiantiCoreTranslator::translate('The field ^1 is required', _t('Unit')) );
+            }
+            
+            $user = SystemUser::validate( $data->login );
+            
+            if ($user)
+            {
+                if (!empty($ini['permission']['auth_service']) and class_exists($ini['permission']['auth_service']))
+                {
+                    $service = $ini['permission']['auth_service'];
+                    $service::authenticate( $data->login, $data->password );
+                }
+                else
+                {
+                    SystemUser::authenticate( $data->login, $data->password );
                 }
                 
-                if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1' and !empty($data->unit_id)) {
-                    TSession::setValue('userunitid', $data->unit_id);
+                TSession::regenerate();
+                $programs = $user->getPrograms();
+                $programs['LoginForm'] = TRUE;
+                
+                TSession::setValue('logged', TRUE);
+                TSession::setValue('login', $data->login);
+                TSession::setValue('userid', $user->id);
+                TSession::setValue('usergroupids', $user->getSystemUserGroupIds());
+                TSession::setValue('userunitids', $user->getSystemUserUnitIds());
+                TSession::setValue('username', $user->name);
+                TSession::setValue('usermail', $user->email);
+                TSession::setValue('frontpage', '');
+                TSession::setValue('programs',$programs);
+                
+                if (!empty($user->unit))
+                {
+                    TSession::setValue('userunitid',$user->unit->id);
+                }
+                
+                if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1' and !empty($data->unit_id))
+                {
+                    TSession::setValue('userunitid', $data->unit_id );
                 }
                 
                 $frontpage = $user->frontpage;
                 SystemAccessLog::registerLogin();
-                if ($frontpage instanceof SystemProgram and $frontpage->controller) {
+                if ($frontpage instanceof SystemProgram and $frontpage->controller)
+                {
                     AdiantiCoreApplication::gotoPage($frontpage->controller); // reload
                     TSession::setValue('frontpage', $frontpage->controller);
-                } else {
+                }
+                else
+                {
                     AdiantiCoreApplication::gotoPage('EmptyPage'); // reload
                     TSession::setValue('frontpage', 'EmptyPage');
                 }
             }
             TTransaction::close();
-        } catch (Exception $e) {
-            new TMessage('error', $e->getMessage());
-            TSession::setValue('logged', false);
+        }
+        catch (Exception $e)
+        {
+            new TMessage('error',$e->getMessage());
+            TSession::setValue('logged', FALSE);
             TTransaction::rollback();
         }
     }
     
-    /**
+    /** 
      * Reload permissions
      */
     public static function reloadPermissions()
     {
-        try {
+        try
+        {
             TTransaction::open('permission');
-            $user = SystemUser::newFromLogin(TSession::getValue('login'));
-            if ($user) {
+            $user = SystemUser::newFromLogin( TSession::getValue('login') );
+            
+            if ($user)
+            {
                 $programs = $user->getPrograms();
-                $programs['LoginForm'] = true;
+                $programs['LoginForm'] = TRUE;
                 TSession::setValue('programs', $programs);
                 
                 $frontpage = $user->frontpage;
-                if ($frontpage instanceof SystemProgram and $frontpage->controller) {
+                if ($frontpage instanceof SystemProgram AND $frontpage->controller)
+                {
                     TApplication::gotoPage($frontpage->controller); // reload
-                } else {
+                }
+                else
+                {
                     TApplication::gotoPage('EmptyPage'); // reload
                 }
             }
             TTransaction::close();
-        } catch (Exception $e) {
+        }
+        catch (Exception $e)
+        {
             new TMessage('error', $e->getMessage());
         }
+    }
+    
+    /**
+     *
+     */
+    public function onLoad($param)
+    {
     }
     
     /**
@@ -187,52 +273,5 @@ class LoginForm extends TPage
         SystemAccessLog::registerLogout();
         TSession::freeSession();
         AdiantiCoreApplication::gotoPage('LoginForm', '');
-    }
-
-    protected function createLoginForm()
-    {
-        $this->style = 'clear:both';
-        // creates the form
-        $this->form = new BootstrapFormBuilder('form_login');
-        $this->form->setFormTitle('LOG IN');
-
-        // create the form fields
-        $login = new TEntry('login');
-        $password = new TPassword('password');
-
-        // define the sizes
-        $login->setSize('70%', 40);
-        $password->setSize('70%', 40);
-
-        $login->style = 'height:35px; font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
-        $password->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
-
-        $login->placeholder = 'Login';
-        $password->placeholder = _t('Password');
-
-        $user = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-user"></span></span>';
-        $locker = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="glyphicon glyphicon-lock"></span></span>';
-        $unit = '<span style="float:left;margin-left:44px;height:35px;" class="login-avatar"><span class="fa fa-university"></span></span>';
-
-        $this->form->addFields([$user, $login]);
-        $this->form->addFields([$locker, $password]);
-
-        $ini = AdiantiApplicationConfig::get();
-        if (!empty($ini['general']['multiunit']) and $ini['general']['multiunit'] == '1') {
-            $unit_id = new TCombo('unit_id');
-            $unit_id->setSize('70%');
-            $unit_id->style = 'height:35px;font-size:14px;float:left;border-bottom-left-radius: 0;border-top-left-radius: 0;';
-            $this->form->addFields([$unit, $unit_id]);
-            $login->setExitAction(new TAction([$this, 'onExitUser']));
-        }
-
-        $btn_login = $this->form->addAction(_t('Log in'), new TAction(array($this, 'onLogin')), '');
-        $btn_login->class = 'btn btn-primary';
-        $btn_login->style = 'height: 40px;width: 100%;margin: auto;font-size:17px;';
-
-        $this->wrapper = new TElement('div');
-        $this->wrapper->style = 'margin:auto; margin-top:100px;max-width:460px;';
-        $this->wrapper->id = 'login-wrapper';
-        $this->wrapper->add($this->form);
     }
 }

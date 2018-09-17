@@ -2,9 +2,9 @@
 namespace Adianti\Base\App\Lib\Menu;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Menu\TMenu;
-use Adianti\Base\Lib\Widget\Menu\TMenuBar;
+use Adianti\Base\Widget\Menu\TMenuBar;
 use Adianti\Base\Modules\Admin\Model\SystemPermission;
+use Adianti\Base\Widget\Menu\TMenu;
 use SimpleXMLElement;
 
 class AdiantiMenuBuilder

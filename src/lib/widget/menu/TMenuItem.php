@@ -1,14 +1,14 @@
 <?php
-namespace Adianti\Base\Lib\Widget\Menu;
+namespace Adianti\Base\Widget\Menu;
 
+use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Util\TImage;
-use function Adianti\Base\App\Lib\Util\_t;
 
 /**
  * MenuItem Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage menu
  * @author     Pablo Dall'Oglio
@@ -31,7 +31,7 @@ class TMenuItem extends TElement
      * @param $action The menu action
      * @param $image  The menu image
      */
-    public function __construct($label, $action, $image = null, $level = 0)
+    public function __construct($label, $action, $image = NULL, $level = 0)
     {
         parent::__construct('li');
         $this->label     = $label;
@@ -40,7 +40,8 @@ class TMenuItem extends TElement
         $this->link      = new TElement('a');
         $this->linkClass = 'dropdown-toggle';
         
-        if ($image) {
+        if ($image)
+        {
             $this->image = $image;
         }
     }
@@ -68,42 +69,66 @@ class TMenuItem extends TElement
      */
     public function show()
     {
-        if ($this->action) {
+        if ($this->action)
+        {
             //$url['class'] = $this->action;
             //$url_str = http_build_query($url);
             $action = str_replace('#', '&', $this->action);
-            if ((substr($action, 0, 7) == 'http://') or (substr($action, 0, 8) == 'https://')) {
-                $this->link-> href = $action;
-                $this->link-> target = '_blank';
-            } else {
-                $this->link-> href = "index.php?class={$action}";
-                $this->link-> generator = 'adianti';
+            if ((substr($action,0,7) == 'http://') or (substr($action,0,8) == 'https://'))
+            {
+                $this->link->{'href'} = $action;
+                $this->link->{'target'} = '_blank';
             }
-        } else {
-            $this->link-> href = '#';
+            else
+            {
+                if ($router = AdiantiCoreApplication::getRouter())
+                {
+                    $this->link->{'href'} = $router("class={$action}", true);
+                }
+                else
+                {
+                    $this->link->{'href'} = "index.php?class={$action}";
+                }
+                $this->link->{'generator'} = 'adianti';
+            }
+        }
+        else
+        {
+            $this->link->{'href'} = '#';
         }
         
-        if (isset($this->image)) {
+        if (isset($this->image))
+        {
             $image = new TImage($this->image);
             $this->link->add($image);
         }
         
         $label = new TElement('span');
-        if (substr($this->label, 0, 3) == '_t{') {
-            $label->add(_t(substr($this->label, 3, -1)));
-        } else {
+        if (substr($this->label, 0, 3) == '_t{')
+        {
+            $label->add(_t(substr($this->label,3,-1)));
+        }
+        else
+        {
             $label->add($this->label);
         }
-        $this->link->add($label);
-        $this->add($this->link);
         
-        if ($this->menu instanceof TMenu) {
+        if (!empty($this->label))
+        {
+            $this->link->add($label);
+            $this->add($this->link);
+        }
+        
+        if ($this->menu instanceof TMenu)
+        {
             $this->link->{'class'} = $this->linkClass;
-            if (strstr($this->linkClass, 'dropdown')) {
+            if (strstr($this->linkClass, 'dropdown'))
+            {
                 $this->link->{'data-toggle'} = "dropdown";
             }
             
-            if ($this->level == 0) {
+            if ($this->level == 0)
+            {
                 $caret = new TElement('b');
                 $caret->{'class'} = 'caret';
                 $caret->add('');

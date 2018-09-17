@@ -8,7 +8,7 @@ use Exception;
 /**
  * TableRow: Represents a row inside a table
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -17,27 +17,33 @@ use Exception;
  */
 class TTableRow extends TElement
 {
+    private $section;
+    
     /**
      * Class Constructor
      */
-    public function __construct()
+    public function __construct($section = 'tbody')
     {
         parent::__construct('tr');
+        $this->section = $section;
     }
-
+    
     /**
      * Add a new cell (TTableCell) to the Table Row
      * @param  $value Cell Content
      * @return TTableCell
-     * @throws Exception
      */
     public function addCell($value)
     {
-        if (is_null($value)) {
+        if (is_null($value))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 does not accept null values', __METHOD__));
-        } else {
+        }
+        else
+        {
             // creates a new Table Cell
-            $cell = new TTableCell($value);
+            $cell = new TTableCell($value, $this->section == 'thead' ? 'th' : 'td');
+            
             parent::add($cell);
             // returns the cell object
             return $cell;
@@ -53,8 +59,10 @@ class TTableRow extends TElement
         $wrapper = new THBox;
         
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
                 $wrapper->add($arg);
             }
         }

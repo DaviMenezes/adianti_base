@@ -9,7 +9,7 @@ use Exception;
 /**
  * Standard Form Trait
  *
- * @version    5.0
+ * @version    5.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -25,12 +25,15 @@ trait AdiantiStandardFormTrait
      */
     public function onSave()
     {
-        try {
-            if (empty($this->database)) {
+        try
+        {
+            if (empty($this->database))
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('^1 was not defined. You must call ^2 in ^3', AdiantiCoreTranslator::translate('Database'), 'setDatabase()', AdiantiCoreTranslator::translate('Constructor')));
             }
             
-            if (empty($this->activeRecord)) {
+            if (empty($this->activeRecord))
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('^1 was not defined. You must call ^2 in ^3', 'Active Record', 'setActiveRecord()', AdiantiCoreTranslator::translate('Constructor')));
             }
             
@@ -56,7 +59,9 @@ trait AdiantiStandardFormTrait
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
             
             return $object;
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // get the form data
             $object = $this->form->getData();
             
@@ -76,7 +81,7 @@ trait AdiantiStandardFormTrait
      */
     public function onClear($param)
     {
-        $this->form->clear();
+        $this->form->clear( true );
     }
     
     /**
@@ -86,16 +91,20 @@ trait AdiantiStandardFormTrait
      */
     public function onEdit($param)
     {
-        try {
-            if (empty($this->database)) {
+        try
+        {
+            if (empty($this->database))
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('^1 was not defined. You must call ^2 in ^3', AdiantiCoreTranslator::translate('Database'), 'setDatabase()', AdiantiCoreTranslator::translate('Constructor')));
             }
             
-            if (empty($this->activeRecord)) {
+            if (empty($this->activeRecord))
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('^1 was not defined. You must call ^2 in ^3', 'Active Record', 'setActiveRecord()', AdiantiCoreTranslator::translate('Constructor')));
             }
             
-            if (isset($param['key'])) {
+            if (isset($param['key']))
+            {
                 // get the parameter $key
                 $key=$param['key'];
                 
@@ -114,10 +123,14 @@ trait AdiantiStandardFormTrait
                 TTransaction::close();
                 
                 return $object;
-            } else {
+            }
+            else
+            {
                 $this->form->clear();
             }
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // shows the exception error message
             new TMessage('error', $e->getMessage());
             // undo all pending operations

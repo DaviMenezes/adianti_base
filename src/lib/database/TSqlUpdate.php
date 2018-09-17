@@ -1,10 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Database\TSqlStatement;
+use Adianti\Base\Lib\Database\TTransaction;
+
 /**
  * Provides an Interface to create UPDATE statements
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -23,7 +26,8 @@ final class TSqlUpdate extends TSqlStatement
      */
     public function setRowData($column, $value)
     {
-        if (is_scalar($value) or is_null($value)) {
+        if (is_scalar($value) OR is_null($value))
+        {
             $this->columnValues[$column] = $value;
         }
     }
@@ -35,34 +39,59 @@ final class TSqlUpdate extends TSqlStatement
      * @param $prepared If the value will be prepared
      * @return       Transformed Value
      */
-    private function transform($value, $prepared = false)
+    private function transform($value, $prepared = FALSE)
     {
         // store just scalar values (string, integer, ...)
-        if (is_scalar($value)) {
+        if (is_scalar($value))
+        {
+            if (substr(strtoupper($value),0,7) == '(SELECT')
+            {
+                $result = $value;
+            }
+            // if the value must not be escaped (NOESC in front)
+            else if (substr($value,0,6) == 'NOESC:')
+            {
+                $result = substr($value,6);
+            }
             // if is a string
-            if (is_string($value) and (!empty($value))) {
-                if ($prepared) {
+            else if (is_string($value) and (!empty($value)))
+            {
+                if ($prepared)
+                {
                     $preparedVar = ':par_'.self::getRandomParameter();
                     $this->preparedVars[ $preparedVar ] = $value;
                     $result = $preparedVar;
-                } else {
+                }
+                else
+                {
                     $conn = TTransaction::get();
                     $result = $conn->quote($value);
                 }
-            } elseif (is_bool($value)) { // if is a boolean
+            }
+            else if (is_bool($value)) // if is a boolean
+            {
                 $result = $value ? 'TRUE': 'FALSE';
-            } elseif ($value !== '') { // if its another data type
-                if ($prepared) {
+            }
+            else if ($value !== '') // if its another data type
+            {
+                if ($prepared)
+                {
                     $preparedVar = ':par_'.self::getRandomParameter();
                     $this->preparedVars[ $preparedVar ] = $value;
                     $result = $preparedVar;
-                } else {
+                }
+                else
+                {
                     $result = $value;
                 }
-            } else {
+            }
+            else
+            {
                 $result = "NULL";
             }
-        } elseif (is_null($value)) {
+        }
+        else if (is_null($value))
+        {
             $result = "NULL";
         }
         
@@ -74,10 +103,13 @@ final class TSqlUpdate extends TSqlStatement
      */
     public function getPreparedVars()
     {
-        if ($this->criteria) {
+        if ($this->criteria)
+        {
             // "column values" prepared vars + "where" prepared vars
             return array_merge($this->preparedVars, $this->criteria->getPreparedVars());
-        } else {
+        }
+        else
+        {
             return $this->preparedVars;
         }
     }
@@ -86,15 +118,17 @@ final class TSqlUpdate extends TSqlStatement
      * Returns the UPDATE plain statement
      * @param $prepared Return a prepared Statement
      */
-    public function getInstruction($prepared = false)
+    public function getInstruction( $prepared = FALSE)
     {
         $this->preparedVars = array();
         // creates the UPDATE statement
         $this->sql = "UPDATE {$this->entity}";
         
         // concatenate the column pairs COLUMN=VALUE
-        if ($this->columnValues) {
-            foreach ($this->columnValues as $column => $value) {
+        if ($this->columnValues)
+        {
+            foreach ($this->columnValues as $column => $value)
+            {
                 $value = $this->transform($value, $prepared);
                 $set[] = "{$column} = {$value}";
             }
@@ -102,8 +136,9 @@ final class TSqlUpdate extends TSqlStatement
         $this->sql .= ' SET ' . implode(', ', $set);
         
         // concatenates the criteria (WHERE)
-        if ($this->criteria) {
-            $this->sql .= ' WHERE ' . $this->criteria->dump($prepared);
+        if ($this->criteria)
+        {
+            $this->sql .= ' WHERE ' . $this->criteria->dump( $prepared );
         }
         
         // returns the SQL statement

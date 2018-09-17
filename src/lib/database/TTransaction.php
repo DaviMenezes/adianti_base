@@ -1,17 +1,16 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TConnection;
+use Adianti\Base\Lib\Log\TLogger;
 use Adianti\Base\Lib\Log\AdiantiLoggerInterface;
-use App\Config\MyRoutes;
-use Closure;
-use Exception;
 use PDO;
+use Closure;
 
 /**
  * Manage Database transactions
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -29,47 +28,58 @@ final class TTransaction
      * Class Constructor
      * There won't be instances of this class
      */
-    private function __construct()
-    {
-    }
+    private function __construct(){}
     
     /**
      * Open a connection and Initiates a transaction
      * @param $database Name of the database (an INI file).
      * @param $dbinfo Optional array with database information
      */
-    public static function open($database, $dbinfo = null)
+    public static function open($database, $dbinfo = NULL)
     {
-        if (!isset(self::$counter)) {
+        if (!isset(self::$counter))
+        {
             self::$counter = 0;
-        } else {
+        }
+        else
+        {
             self::$counter ++;
         }
         
-        if ($dbinfo) {
+        if ($dbinfo)
+        {
             self::$conn[self::$counter] = TConnection::openArray($dbinfo);
             self::$dbinfo[self::$counter] = $dbinfo;
-        } else {
+        }
+        else
+        {
             self::$conn[self::$counter] = TConnection::open($database);
             self::$dbinfo[self::$counter] = TConnection::getDatabaseInfo($database);
         }
         self::$database[self::$counter] = $database;
         
         $driver = self::$conn[self::$counter]->getAttribute(PDO::ATTR_DRIVER_NAME);
-        if ($driver !== 'dblib') {
+        if ($driver !== 'dblib')
+        {
             // begins transaction
             self::$conn[self::$counter]->beginTransaction();
         }
         
-        if (!empty(self::$dbinfo[self::$counter]['slog'])) {
-            $logClass = MyRoutes::getPath(self::$dbinfo[self::$counter]['slog']);
-            if (class_exists($logClass)) {
+        if (!empty(self::$dbinfo[self::$counter]['slog']))
+        {
+            $logClass = self::$dbinfo[self::$counter]['slog'];
+            if (class_exists($logClass))
+            {
                 self::setLogger(new $logClass);
             }
-        } else {
-            // turn OFF the log
-            self::$logger[self::$counter] = null;
         }
+        else
+        {
+            // turn OFF the log
+            self::$logger[self::$counter] = NULL;
+        }
+        
+        return self::$conn[self::$counter];
     }
     
     /**
@@ -78,7 +88,8 @@ final class TTransaction
      */
     public static function get()
     {
-        if (isset(self::$conn[self::$counter])) {
+        if (isset(self::$conn[self::$counter]))
+        {
             return self::$conn[self::$counter];
         }
     }
@@ -88,13 +99,15 @@ final class TTransaction
      */
     public static function rollback()
     {
-        if (self::$conn[self::$counter]) {
+        if (self::$conn[self::$counter])
+        {
             $driver = self::$conn[self::$counter]->getAttribute(PDO::ATTR_DRIVER_NAME);
-            if ($driver !== 'dblib') {
+            if ($driver !== 'dblib')
+            {
                 // rollback
                 self::$conn[self::$counter]->rollBack();
             }
-            self::$conn[self::$counter] = null;
+            self::$conn[self::$counter] = NULL;
             self::$counter --;
         }
     }
@@ -104,16 +117,18 @@ final class TTransaction
      */
     public static function close()
     {
-        if (self::$conn[self::$counter]) {
+        if (self::$conn[self::$counter])
+        {
             $driver = self::$conn[self::$counter]->getAttribute(PDO::ATTR_DRIVER_NAME);
             $info = self::getDatabaseInfo();
-            $fake = isset($info['fake']) ? $info['fake'] : false;
+            $fake = isset($info['fake']) ? $info['fake'] : FALSE;
             
-            if ($driver !== 'dblib' and !$fake) {
+            if ($driver !== 'dblib' AND !$fake)
+            {
                 // apply the pending operations
                 self::$conn[self::$counter]->commit();
             }
-            self::$conn[self::$counter] = null;
+            self::$conn[self::$counter] = NULL;
             self::$counter --;
         }
     }
@@ -124,9 +139,12 @@ final class TTransaction
      */
     public static function setLoggerFunction(Closure $logger)
     {
-        if (isset(self::$conn[self::$counter])) {
+        if (isset(self::$conn[self::$counter]))
+        {
             self::$logger[self::$counter] = $logger;
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__);
         }
@@ -138,9 +156,12 @@ final class TTransaction
      */
     public static function setLogger(AdiantiLoggerInterface $logger)
     {
-        if (isset(self::$conn[self::$counter])) {
+        if (isset(self::$conn[self::$counter]))
+        {
             self::$logger[self::$counter] = $logger;
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__);
         }
@@ -153,16 +174,20 @@ final class TTransaction
     public static function log($message)
     {
         // check if exist a logger
-        if (self::$logger[self::$counter]) {
+        if (self::$logger[self::$counter])
+        {
             $log = self::$logger[self::$counter];
             
             // avoid recursive log
-            self::$logger[self::$counter] = null;
+            self::$logger[self::$counter] = NULL;
             
-            if ($log instanceof AdiantiLoggerInterface) {
+            if ($log instanceof AdiantiLoggerInterface)
+            {
                 // call log method
                 $log->write($message);
-            } elseif ($log instanceof Closure) {
+            }
+            else if ($log instanceof Closure)
+            {
                 $log($message);
             }
             

@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Database\TRecord;
  */
 class SystemUnit extends TRecord
 {
-    const TABLENAME = 'sys_unit';
+    const TABLENAME = 'system_unit';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
@@ -23,7 +23,7 @@ class SystemUnit extends TRecord
     /**
      * Constructor method
      */
-    public function __construct($id = null, $callObjectLoad = true)
+    public function __construct($id = NULL, $callObjectLoad = TRUE)
     {
         parent::__construct($id, $callObjectLoad);
         parent::addAttribute('name');

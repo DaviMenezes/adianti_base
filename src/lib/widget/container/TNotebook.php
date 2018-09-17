@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Notebook
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -26,7 +26,7 @@ class TNotebook extends TElement
     private $tabsVisibility;
     private $tabsSensibility;
     private $container;
-    private static $noteCounter;
+    static private $noteCounter;
     
     /**
      * Class Constructor
@@ -40,11 +40,12 @@ class TNotebook extends TElement
         $this->counter = ++ self::$noteCounter;
         
         // define some default values
+        $this->pages = [];
         $this->width = $width;
         $this->height = $height;
         $this->currentPage = 0;
-        $this->tabsVisibility = true;
-        $this->tabsSensibility = true;
+        $this->tabsVisibility = TRUE;
+        $this->tabsSensibility = TRUE;
     }
     
     /**
@@ -149,7 +150,8 @@ class TNotebook extends TElement
         $pages = $this->getPageCount();
         
         $this->container = new TElement('div');
-        if ($this->width) {
+        if ($this->width)
+        {
             $this->container->{'style'} = ";min-width:{$this->width}px";
         }
         $this->container->{'class'} = 'tnotebook';
@@ -159,7 +161,8 @@ class TNotebook extends TElement
         $this->container->add($ul);
         
         $space = new TElement('div');
-        if ($this->width) {
+        if ($this->width)
+        {
             $space->{'style'} = "min-width:{$this->width}px";
         }
         $space->{'class'} = 'spacer';
@@ -169,14 +172,17 @@ class TNotebook extends TElement
         $id = $this->id;
         
         
-        if ($this->pages) {
+        if ($this->pages)
+        {
             // iterate the tabs, showing them
-            foreach ($this->pages as $title => $content) {
+            foreach ($this->pages as $title => $content)
+            {
                 // verify if the current page is to be shown
                 $classe = ($i == $this->currentPage) ? 'active' : '';
                 
                 // add a cell for this tab
-                if ($this->tabsVisibility) {
+                if ($this->tabsVisibility)
+                {
                     $item = new TElement('li');
                     $link = new TElement('a');
                     $link->{'aria-controls'} = "home";
@@ -184,7 +190,8 @@ class TNotebook extends TElement
                     $link->{'data-toggle'} = "tab";
                     $link->{'href'} = "#"."panel_{$id}_{$i}";
                     
-                    if (!$this->tabsSensibility) {
+                    if (!$this->tabsSensibility)
+                    {
                         $link->{'style'} = "pointer-events:none";
                     }
                     
@@ -194,9 +201,10 @@ class TNotebook extends TElement
                     $item->{'role'} = "presentation";
                     $item->{'id'} = "tab_{$id}_{$i}";
                     
-                    if ($this->tabAction) {
+                    if ($this->tabAction)
+                    {
                         $this->tabAction->setParameter('current_page', $i+1);
-                        $string_action = $this->tabAction->serialize(false);
+                        $string_action = $this->tabAction->serialize(FALSE);
                         $link-> onclick = "__adianti_ajax_exec('$string_action')";
                     }
                     
@@ -213,18 +221,22 @@ class TNotebook extends TElement
         $width = $this->width;
         $height= $this->height;// -30;
         
-        if ($width) {
+        if ($width)
+        {
             $quadro->{'style'} .= ";min-width:{$width}px";
         }
         
-        if ($height) {
+        if($height)
+        {
             $quadro->{'style'} .= ";min-height:{$height}px";
         }
         
         $i = 0;
         // iterate the tabs again, now to show the content
-        if ($this->pages) {
-            foreach ($this->pages as $title => $content) {
+        if ($this->pages)
+        {
+            foreach ($this->pages as $title => $content)
+            {
                 $panelClass = ($i == $this->currentPage) ? 'active': '';
                 
                 // creates a <div> for the contents
@@ -235,7 +247,8 @@ class TNotebook extends TElement
                 $quadro->add($panel);
                 
                 // check if the content is an object
-                if (is_object($content)) {
+                if (is_object($content))
+                {
                     $panel->add($content);
                 }
                 
@@ -252,7 +265,8 @@ class TNotebook extends TElement
      */
     public function show()
     {
-        if (empty($this->container)) {
+        if (empty($this->container))
+        {
             $this->container = $this->render();
         }
         parent::add($this->container);

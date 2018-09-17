@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Model;
 
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Registry\TSession;
 
 /**
@@ -17,7 +18,12 @@ class SystemPermission
 {
     public static function checkPermission($action)
     {
+        $ini    = AdiantiApplicationConfig::get();
+        
         $programs = TSession::getValue('programs');
-        return (isset($programs[$action]) and $programs[$action]);
-    }
+        $public = $ini['permission']['public_classes'];
+        
+        return ( (isset($programs[$action]) AND $programs[$action]) OR
+                 in_array($action, $public) );
+    } 
 }

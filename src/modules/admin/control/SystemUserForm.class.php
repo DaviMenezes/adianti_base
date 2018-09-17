@@ -11,6 +11,7 @@ use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TTableRow;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
@@ -24,7 +25,9 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCheckGroup;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBSeekButton;
+use Adianti\Base\Lib\Widget\Wrapper\TDBUniqueSearch;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
@@ -67,40 +70,43 @@ class SystemUserForm extends TPage
         $password            = new TPassword('password');
         $repassword          = new TPassword('repassword');
         $email               = new TEntry('email');
-        $unit_id             = new TDBCombo('system_unit_id', 'permission', SystemUnit::class, 'id', 'name');
-        $program_id          = new TDBSeekButton('program_id', 'permission', 'form_System_user', SystemProgram::class, 'name', 'program_id', 'program_name');
+        $unit_id             = new TDBCombo('system_unit_id','permission', SystemUnit::class,'id','name');
+        $program_id          = new TDBSeekButton('program_id', 'permission', 'form_System_user', 'SystemProgram', 'name', 'program_id', 'program_name');
         $program_name        = new TEntry('program_name');
-        $groups              = new TDBCheckGroup('groups', 'permission', SystemGroup::class, 'id', 'name');
-        $frontpage_id        = new TDBSeekButton('frontpage_id', 'permission', 'form_System_user', SystemProgram::class, 'name', 'frontpage_id', 'frontpage_name');
-        $frontpage_name      = new TEntry('frontpage_name');
-        $units               = new TDBCheckGroup('units', 'permission', SystemUnit::class, 'id', 'name');
+        $groups              = new TDBCheckGroup('groups','permission', SystemGroup::class,'id','name');
+        $frontpage_id        = new TDBUniqueSearch('frontpage_id', 'permission', SystemProgram::class, 'id', 'name', 'name');
+        $units               = new TDBCheckGroup('units','permission', SystemUnit::class,'id','name');
         
         $units->setLayout('horizontal');
-        if ($units->getLabels()) {
-            foreach ($units->getLabels() as $label) {
+        if ($units->getLabels())
+        {
+            foreach ($units->getLabels() as $label)
+            {
                 $label->setSize(200);
             }
         }
         
         $groups->setLayout('horizontal');
-        if ($groups->getLabels()) {
-            foreach ($groups->getLabels() as $label) {
+        if ($groups->getLabels())
+        {
+            foreach ($groups->getLabels() as $label)
+            {
                 $label->setSize(200);
             }
         }
         
-        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction( _t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addAction(_t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
-        $this->form->addAction(_t('Back'), new TAction(array('SystemUserList','onReload')), 'fa:arrow-circle-o-left blue');
+        $this->form->addAction( _t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addAction( _t('Back'), new TAction(array(SystemUserList::class,'onReload')), 'fa:arrow-circle-o-left blue');
         
-        $add_button  = TButton::create('add', array($this,'onAddProgram'), _t('Add'), 'fa:plus green');
+        $add_button  = TButton::create('add',  array($this,'onAddProgram'), _t('Add'), 'fa:plus green');
         
         $this->form->addField($program_id);
         $this->form->addField($program_name);
         $this->form->addField($add_button);
         
-        $this->program_list = new TQuickGrid;
+        $this->program_list = new BootstrapDatagridWrapper(new TQuickGrid);
         $this->program_list->setHeight(180);
         $this->program_list->makeScrollable();
         $this->program_list->style='width: 100%';
@@ -118,8 +124,8 @@ class SystemUserForm extends TPage
         $hbox->style = 'margin: 4px';
         $vbox = new TVBox;
         $vbox->style='width:100%';
-        $vbox->add($hbox);
-        $vbox->add($this->program_list);
+        $vbox->add( $hbox );
+        $vbox->add(TPanelGroup::pack('', $this->program_list));
 
         // define the sizes
         $id->setSize('50%');
@@ -129,31 +135,30 @@ class SystemUserForm extends TPage
         $repassword->setSize('100%');
         $email->setSize('100%');
         $unit_id->setSize('100%');
-        $frontpage_id->setSize('60');
-        $frontpage_name->setSize('calc(100% - 60px)');
+        $frontpage_id->setSize('100%');
         $program_id->setSize('30');
         $program_name->setSize('calc(100% - 200px)');
+        $frontpage_id->setMinLength(1);
         
         // outros
         $id->setEditable(false);
         $program_name->setEditable(false);
-        $frontpage_name->setEditable(false);
         
         // validations
         $name->addValidation(_t('Name'), new TRequiredValidator);
         $login->addValidation('Login', new TRequiredValidator);
         $email->addValidation('Email', new TEmailValidator);
         
-        $this->form->addFields([new TLabel('ID')], [$id], [new TLabel(_t('Name'))], [$name]);
-        $this->form->addFields([new TLabel(_t('Login'))], [$login], [new TLabel(_t('Email'))], [$email]);
-        $this->form->addFields([new TLabel(_t('Main unit'))], [$unit_id], [new TLabel(_t('Front page'))], [$frontpage_id, $frontpage_name]);
-        $this->form->addFields([new TLabel(_t('Password'))], [$password], [new TLabel(_t('Password confirmation'))], [$repassword]);
-        $this->form->addFields([new TFormSeparator(_t('Units'))]);
-        $this->form->addFields([$units]);
-        $this->form->addFields([new TFormSeparator(_t('Groups'))]);
-        $this->form->addFields([$groups]);
-        $this->form->addFields([new TFormSeparator(_t('Programs'))]);
-        $this->form->addFields([$vbox]);
+        $this->form->addFields( [new TLabel('ID')], [$id],  [new TLabel(_t('Name'))], [$name] );
+        $this->form->addFields( [new TLabel(_t('Login'))], [$login],  [new TLabel(_t('Email'))], [$email] );
+        $this->form->addFields( [new TLabel(_t('Main unit'))], [$unit_id],  [new TLabel(_t('Front page'))], [$frontpage_id] );
+        $this->form->addFields( [new TLabel(_t('Password'))], [$password],  [new TLabel(_t('Password confirmation'))], [$repassword] );
+        $this->form->addFields( [new TFormSeparator(_t('Units'))] );
+        $this->form->addFields( [$units] );
+        $this->form->addFields( [new TFormSeparator(_t('Groups'))] );
+        $this->form->addFields( [$groups] );
+        $this->form->addFields( [new TFormSeparator(_t('Programs'))] );
+        $this->form->addFields( [$vbox] );
         
         $container = new TVBox;
         $container->style = 'width: 90%';
@@ -180,63 +185,83 @@ class SystemUserForm extends TPage
      */
     public static function onSave($param)
     {
-        try {
+        try
+        {
             // open a transaction with database 'permission'
             TTransaction::open('permission');
             
-            $user = new SystemUser;
-            $user->fromArray($param);
+            $object = new SystemUser;
+            $object->fromArray( $param );
             
-            if (empty($user->login)) {
+            $senha = $object->password;
+            
+            if( empty($object->login) )
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Login')));
             }
             
-            if (empty($user->id)) {
-                if (SystemUser::newFromLogin($user->login) instanceof SystemUser) {
+            if( empty($object->id) )
+            {
+                if (SystemUser::newFromLogin($object->login) instanceof SystemUser)
+                {
                     throw new Exception(_t('An user with this login is already registered'));
                 }
                 
-                if (empty($user->password)) {
+                if (SystemUser::newFromEmail($object->email) instanceof SystemUser)
+                {
+                    throw new Exception(_t('An user with this e-mail is already registered'));
+                }
+                
+                if ( empty($object->password) )
+                {
                     throw new Exception(AdiantiCoreTranslator::translate('The field ^1 is required', _t('Password')));
                 }
                 
-                $user->active = 'Y';
+                $object->active = 'Y';
             }
             
-            if ($user->password) {
-                if ($user->password !== $param['repassword']) {
+            if( $object->password )
+            {
+                if( $object->password !== $param['repassword'] )
                     throw new Exception(_t('The passwords do not match'));
-                }
                 
-                $user->password = password_hash($user->password, PASSWORD_BCRYPT);
-            } else {
-                unset($user->password);
+                $object->password = md5($object->password);
             }
-
-            $user->store();
-            $user->clearParts();
+            else
+            {
+                unset($object->password);
+            }
             
-            if (!empty($param['groups'])) {
-                foreach ($param['groups'] as $group_id) {
-                    $user->addSystemUserGroup(new SystemGroup($group_id));
+            $object->store();
+            $object->clearParts();
+            
+            if( !empty($param['groups']) )
+            {
+                foreach( $param['groups'] as $group_id )
+                {
+                    $object->addSystemUserGroup( new SystemGroup($group_id) );
                 }
             }
             
-            if (!empty($param['units'])) {
-                foreach ($param['units'] as $unit_id) {
-                    $user->addSystemUserUnit(new SystemUnit($unit_id));
+            if( !empty($param['units']) )
+            {
+                foreach( $param['units'] as $unit_id )
+                {
+                    $object->addSystemUserUnit( new SystemUnit($unit_id) );
                 }
             }
             
             $programs = TSession::getValue('program_list');
-            if (!empty($programs)) {
-                foreach ($programs as $program) {
-                    $user->addSystemUserProgram(new SystemProgram($program['id']));
+            if (!empty($programs))
+            {
+                foreach ($programs as $program)
+                {
+                    $object->addSystemUserProgram( new SystemProgram( $program['id'] ) );
                 }
             }
             
             $data = new stdClass;
-            $data->id = $user->id;
+            $data->id = $object->id;
             TForm::sendData('form_System_user', $data);
             
             // close the transaction
@@ -244,9 +269,9 @@ class SystemUserForm extends TPage
             
             // shows the success message
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
-
-            return $user;
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // shows the exception error message
             new TMessage('error', $e->getMessage());
             

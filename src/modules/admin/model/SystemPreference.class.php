@@ -17,14 +17,14 @@ use Adianti\Base\Lib\Database\TRepository;
  */
 class SystemPreference extends TRecord
 {
-    const TABLENAME  = 'sys_preference';
+    const TABLENAME  = 'system_preference';
     const PRIMARYKEY = 'id';
     const IDPOLICY   = 'max'; // {max, serial}
     
     /**
      * Constructor method
      */
-    public function __construct($id = null, $callObjectLoad = true)
+    public function __construct($id = NULL, $callObjectLoad = TRUE)
     {
         parent::__construct($id, $callObjectLoad);
         parent::addAttribute('value');
@@ -48,15 +48,15 @@ class SystemPreference extends TRecord
     public static function setPreference($id, $value)
     {
         $preference = SystemPreference::find($id);
-        if ($preference) {
+        if ($preference)
+        {
             $preference->value = $value;
             $preference->store();
         }
     }
-
+    
     /**
      * Retorna um array com todas preferências
-     * @throws \Exception
      */
     public static function getAllPreferences()
     {
@@ -64,8 +64,10 @@ class SystemPreference extends TRecord
         $objects = $rep->load(new TCriteria);
         $dataset = array();
         
-        if ($objects) {
-            foreach ($objects as $object) {
+        if ($objects)
+        {
+            foreach ($objects as $object)
+            {
                 $property = $object->id;
                 $value    = $object->value;
                 $dataset[$property] = $value;

@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Database\TRecord;
  */
 class SystemDocumentCategory extends TRecord
 {
-    const TABLENAME = 'sys_document_category';
+    const TABLENAME = 'system_document_category';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     

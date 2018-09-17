@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Core;
 /**
  * Framework translation class for internal messages
  *
- * @version    5.0
+ * @version    5.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -69,7 +69,6 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'The field ^1 has not a valid CNPJ';
         $this->messages['en'][] = 'The field ^1 has not a valid CPF';
         $this->messages['en'][] = 'The field ^1 contains an invalid e-mail';
-        $this->messages['en'][] = 'The field ^1 contains an invalid url';
         $this->messages['en'][] = 'The field ^1 must be numeric';
         $this->messages['en'][] = 'No active transactions';
         $this->messages['en'][] = 'Object not found';
@@ -120,7 +119,16 @@ class AdiantiCoreTranslator
         $this->messages['en'][] = 'Constructor';
         $this->messages['en'][] = 'Records';
         $this->messages['en'][] = 'Description';
-
+        $this->messages['en'][] = 'Error while copying file to ^1';
+        $this->messages['en'][] = 'Permission denied';
+        $this->messages['en'][] = 'Extension not allowed';
+        $this->messages['en'][] = 'Hash error';
+        $this->messages['en'][] = 'Invalid parameter (^1) in ^2';
+        $this->messages['en'][] = 'Warning';
+        $this->messages['en'][] = 'No records found';
+        $this->messages['en'][] = '^1 to ^2 from ^3 records';
+        $this->messages['en'][] = 'PHP Module not found';
+        
         $this->messages['pt'][] = 'Carregando';
         $this->messages['pt'][] = 'Arquivo não encontrado';
         $this->messages['pt'][] = 'Buscar';
@@ -169,7 +177,6 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'O campo ^1 não contém um CNPJ válido';
         $this->messages['pt'][] = 'O campo ^1 não contém um CPF válido';
         $this->messages['pt'][] = 'O campo ^1 contém um e-mail inválido';
-        $this->messages['pt'][] = 'O campo ^1 contém um url inválido';
         $this->messages['pt'][] = 'O campo ^1 deve ser numérico';
         $this->messages['pt'][] = 'Sem transação ativa com a base de dados';
         $this->messages['pt'][] = 'Objeto não encontrado';
@@ -220,6 +227,15 @@ class AdiantiCoreTranslator
         $this->messages['pt'][] = 'Construtor';
         $this->messages['pt'][] = 'Registros';
         $this->messages['pt'][] = 'Descrição';
+        $this->messages['pt'][] = 'Falha ao copiar arquivo para ^1';
+        $this->messages['pt'][] = 'Permissão negada';
+        $this->messages['pt'][] = 'Extensão não permitida';
+        $this->messages['pt'][] = 'Erro de hash';
+        $this->messages['pt'][] = 'Parâmetro (^1) inválido em ^2';
+        $this->messages['pt'][] = 'Atenção';
+        $this->messages['pt'][] = 'Nenhum registro encontrado';
+        $this->messages['pt'][] = '^1 a ^2 de ^3 registros';
+        $this->messages['pt'][] = 'Módulo PHP não encontrado';
     }
     
     /**
@@ -229,7 +245,8 @@ class AdiantiCoreTranslator
     public static function getInstance()
     {
         // if there's no instance
-        if (empty(self::$instance)) {
+        if (empty(self::$instance))
+        {
             // creates a new object
             self::$instance = new AdiantiCoreTranslator;
         }
@@ -255,37 +272,43 @@ class AdiantiCoreTranslator
         $instance = self::getInstance();
         return $instance->lang;
     }
-
+    
     /**
      * Translate a word to the target language
      * @param $word     Word to be translated
-     * @return mixed|string
      */
-    public static function translate($word, $param1 = null, $param2 = null, $param3 = null, $param4 = null)
+    public static function translate($word, $param1 = NULL, $param2 = NULL, $param3 = NULL, $param4 = NULL)
     {
         // get the AdiantiCoreTranslator unique instance
         $instance = self::getInstance();
         // search by the numeric index of the word
         $key = array_search($word, $instance->messages['en']);
-        if ($key !== false) {
+        if ($key !== FALSE)
+        {
             // get the target language
             $language = self::getLanguage();
             // returns the translated word
             $message = $instance->messages[$language][$key];
-            if (isset($param1)) {
+            if (isset($param1))
+            {
                 $message = str_replace('^1', $param1, $message);
             }
-            if (isset($param2)) {
+            if (isset($param2))
+            {
                 $message = str_replace('^2', $param2, $message);
             }
-            if (isset($param3)) {
+            if (isset($param3))
+            {
                 $message = str_replace('^3', $param3, $message);
             }
-            if (isset($param4)) {
+            if (isset($param4))
+            {
                 $message = str_replace('^4', $param4, $message);
             }
             return $message;
-        } else {
+        }
+        else
+        {
             return 'Message not found: '. $word;
         }
     }

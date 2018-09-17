@@ -1,12 +1,15 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Database\TSqlStatement;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Database\TCriteria;
 use Exception;
 
 /**
  * Provides an Interface to create an INSERT statement
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -14,9 +17,18 @@ use Exception;
  */
 final class TSqlInsert extends TSqlStatement
 {
-    protected $sql;         // stores the SQL
+    protected $sql;
     private $columnValues;
     private $preparedVars;
+    
+    /**
+     * Constructor method
+     */
+    public function __construct()
+    {
+        $this->columnValues = [];
+        $this->preparedVars = [];
+    }
     
     /**
      * Assign values to the database columns
@@ -25,7 +37,8 @@ final class TSqlInsert extends TSqlStatement
      */
     public function setRowData($column, $value)
     {
-        if (is_scalar($value) or is_null($value)) {
+        if (is_scalar($value) OR is_null($value))
+        {
             $this->columnValues[$column] = $value;
         }
     }
@@ -37,34 +50,50 @@ final class TSqlInsert extends TSqlStatement
      * @param $prepared If the value will be prepared
      * @return       Transformed Value
      */
-    private function transform($value, $prepared = false)
+    private function transform($value, $prepared = FALSE)
     {
         // store just scalar values (string, integer, ...)
-        if (is_scalar($value)) {
+        if (is_scalar($value))
+        {
             // if is a string
-            if (is_string($value) and (!empty($value))) {
-                if ($prepared) {
+            if (is_string($value) and (!empty($value)))
+            {
+                if ($prepared)
+                {
                     $preparedVar = ':par_'.self::getRandomParameter();
                     $this->preparedVars[ $preparedVar ] = $value;
                     $result = $preparedVar;
-                } else {
+                }
+                else
+                {
                     $conn = TTransaction::get();
                     $result = $conn->quote($value);
                 }
-            } elseif (is_bool($value)) { // if is a boolean
+            }
+            else if (is_bool($value)) // if is a boolean
+            {
                 $result = $value ? 'TRUE': 'FALSE';
-            } elseif ($value !== '') { // if its another data type
-                if ($prepared) {
+            }
+            else if ($value !== '') // if its another data type
+            {
+                if ($prepared)
+                {
                     $preparedVar = ':par_'.self::getRandomParameter();
                     $this->preparedVars[ $preparedVar ] = $value;
                     $result = $preparedVar;
-                } else {
+                }
+                else
+                {
                     $result = $value;
                 }
-            } else {
+            }
+            else
+            {
                 $result = "NULL";
             }
-        } elseif (is_null($value)) {
+        }
+        else if (is_null($value))
+        {
             $result = "NULL";
         }
         
@@ -93,12 +122,14 @@ final class TSqlInsert extends TSqlStatement
      * Returns the INSERT plain statement
      * @param $prepared Return a prepared Statement
      */
-    public function getInstruction($prepared = false)
+    public function getInstruction( $prepared = FALSE )
     {
         $this->preparedVars = array();
         $columnValues = $this->columnValues;
-        if ($columnValues) {
-            foreach ($columnValues as $key => $value) {
+        if ($columnValues)
+        {
+            foreach ($columnValues as $key => $value)
+            {
                 $columnValues[$key] = $this->transform($value, $prepared);
             }
         }

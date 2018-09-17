@@ -35,11 +35,10 @@ class SystemDocumentCategoryFormList extends TPage
     protected $pageNavigation;
     
     use AdiantiStandardFormListTrait; // standard form/list methods
-
+    
     /**
      * Class constructor
      * Creates the page and the registration form
-     * @throws \Exception
      */
     public function __construct()
     {
@@ -110,6 +109,7 @@ class SystemDocumentCategoryFormList extends TPage
         
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
+        $this->pageNavigation->enableCounters();
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         

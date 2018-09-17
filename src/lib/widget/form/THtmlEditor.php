@@ -2,10 +2,8 @@
 namespace Adianti\Base\Lib\Widget\Form;
 
 use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Form\TField;
 
 /**
  * Html Editor

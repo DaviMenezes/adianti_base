@@ -1,6 +1,9 @@
 <?php
 namespace Adianti\Base\App\Lib\Reports;
 
+use Exception;
+use Spreadsheet_Excel_Writer_Workbook;
+
 /**
  * Excel writer
  *

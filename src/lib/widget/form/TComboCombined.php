@@ -1,7 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TStyle;
 
 /**
  * ComboBox Widget with an entry

@@ -1,8 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
-use Adianti\Widget\Util\TTextDisplay;
-
 /**
  * File Link
  *

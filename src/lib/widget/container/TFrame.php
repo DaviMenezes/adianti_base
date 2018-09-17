@@ -2,6 +2,7 @@
 namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
+use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * Frame Widget: creates a bordered area with a title located at its top-left corner

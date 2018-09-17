@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Service;
 
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 
 /**

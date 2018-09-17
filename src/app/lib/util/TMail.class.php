@@ -2,7 +2,6 @@
 namespace Adianti\Base\App\Lib\Util;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 /**
  * TMail

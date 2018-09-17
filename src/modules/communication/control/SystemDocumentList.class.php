@@ -169,6 +169,7 @@ class SystemDocumentList extends TPage
         
         // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
+        $this->pageNavigation->enableCounters();
         $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
@@ -191,28 +192,40 @@ class SystemDocumentList extends TPage
      */
     public function onDownload($param)
     {
-        try {
-            if (isset($param['id'])) {
+        try
+        {
+            if (isset($param['id']))
+            {
                 $id = $param['id'];  // get the parameter $key
                 TTransaction::open('communication'); // open a transaction
                 $object = new SystemDocument($id); // instantiates the Active Record
                 
-                if ($object->system_user_id == TSession::getValue('userid') or TSession::getValue('login') === 'admin') {
-                    if (strtolower(substr($object->filename, -4)) == 'html') {
-                        $win = TWindow::create($object->filename, 0.8, 0.8);
-                        $win->add(file_get_contents("files/documents/{$id}/".$object->filename));
+                if ($object->system_user_id == TSession::getValue('userid') OR TSession::getValue('login') === 'admin')
+                {
+                    if (strtolower(substr($object->filename, -4)) == 'html')
+                    {
+                        $win = TWindow::create( $object->filename, 0.8, 0.8 );
+                        $win->add( file_get_contents( "files/documents/{$id}/".$object->filename ) );
                         $win->show();
-                    } else {
+                    }
+                    else
+                    {
                         TPage::openFile("files/documents/{$id}/".$object->filename);
                     }
-                } else {
+                }
+                else
+                {
                     new TMessage('error', _t('Permission denied'));
                 }
                 TTransaction::close(); // close the transaction
-            } else {
+            }
+            else
+            {
                 $this->form->clear();
             }
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             new TMessage('error', $e->getMessage()); // shows the exception error message
             TTransaction::rollback(); // undo all pending operations
         }

@@ -1,15 +1,16 @@
 <?php
-namespace Adianti\Base\Lib\Widget\Util;
+namespace Adianti\Widget\Util;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TElement;
+
 use stdClass;
 
 /**
  * FullCalendar Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -31,6 +32,8 @@ class TFullCalendar extends TElement
     private $popover;
     private $poptitle;
     private $popcontent;
+    private $resizable;
+    private $movable;
 
 
     /**
@@ -38,7 +41,7 @@ class TFullCalendar extends TElement
      * @param $current_date Current date of calendar
      * @param $default_view Default view (month, agendaWeek, agendaDay)
      */
-    public function __construct($current_date = null, $default_view = 'month')
+    public function __construct($current_date = NULL, $default_view = 'month')
     {
         parent::__construct('div');
         $this->current_date = $current_date ? $current_date : date('Y-m-d');
@@ -48,7 +51,9 @@ class TFullCalendar extends TElement
         $this->min_time  = '00:00:00';
         $this->max_time  = '24:00:00';
         $this->enabled_days = [0,1,2,3,4,5,6];
-        $this->popover = false;
+        $this->popover = FALSE;
+        $this->resizable = TRUE;
+        $this->movable = TRUE;
     }
     
     /**
@@ -129,9 +134,25 @@ class TFullCalendar extends TElement
      */
     public function enablePopover($title, $content)
     {
-        $this->popover = true;
+        $this->popover = TRUE;
         $this->poptitle = $title;
         $this->popcontent = $content;
+    }
+    
+    /**
+     * Disable event resize
+     */
+    public function disableResizing()
+    {
+        $this->resizable = FALSE;
+    }
+    
+    /**
+     * Disable event dragging
+     */
+    public function disableDragging()
+    {
+        $this->movable = FALSE;
     }
     
     /**
@@ -143,16 +164,19 @@ class TFullCalendar extends TElement
      * @param $url Event url
      * @param $color Event color
      */
-    public function addEvent($id, $title, $start, $end = null, $url = null, $color = null, $object = null)
+    public function addEvent($id, $title, $start, $end = NULL, $url = NULL, $color = NULL, $object = NULL)
     {
         $event = new stdClass;
         $event->{'id'} = $id;
         
-        if ($this->popover and !empty($object)) {
+        if ($this->popover and !empty($object))
+        {
             $poptitle   = $this->replace($this->poptitle, $object);
             $popcontent = $this->replace($this->popcontent, $object);
-            $event->{'title'} = "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline'> {$title} </div>";
-        } else {
+            $event->{'title'} = self::renderPopover($title, $poptitle, $popcontent);
+        }
+        else
+        {
             $event->{'title'} = $title;
         }
         $event->{'start'} = $start;
@@ -164,17 +188,31 @@ class TFullCalendar extends TElement
     }
     
     /**
+     * Render title popover
+     * @param $title Event title
+     * @param $poptitle Popover Title
+     * @param $popcontent Popover Content
+     */
+    public static function renderPopover($title, $poptitle, $popcontent)
+    {
+        return "<div popover='true' poptitle='{$poptitle}' popcontent='{$popcontent}' style='display:inline;cursor:pointer'> {$title} </div>";
+    }
+    
+    /**
      * Replace a string with object properties within {pattern}
      * @param $content String with pattern
      * @param $object  Any object
      */
     private function replace($content, $object, $cast = null)
     {
-        if (preg_match_all('/\{(.*?)\}/', $content, $matches)) {
-            foreach ($matches[0] as $match) {
+        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
+        {
+            foreach ($matches[0] as $match)
+            {
                 $property = substr($match, 1, -1);
                 $value    = $object->$property;
-                if ($cast) {
+                if ($cast)
+                {
                     settype($value, $cast);
                 }
                 
@@ -198,33 +236,41 @@ class TFullCalendar extends TElement
         $day_action_string    = '';
         $update_action_string = '';
         
-        if ($this->event_action) {
-            if ($this->event_action->isStatic()) {
+        if ($this->event_action)
+        {
+            if ($this->event_action->isStatic())
+            {
                 $this->event_action->setParameter('static', '1');
             }
             $event_action_string = $this->event_action->serialize();
         }
         
-        if ($this->day_action) {
-            if ($this->day_action->isStatic()) {
+        if ($this->day_action)
+        {
+            if ($this->day_action->isStatic())
+            {
                 $this->day_action->setParameter('static', '1');
             }
             $day_action_string = $this->day_action->serialize();
         }
         
-        if ($this->update_action) {
-            $update_action_string = $this->update_action->serialize(false);
+        if ($this->update_action)
+        {
+            $update_action_string = $this->update_action->serialize(FALSE);
         }
-        if ($this->reload_action) {
-            $reload_action_string = $this->reload_action->serialize(false);
+        if ($this->reload_action)
+        {
+            $reload_action_string = $this->reload_action->serialize(FALSE);
             $this->events = array('url' => 'engine.php?' . $reload_action_string . '&static=1');
         }
         
         $events = json_encode($this->events);
         $editable = ($this->update_action) ? 'true' : 'false';
+        $movable = ($this->movable) ? 'true' : 'false';
+        $resizable = ($this->resizable) ? 'true' : 'false';
         $hidden_days = json_encode(array_values(array_diff([0,1,2,3,4,5,6], $this->enabled_days)));
         
-        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}', $hidden_days );");
+        TScript::create("tfullcalendar_start( '{$id}', {$editable}, '{$this->default_view}', '{$this->current_date}', '$language', $events, '{$day_action_string}', '{$event_action_string}', '{$update_action_string}', '{$this->min_time}', '{$this->max_time}', $hidden_days, {$movable}, {$resizable} );");
         parent::show();
     }
 }

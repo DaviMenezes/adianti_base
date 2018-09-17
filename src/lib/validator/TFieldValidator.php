@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Validator;
 /**
  * TFieldValidator abstract validation class
  *
- * @version    5.0
+ * @version    5.5
  * @package    validator
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -18,5 +18,5 @@ abstract class TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation
      */
-    abstract public function validate($label, $value, $parameters = null);
+    abstract public function validate($label, $value, $parameters = NULL);
 }

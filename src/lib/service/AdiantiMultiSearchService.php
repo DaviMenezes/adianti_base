@@ -7,12 +7,14 @@ use Adianti\Base\Lib\Database\TExpression;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
+
+use StdClass;
 use Exception;
 
 /**
  * MultiSearch backend
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @author     Matheus Agnes Dias
@@ -24,45 +26,62 @@ class AdiantiMultiSearchService
     /**
      * Search by the given word inside a model
      */
-    public static function onSearch($param = null)
-    {
+	public static function onSearch($param = null)
+	{
         $key  = $param['key'];
         $ini  = AdiantiApplicationConfig::get();
-        $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
+        $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $hash = md5("{$seed}{$param['database']}{$param['key']}{$param['column']}{$param['model']}");
-        $operator = $param['operator'] ? $param['operator'] : 'like';
         $mask = $param['mask'];
-
-        if ($hash == $param['hash']) {
-            try {
+        
+        if ($hash == $param['hash'])
+        {
+            try
+            {
                 TTransaction::open($param['database']);
-
-                $model = explode('|', $param['model']);
-                $model = implode('\\', $model);
-
-                $repository = new TRepository($model);
+                $info = TTransaction::getDatabaseInfo();
+                $default_op = $info['type'] == 'pgsql' ? 'ilike' : 'like';
+                $operator   = !empty($param['operator']) ? $param['operator'] : $default_op;
+                
+                $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
-                if ($param['criteria']) {
-                    $criteria = unserialize(base64_decode(str_replace(array('-', '_'), array('+', '/'), $param['criteria'])));
+                if ($param['criteria'])
+                {
+                    $criteria = unserialize( base64_decode(str_replace(array('-', '_'), array('+', '/'), $param['criteria'])) );
                 }
     
                 $columns = explode(',', $param['column']);
                 
-                if ($columns) {
+                if (!isset($param['value']))
+                {
+                    $param['value'] = '';
+                }
+                
+                if ($columns)
+                {
                     $dynamic_criteria = new TCriteria;
-                    foreach ($columns as $column) {
-                        if (stristr(strtolower($operator), 'like') !== false) {
-                            $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
-                        } else {
-                            $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
+                    
+                    if (empty($param['onlyidsearch']))
+                    {
+                        foreach ($columns as $column)
+                        {
+                            if (stristr(strtolower($operator),'like') !== FALSE)
+                            {
+                                $filter = new TFilter($column, $operator, "NOESC:'%{$param['value']}%'");
+                            }
+                            else
+                            {
+                                $filter = new TFilter($column, $operator, "NOESC:'{$param['value']}'");
+                            }
+        
+                            $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                         }
-    
-                        $dynamic_criteria->add($filter, TExpression::OR_OPERATOR);
                     }
                     
-                    if ($param['idsearch'] == '1') {
+                    if ($param['idsearch'] == '1')
+                    {
                         $id = (int) $param['value'];
-                        $dynamic_criteria->add(new TFilter($key, '=', "NOESC:'{$id}'"), TExpression::OR_OPERATOR);
+                        $dynamic_criteria->add( new TFilter($key, '=', "NOESC:'{$id}'" ), TExpression::OR_OPERATOR);
                     }
                 }
                 
@@ -70,11 +89,13 @@ class AdiantiMultiSearchService
                 $criteria->setProperty('order', $param['orderColumn']);
                 $criteria->setProperty('limit', 1000);
                 
-                $collection = $repository->load($criteria, false);
+                $collection = $repository->load($criteria, FALSE);
                 $items = array();
                 
-                if ($collection) {
-                    foreach ($collection as $object) {
+                if ($collection)
+                {
+                    foreach ($collection as $object)
+                    {
                         $k = $object->$key;
                         $array_object = $object->toArray();
                         $maskvalues = $mask;
@@ -83,20 +104,26 @@ class AdiantiMultiSearchService
                         
                         // replace methods
                         $methods = get_class_methods($object);
-                        if ($methods) {
-                            foreach ($methods as $method) {
-                                if (stristr($maskvalues, "{$method}()") !== false) {
+                        if ($methods)
+                        {
+                            foreach ($methods as $method)
+                            {
+                                if (stristr($maskvalues, "{$method}()") !== FALSE)
+                                {
                                     $maskvalues = str_replace('{'.$method.'()}', $object->$method(), $maskvalues);
                                 }
                             }
                         }
                         
                         $c = $maskvalues;
-                        if ($k != null && $c != null) {
-                            if (utf8_encode(utf8_decode($c)) !== $c) { // SE NÃO UTF8
+                        if ( $k != null && $c != null )
+                        {
+                            if (utf8_encode(utf8_decode($c)) !== $c ) // SE NÃO UTF8
+                            {
                                 $c = utf8_encode($c);
                             }
-                            if (!empty($k) && !empty($c)) {
+                            if (!empty($k) && !empty($c))
+                            {
                                 $items[] = "{$k}::{$c}";
                             }
                         }
@@ -107,12 +134,14 @@ class AdiantiMultiSearchService
                 $ret['result'] = $items;
                 echo json_encode($ret);
                 TTransaction::close();
-            } catch (Exception $e) {
+            }
+            catch (Exception $e)
+            {
                 $ret = array();
                 $ret['result'] = array("1::".$e->getMessage());
                 
                 echo json_encode($ret);
             }
         }
-    }
+	}
 }

@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Image Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -23,40 +23,81 @@ class TImage extends TElement
      */
     public function __construct($source)
     {
-        if (substr($source, 0, 3) == 'bs:') {
+        if (substr($source,0,3) == 'bs:')
+        {
             parent::__construct('i');
-            $this->{'class'} = 'glyphicon glyphicon-'.substr($source, 3);
+            $this->{'class'} = 'glyphicon glyphicon-'.substr($source,3);
             parent::add('');
-        } elseif (substr($source, 0, 3) == 'fa:') {
+        }
+        else if (substr($source,0,3) == 'fa:')
+        {
             parent::__construct('i');
             
-            $fa_class = substr($source, 3);
-            if (strstr($source, '#') !== false) {
+            $fa_class = substr($source,3);
+            if (strstr($source, '#') !== FALSE)
+            {
                 $pieces = explode('#', $fa_class);
                 $fa_class = $pieces[0];
                 $fa_color = $pieces[1];
             }
+            $this->{'style'} = 'padding-right:4px;';
             $this->{'class'} = 'fa fa-'.$fa_class;
-            if (isset($fa_color)) {
-                $this->{'style'} .= "; color: #{$fa_color}";
+            if (isset($fa_color))
+            {
+                $this->{'style'} .= "; color: #{$fa_color};";
             }
             parent::add('');
-        } elseif (file_exists($source)) {
+        }
+        else if (substr($source,0,3) == 'mi:')
+        {
+            parent::__construct('i');
+            
+            $mi_class = substr($source,3);
+            if (strstr($source, '#') !== FALSE)
+            {
+                $pieces = explode('#', $mi_class);
+                $mi_class = $pieces[0];
+                $mi_color = $pieces[1];
+            }
+            $this->{'class'} = 'material-icons';
+            
+            $pieces = explode(' ', $mi_class);
+            
+            if (count($pieces)>1)
+            {
+                $mi_class = array_shift($pieces);
+                $this->{'class'} = 'material-icons ' . implode(' ', $pieces);
+            }
+            
+            if (isset($mi_color))
+            {
+                $this->{'style'} = "color: #{$mi_color};";
+            }
+            parent::add($mi_class);
+        }
+        else if (file_exists($source))
+        {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = $source;
             $this->{'border'} = 0;
-        } elseif (file_exists("app/images/{$source}")) {
+        }
+        else if (file_exists("app/images/{$source}"))
+        {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = "app/images/{$source}";
             $this->{'border'} = 0;
-        } elseif (file_exists("lib/adianti/images/{$source}")) {
+        }
+        else if (file_exists("lib/adianti/images/{$source}"))
+        {
             parent::__construct('img');
             // assign the image path
             $this->{'src'} = "lib/adianti/images/{$source}";
             $this->{'border'} = 0;
-        } else {
+        }
+        else
+        {
             parent::__construct('i');
         }
     }

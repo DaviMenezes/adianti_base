@@ -2,10 +2,12 @@
 namespace Adianti\Base\App\Lib\Reports;
 
 /**
- * Table Container
- * Copyright (c) 2006-2010 Pablo Dall'Oglio
- * @author  Pablo Dall'Oglio <pablo [at] adianti.com.br>
- * @version 2.0, 2007-08-01
+ * Table
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TAdiantiTable extends TAdiantiElement
 {
@@ -29,3 +31,4 @@ class TAdiantiTable extends TAdiantiElement
         return $row;
     }
 }
+?>

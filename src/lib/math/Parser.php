@@ -1,8 +1,6 @@
 <?php
 
-namespace Adianti\Base\Lib\Math;
-
-use Adianti\Base\Lib\Math\TranslationStrategy\ShuntingYard;
+namespace Math;
 
 /**
  * Evaluate mathematical expression.
@@ -20,7 +18,7 @@ class Parser
 
     /**
      * TranslationStrategy that should translate from infix
-     * mathematical expression notation to reverse-polish
+     * mathematical expression notation to reverse-polish 
      * mathematical expression notation.
      *
      * @var TranslationStrategy\TranslationStrategyInterface
@@ -30,7 +28,7 @@ class Parser
     /**
      * Array of key => value options.
      *
-     * @var array
+     * @var array 
      */
     private $options = array(
         'translationStrategy' => '\Math\TranslationStrategy\ShuntingYard',
@@ -38,18 +36,18 @@ class Parser
 
     /**
      * Create new Lexer wich can evaluate mathematical expression.
-     * Accept array of configuration options, currently supports only
+     * Accept array of configuration options, currently supports only 
      * one option "translationStrategy" => "Fully\Qualified\Classname".
      * Class represent by this options is responsible for translation
      * from infix mathematical expression notation to reverse-polish
      * mathematical expression notation.
-     *
+     * 
      * <code>
      *  $options = array(
      *      'translationStrategy' => '\Math\TranslationStrategy\ShuntingYard'
      *  );
      * </code>
-     *
+     * 
      * @param array $options
      */
     public function __construct(array $options = array())
@@ -61,7 +59,7 @@ class Parser
 
     /**
      * Evaluate string representing mathematical expression.
-     *
+     * 
      * @param string $expression
      * @return float
      */
@@ -70,7 +68,7 @@ class Parser
         $lexer = $this->getLexer();
         $tokens = $lexer->tokenize($expression);
 
-        $translationStrategy = new ShuntingYard();
+        $translationStrategy = new \Math\TranslationStrategy\ShuntingYard();
 
         return $this->evaluateRPN($translationStrategy->translate($tokens));
     }
@@ -78,7 +76,7 @@ class Parser
     /**
      * Evaluate array sequence of tokens in Reverse Polish notation (RPN)
      * representing mathematical expression.
-     *
+     * 
      * @param array $expressionTokens
      * @return float
      * @throws \InvalidArgumentException
@@ -124,7 +122,7 @@ class Parser
 
     /**
      * Return lexer.
-     *
+     * 
      * @return Lexer
      */
     public function getLexer()

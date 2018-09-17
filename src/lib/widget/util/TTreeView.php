@@ -6,8 +6,8 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 
 /**
  * TreeView
- *
- * @version    5.0
+ * 
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -26,9 +26,9 @@ class TTreeView extends TElement
      */
     public function __construct()
     {
-        $this->{'id'} = 'ttreeview_'.mt_rand(1000000000, 1999999999);
-        $this->collapsed = false;
         parent::__construct('ul');
+        $this->{'id'} = 'ttreeview_'.mt_rand(1000000000, 1999999999);
+        $this->collapsed = FALSE;
     }
     
     /**
@@ -64,14 +64,14 @@ class TTreeView extends TElement
     public function setItemAction($action)
     {
         $this->itemAction = $action;
-    }
+    } 
     
     /**
      * Collapse the Tree
      */
     public function collapse()
     {
-        $this->collapsed = true;
+        $this->collapsed = TRUE;
     }
     
     /**
@@ -94,33 +94,42 @@ class TTreeView extends TElement
      */
     public function fromArray($array)
     {
-        if (is_array($array)) {
-            foreach ($array as $key => $option) {
-                if (is_scalar($option)) {
+        if (is_array($array))
+        {
+            foreach ($array as $key => $option)
+            {
+                if (is_scalar($option))
+                {
                     $element = new TElement('li');
                     $span = new TElement('span');
                     $span->{'class'} = 'file';
                     $span->add($option);
-                    if ($this->itemIcon) {
+                    if ($this->itemIcon)
+                    {
                         $element->{'style'} = "background-image:url(app/images/{$this->itemIcon})";
                     }
                     
-                    if ($this->itemAction) {
+                    if ($this->itemAction)
+                    {
                         $this->itemAction->setParameter('key', $key);
                         $this->itemAction->setParameter('value', $option);
-                        $string_action = $this->itemAction->serialize(false);
+                        $string_action = $this->itemAction->serialize(FALSE);
                         $element->{'onClick'} = "__adianti_ajax_exec('{$string_action}')";
                         $element->{'id'} = $this->{'id'} . '_' . md5($key);
                     }
                     $span->{'key'} = $key;
+                    
+                    if (is_callable($this->callback))
+                    {
+                        $span = call_user_func($this->callback, $span);
+                    }
+
                     $element->add($span);
                     
-                    if (is_callable($this->callback)) {
-                        call_user_func($this->callback, $span);
-                    }
-                    
                     parent::add($element);
-                } elseif (is_array($option)) {
+                }
+                else if (is_array($option))
+                {
                     $element = new TElement('li');
                     $span = new TElement('span');
                     $span->{'class'} = 'folder';
@@ -140,38 +149,52 @@ class TTreeView extends TElement
      */
     private function fromOptions($options)
     {
-        if (is_array($options)) {
+        if (is_array($options))
+        {
             $ul = new TElement('ul');
-            foreach ($options as $key => $option) {
-                if (is_scalar($option)) {
+            foreach ($options as $key => $option)
+            {
+                if (is_scalar($option))
+                {
                     $element = new TElement('li');
                     $span = new TElement('span');
                     $span->{'class'} = 'file';
                     $span->add($option);
-                    if ($this->itemIcon) {
+                    if ($this->itemIcon)
+                    {
                         $element->{'style'} = "background-image:url(app/images/{$this->itemIcon})";
                     }
                     
-                    if ($this->itemAction) {
+                    if ($this->itemAction)
+                    {
                         $this->itemAction->setParameter('key', $key);
                         $this->itemAction->setParameter('value', $option);
-                        $string_action = $this->itemAction->serialize(false);
+                        $string_action = $this->itemAction->serialize(FALSE);
                         $element->{'onClick'} = "__adianti_ajax_exec('{$string_action}')";
                         $element->{'id'} = $this->{'id'} . '_' . md5($key);
                     }
                     $span->{'key'} = $key;
-                    $element->add($span);
                     
-                    if (is_callable($this->callback)) {
-                        call_user_func($this->callback, $span);
+                    if (is_callable($this->callback))
+                    {
+                        $span = call_user_func($this->callback, $span);
                     }
-                } elseif (is_array($option)) {
+
+                    $element->add($span);
+                }
+                else if (is_array($option))
+                {
                     $element = new TElement('li');
                     $span = new TElement('span');
                     $span->{'class'} = 'folder';
                     $span->add($key);
                     $element->add($span);
                     $element->add($this->fromOptions($option));
+                }
+                else if (is_object($option))
+                {
+                    $element = new TElement('li');
+                    $element->add($option);
                 }
                 $ul->add($element);
             }
@@ -187,7 +210,7 @@ class TTreeView extends TElement
         $objectId = $this->{'id'};
         $collapsed = $this->collapsed ? 'true' : 'false';
         
-        parent::add(TScript::create(" ttreeview_start( '#{$objectId}', {$collapsed} ); ", false));
+        parent::add(TScript::create(" ttreeview_start( '#{$objectId}', {$collapsed} ); ", FALSE));
         parent::show();
     }
 }

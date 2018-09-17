@@ -1,10 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Database\TCriteria;
+
 /**
  * Provides an abstract Interface to create a SQL statement
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -51,5 +53,5 @@ abstract class TSqlStatement
     }
     
     // force method rewrite in child classes
-    abstract public function getInstruction();
+    abstract function getInstruction();
 }

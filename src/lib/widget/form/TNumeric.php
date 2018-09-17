@@ -1,10 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+
 /**
  * Numeric Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio

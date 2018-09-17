@@ -8,7 +8,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 /**
  * Message Dialog
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage dialog
  * @author     Pablo Dall'Oglio
@@ -20,26 +20,46 @@ class TMessage
 {
     /**
      * Class Constructor
-     * @param string $type Type of the message (info, error)
-     * @param string $message Message to be shown
-     * @param TAction $action  Action to be processed when closing the dialog
-     * @param string $title_msg  Dialog Title
+     * @param $type    Type of the message (info, error)
+     * @param $message Message to be shown
+     * @param $action  Action to be processed when closing the dialog
+     * @param $title_msg  Dialog Title
      */
-    public function __construct($type, $message, TAction $action = null, $title_msg = '')
+    public function __construct($type, $message, TAction $action = NULL, $title_msg = '')
     {
-        $title    = $title_msg ? $title_msg : ($type == 'info' ? AdiantiCoreTranslator::translate('Information') : AdiantiCoreTranslator::translate('Error'));
+        if (!empty($title_msg))
+        {
+            $title = $title_msg;
+        }
+        else
+        {
+            $titles = [];
+            $titles['info']    = AdiantiCoreTranslator::translate('Information');
+            $titles['error']   = AdiantiCoreTranslator::translate('Error');
+            $titles['warning'] = AdiantiCoreTranslator::translate('Warning');
+            $title = !empty($titles[$type])? $titles[$type] : '';
+        }
+        
         $callback = "function () {}";
         
-        if ($action) {
+        if ($action)
+        {
             $callback = "function () { __adianti_load_page('{$action->serialize()}') }";
         }
         
         $title = addslashes($title);
         $message = addslashes($message);
         
-        if ($type == 'info') {
+        if ($type == 'info')
+        {
             TScript::create("__adianti_message('{$title}', '{$message}', $callback)");
-        } else {
+        }
+        else if ($type == 'warning')
+        {
+            TScript::create("__adianti_warning('{$title}', '{$message}', $callback)");
+        }
+        else
+        {
             TScript::create("__adianti_error('{$title}', '{$message}', $callback)");
         }
     }

@@ -9,6 +9,7 @@ use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Container\THBox;
+use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TTableRow;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
@@ -99,7 +100,7 @@ class SystemGroupForm extends TPage
         $vbox = new TVBox;
         $vbox->style='width:100%';
         $vbox->add($hbox);
-        $vbox->add($this->program_list);
+        $vbox->add(TPanelGroup::pack('', $this->program_list));
         
         $this->form->addFields([new TFormSeparator(_t('Programs'))]);
         $this->form->addFields([$vbox]);
@@ -108,7 +109,7 @@ class SystemGroupForm extends TPage
         $btn->class = 'btn btn-sm btn-primary';
         
         $this->form->addAction(_t('Clear'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
-        $this->form->addAction(_t('Back'), new TAction(array('SystemGroupList','onReload')), 'fa:arrow-circle-o-left blue');
+        $this->form->addAction(_t('Back'), new TAction(array(SystemGroupList::class,'onReload')), 'fa:arrow-circle-o-left blue');
         
         $this->form->addField($program_id);
         $this->form->addField($program_name);
@@ -116,7 +117,7 @@ class SystemGroupForm extends TPage
         
         $container = new TVBox;
         $container->style = 'width:90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', 'SystemGroupList'));
+        $container->add(new TXMLBreadCrumb('menu.xml', SystemGroupList::class));
         $container->add($this->form);
         
         // add the form to the page

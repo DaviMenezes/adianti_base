@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Horizontal Box
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -43,8 +43,10 @@ class THBox extends TElement
     public function addRowSet()
     {
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
                 $this->add($arg);
             }
         }
@@ -58,8 +60,10 @@ class THBox extends TElement
     {
         $box = new self;
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
                 $box->add($arg);
             }
         }

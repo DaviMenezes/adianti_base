@@ -1,16 +1,19 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Form\TField;
+use Adianti\Base\Lib\Widget\Form\TButton;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 use ReflectionClass;
 
 /**
  * Wrapper class to deal with forms
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -24,7 +27,7 @@ class TForm implements AdiantiFormInterface
     protected $children;
     protected $js_function;
     protected $element;
-    private static $forms;
+    static private $forms;
     
     /**
      * Class Constructor
@@ -32,7 +35,8 @@ class TForm implements AdiantiFormInterface
      */
     public function __construct($name = 'my_form')
     {
-        if ($name) {
+        if ($name)
+        {
             $this->setName($name);
         }
         $this->children = array();
@@ -46,16 +50,20 @@ class TForm implements AdiantiFormInterface
      */
     public function __set($name, $value)
     {
-        $rc = new ReflectionClass($this);
+        $rc = new ReflectionClass( $this );
         $classname = $rc->getShortName();
         
-        if (in_array($classname, array('TForm', 'TQuickForm', 'TQuickNotebookForm'))) {
+        if (in_array($classname, array('TForm', 'TQuickForm', 'TQuickNotebookForm')))
+        {
             // objects and arrays are not set as properties
-            if (is_scalar($value)) {
+            if (is_scalar($value))
+            {              
                 // store the property's value
                 $this->element->$name = $value;
             }
-        } else {
+        }
+        else
+        {
             $this->$name = $value;
         }
     }
@@ -65,17 +73,23 @@ class TForm implements AdiantiFormInterface
      * @param $name  Property Name
      * @param $value Property Value
      */
-    public function setProperty($name, $value, $replace = true)
+    public function setProperty($name, $value, $replace = TRUE)
     {
-        if ($replace) {
+        if ($replace)
+        {
             // delegates the property assign to the composed object
             $this->element->$name = $value;
-        } else {
-            if ($this->element->$name) {
+        }
+        else
+        {
+            if ($this->element->$name)
+            {
             
                 // delegates the property assign to the composed object
                 $this->element->$name = $this->element->$name . ';' . $value;
-            } else {
+            }
+            else
+            {
                 // delegates the property assign to the composed object
                 $this->element->$name = $value;
             }
@@ -87,7 +101,8 @@ class TForm implements AdiantiFormInterface
      */
     public static function getFormByName($name)
     {
-        if (isset(self::$forms[$name])) {
+        if (isset(self::$forms[$name]))
+        {
             return self::$forms[$name];
         }
     }
@@ -116,44 +131,60 @@ class TForm implements AdiantiFormInterface
      * @param $form_name  Form Name
      * @param $object     An Object containing the form data
      */
-    public static function sendData($form_name, $object, $aggregate = false, $fireEvents = true)
+    public static function sendData($form_name, $object, $aggregate = FALSE, $fireEvents = TRUE)
     {
         $fire_param = $fireEvents ? 'true' : 'false';
         // iterate the object properties
-        if ($object) {
-            foreach ($object as $field => $value) {
-                if (is_object($value)) {  // TMultiField
-                    foreach ($value as $property=>$data) {
+        if ($object)
+        {
+            foreach ($object as $field => $value)
+            {
+                if (is_object($value))  // TMultiField
+                {
+                    foreach ($value as $property=>$data)
+                    {
                         // if inside ajax request, then utf8_encode if isn't utf8
-                        if (utf8_encode(utf8_decode($data)) !== $data) {
+                        if (utf8_encode(utf8_decode($data)) !== $data )
+                        {
                             $data = utf8_encode(addslashes($data));
-                        } else {
+                        }
+                        else
+                        {
                             $data = addslashes($data);
                         }
-                        $data = str_replace(array("\n", "\r"), array( ' ', ' '), $data);
+                        $data = str_replace(array("\n", "\r"), array( '\n', '\r'), $data );
                         // send the property value to the form
-                        TScript::create(" tform_send_data('{$form_name}', '{$field}_{$property}', '$data', $fire_param); ");
+                        TScript::create( " tform_send_data('{$form_name}', '{$field}_{$property}', '$data', $fire_param); " );
                     }
-                } else {
-                    if (is_array($value)) {
-                        $value = implode(',', $value);
+                }
+                else
+                {
+                    if (is_array($value))
+                    {
+                        $value = implode('|', $value);
                     }
                     
                     // if inside ajax request, then utf8_encode if isn't utf8
-                    if (utf8_encode(utf8_decode($value)) !== $value) {
+                    if (utf8_encode(utf8_decode($value)) !== $value )
+                    {
                         $value = utf8_encode(addslashes($value));
-                    } else {
+                    }
+                    else
+                    {
                         $value = addslashes($value);
                     }
                     
-                    $value = str_replace(array("\n", "\r"), array( ' ', ' '), $value);
+                    $value = str_replace(array("\n", "\r"), array( '\n', '\r'), $value );
                     
                     // send the property value to the form
-                    if ($aggregate) {
-                        TScript::create(" tform_send_data_aggregate('{$form_name}', '{$field}', '$value', $fire_param); ");
-                    } else {
-                        TScript::create(" tform_send_data('{$form_name}', '{$field}', '$value', $fire_param); ");
-                        TScript::create(" tform_send_data_by_id('{$form_name}', '{$field}', '$value', $fire_param); ");
+                    if ($aggregate)
+                    {
+                        TScript::create( " tform_send_data_aggregate('{$form_name}', '{$field}', '$value', $fire_param); " );
+                    }
+                    else
+                    {
+                        TScript::create( " tform_send_data('{$form_name}', '{$field}', '$value', $fire_param); " );
+                        TScript::create( " tform_send_data_by_id('{$form_name}', '{$field}', '$value', $fire_param); " );
                     }
                 }
             }
@@ -166,8 +197,10 @@ class TForm implements AdiantiFormInterface
      */
     public function setEditable($bool)
     {
-        if ($this->fields) {
-            foreach ($this->fields as $object) {
+        if ($this->fields)
+        {
+            foreach ($this->fields as $object)
+            {
                 $object->setEditable($bool);
             }
         }
@@ -179,29 +212,37 @@ class TForm implements AdiantiFormInterface
      */
     public function addField(AdiantiWidgetInterface $field)
     {
-        if ($field instanceof TField) {
+        if ($field instanceof TField)
+        {
             $name = $field->getName();
-            if (isset($this->fields[$name]) and substr($name, -2) !== '[]') {
+            if (isset($this->fields[$name]) AND substr($name,-2) !== '[]')
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('You have already added a field called "^1" inside the form', $name));
             }
             
-            if ($name) {
+            if ($name)
+            {
                 $this->fields[$name] = $field;
                 $field->setFormName($this->name);
                 
-                if ($field instanceof TButton) {
+                if ($field instanceof TButton)
+                {
                     $field->addFunction($this->js_function);
                 }
             }
         }
-        if ($field instanceof TMultiField) {
+        if ($field instanceof TMultiField)
+        {
             $fieldid = $field->getId();
             $this->js_function .= "multifields['$fieldid'].parseTableToJSON();";
             
-            if ($this->fields) {
+            if ($this->fields)
+            {
                 // if the button was added before multifield
-                foreach ($this->fields as $field) {
-                    if ($field instanceof TButton) {
+                foreach ($this->fields as $field)
+                {
+                    if ($field instanceof TButton)
+                    {
                         $field->addFunction($this->js_function);
                     }
                 }
@@ -215,9 +256,12 @@ class TForm implements AdiantiFormInterface
      */
     public function delField(AdiantiWidgetInterface $field)
     {
-        if ($this->fields) {
-            foreach ($this->fields as $name => $object) {
-                if ($field === $object) {
+        if ($this->fields)
+        {
+            foreach($this->fields as $name => $object)
+            {
+                if ($field === $object)
+                {
                     unset($this->fields[$name]);
                 }
             }
@@ -238,14 +282,18 @@ class TForm implements AdiantiFormInterface
      */
     public function setFields($fields)
     {
-        if (is_array($fields)) {
+        if (is_array($fields))
+        {
             $this->fields = array();
             $this->js_function = '';
             // iterate the form fields
-            foreach ($fields as $field) {
+            foreach ($fields as $field)
+            {
                 $this->addField($field);
             }
-        } else {
+        }
+        else
+        {
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 must receive a parameter of type ^2', __METHOD__, 'Array'));
         }
     }
@@ -257,7 +305,8 @@ class TForm implements AdiantiFormInterface
      */
     public function getField($name)
     {
-        if (isset($this->fields[$name])) {
+        if (isset($this->fields[$name]))
+        {
             return $this->fields[$name];
         }
     }
@@ -274,13 +323,15 @@ class TForm implements AdiantiFormInterface
     /**
      * clear the form Data
      */
-    public function clear($keepDefaults = false)
+    public function clear($keepDefaults = FALSE)
     {
         // iterate the form fields
-        foreach ($this->fields as $name => $field) {
+        foreach ($this->fields as $name => $field)
+        {
             // labels don't have name
-            if ($name and !$keepDefaults) {
-                $field->setValue(null);
+            if ($name AND !$keepDefaults)
+            {
+                $field->setValue(NULL);
             }
         }
     }
@@ -292,9 +343,12 @@ class TForm implements AdiantiFormInterface
     public function setData($object)
     {
         // iterate the form fields
-        foreach ($this->fields as $name => $field) {
-            if ($name) { // labels don't have name
-                if (isset($object->$name)) {
+        foreach ($this->fields as $name => $field)
+        {
+            if ($name) // labels don't have name
+            {
+                if (isset($object->$name))
+                {
                     $field->setValue($object->$name);
                 }
             }
@@ -307,15 +361,18 @@ class TForm implements AdiantiFormInterface
      */
     public function getData($class = 'StdClass')
     {
-        if (!class_exists($class)) {
+        if (!class_exists($class))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('Class ^1 not found in ^2', $class, __METHOD__));
         }
         
         $object = new $class;
-        foreach ($this->fields as $key => $fieldObject) {
+        foreach ($this->fields as $key => $fieldObject)
+        {
             $key = str_replace(['[',']'], ['',''], $key);
             
-            if (!$fieldObject instanceof TButton) {
+            if (!$fieldObject instanceof TButton)
+            {
                 $object->$key = $fieldObject->getPostData();
             }
         }
@@ -329,29 +386,41 @@ class TForm implements AdiantiFormInterface
      */
     public function getValues($class = 'StdClass', $withOptions = false)
     {
-        if (!class_exists($class)) {
+        if (!class_exists($class))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('Class ^1 not found in ^2', $class, __METHOD__));
         }
         
         $object = new $class;
-        foreach ($this->fields as $key => $field) {
-            $key = str_replace(['[',']'], ['',''], $key);
-            
-            if (!$field instanceof TButton) {
-                if ($withOptions and method_exists($field, 'getItems')) {
-                    $items = $field->getItems();
-                    
-                    if (is_array($field->getValue())) {
-                        $value = [];
-                        foreach ($field->getValue() as $field_value) {
-                            if ($field_value) {
-                                $value[] = $items[$field_value];
+        if ($this->fields)
+        {
+            foreach ($this->fields as $key => $field)
+            {
+                $key = str_replace(['[',']'], ['',''], $key);
+                
+                if (!$field instanceof TButton)
+                {
+                    if ($withOptions AND method_exists($field, 'getItems'))
+                    {
+                        $items = $field->getItems();
+                        
+                        if (is_array($field->getValue()))
+                        {
+                            $value = [];
+                            foreach ($field->getValue() as $field_value)
+                            {
+                                if ($field_value)
+                                {
+                                    $value[] = $items[$field_value];
+                                }
                             }
+                            $object->$key = $value;
                         }
                     }
-                    $object->$key = $value;
-                } else {
-                    $object->$key = $field->getValue();
+                    else
+                    {
+                        $object->$key = $field->getValue();
+                    }
                 }
             }
         }
@@ -370,15 +439,20 @@ class TForm implements AdiantiFormInterface
         $this->setData($this->getData());
         
         $errors = array();
-        foreach ($this->fields as $fieldObject) {
-            try {
+        foreach ($this->fields as $fieldObject)
+        {
+            try
+            {
                 $fieldObject->validate();
-            } catch (Exception $e) {
+            }
+            catch (Exception $e)
+            {
                 $errors[] = $e->getMessage() . '.';
             }
         }
         
-        if (count($errors) > 0) {
+        if (count($errors) > 0)
+        {
             throw new Exception(implode("<br>", $errors));
         }
     }
@@ -389,7 +463,8 @@ class TForm implements AdiantiFormInterface
      */
     public function add($object)
     {
-        if (!in_array($object, $this->children)) {
+        if (!in_array($object, $this->children))
+        {
             $this->children[] = $object;
         }
     }
@@ -423,8 +498,10 @@ class TForm implements AdiantiFormInterface
         $this->element->{'method'}  = 'post';      // transfer method
         
         // add the container to the form
-        if (isset($this->children)) {
-            foreach ($this->children as $child) {
+        if (isset($this->children))
+        {
+            foreach ($this->children as $child)
+            {
                 $this->element->add($child);
             }
         }

@@ -2,16 +2,17 @@
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Database\TCriteria;
-use Adianti\Base\Lib\Database\TRepository;
-use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Form\TSelect;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Database\TRepository;
+use Adianti\Base\Lib\Database\TCriteria;
+
 use Exception;
 
 /**
  * Database Select Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -32,7 +33,7 @@ class TDBSelect extends TSelect
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $key, $value, $ordercolumn = null, TCriteria $criteria = null)
+    public function __construct($name, $database, $model, $key, $value, $ordercolumn = NULL, TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name);
@@ -40,19 +41,23 @@ class TDBSelect extends TSelect
         $key   = trim($key);
         $value = trim($value);
         
-        if (empty($database)) {
+        if (empty($database))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
         }
         
-        if (empty($model)) {
+        if (empty($model))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'model', __CLASS__));
         }
         
-        if (empty($key)) {
+        if (empty($key))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'key', __CLASS__));
         }
         
-        if (empty($value)) {
+        if (empty($value))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'value', __CLASS__));
         }
         
@@ -60,26 +65,33 @@ class TDBSelect extends TSelect
         
         // creates repository
         $repository = new TRepository($model);
-        if (is_null($criteria)) {
+        if (is_null($criteria))
+        {
             $criteria = new TCriteria;
         }
         $criteria->setProperty('order', isset($ordercolumn) ? $ordercolumn : $key);
         
         // load all objects
-        $collection = $repository->load($criteria, false);
+        $collection = $repository->load($criteria, FALSE);
         
         // add objects to the options
-        if ($collection) {
+        if ($collection)
+        {
             $items = array();
-            foreach ($collection as $object) {
-                if (isset($object->$value)) {
+            foreach ($collection as $object)
+            {
+                if (isset($object->$value))
+                {
                     $items[$object->$key] = $object->$value;
-                } else {
+                }
+                else
+                {
                     $items[$object->$key] = $object->render($value);
                 }
             }
             
-            if (strpos($value, '{') !== false and is_null($ordercolumn)) {
+            if (strpos($value, '{') !== FALSE AND is_null($ordercolumn))
+            {
                 asort($items);
             }
             parent::addItems($items);

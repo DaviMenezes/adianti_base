@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 /**
  * Slider Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -52,7 +52,7 @@ class TSlider extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tslider_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tslider_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -62,7 +62,7 @@ class TSlider extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tslider_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tslider_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -75,13 +75,17 @@ class TSlider extends TField implements AdiantiWidgetInterface
         $this->tag->{'value'} = $this->value;   // TAG value
         $this->tag->{'type'}  = 'text';         // input type
         
-        if (strstr($this->size, '%') !== false) {
+        if (strstr($this->size, '%') !== FALSE)
+        {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-        } else {
+        }
+        else
+        {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
         }
         
-        if ($this->id) {
+        if ($this->id)
+        {
             $this->tag->{'id'} = $this->id;
         }
         
@@ -100,7 +104,8 @@ class TSlider extends TField implements AdiantiWidgetInterface
         
         TScript::create(" tslider_start( '#{$this->id}', {$this->value}, {$this->min}, {$this->max}, {$this->step}); ");
         
-        if (!parent::getEditable()) {
+        if (!parent::getEditable())
+        {
             self::disableField($this->formName, $this->name);
         }
     }
@@ -110,6 +115,6 @@ class TSlider extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        parent::setValue((int) $value);
+        parent::setValue( (int) $value);
     }
 }

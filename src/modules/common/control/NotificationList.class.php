@@ -27,7 +27,11 @@ class NotificationList extends TElement
         try {
             TTransaction::open('communication');
             // load the notifications to the logged user
-            $system_notifications = SystemNotification::where('checked', '=', 'N')->where('system_user_to_id', '=', TSession::getValue('userid'))->orderBy('id', 'desc')->load();
+            $system_notifications = SystemNotification::where('checked', '=', 'N')
+                                                      ->where('dt_message', '<=', date('Y-m-d 23:59:59'))
+                                                      ->where('system_user_to_id', '=', TSession::getValue('userid'))
+                                                      ->orderBy('id', 'desc')
+                                                      ->load();
             
             if ($param['theme'] == 'theme2') {
                 $this->class = 'dropdown-menu dropdown-alerts';
@@ -46,6 +50,7 @@ class NotificationList extends TElement
                     $date    = $this->getShortPastTime($system_notification->dt_message);
                     $subject = $system_notification->subject;
                     $icon    = $system_notification->icon ? $system_notification->icon : 'fa fa-bell-o blue';
+                    $icon    = str_replace( 'fa:', 'fa fa-', $icon);
                     
                     $li  = new TElement('li');
                     $a   = new TElement('a');
@@ -87,12 +92,15 @@ class NotificationList extends TElement
                 $ul_wrapper = new TElement('ul');
                 $ul_wrapper->{'class'} = 'menu';
                 $li_master->add($ul_wrapper);
+                
+                parent::add( TElement::tag('li', _t('Notifications'), ['class'=>'header']));
                 parent::add($li_master);
                 
                 foreach ($system_notifications as $system_notification) {
                     $date    = $this->getShortPastTime($system_notification->dt_message);
                     $subject = $system_notification->subject;
                     $icon    = $system_notification->icon ? $system_notification->icon : 'fa fa-bell-o text-aqua';
+                    $icon    = str_replace( 'fa:', 'fa fa-', $icon);
                     
                     $li  = new TElement('li');
                     $a   = new TElement('a');
@@ -136,6 +144,7 @@ class NotificationList extends TElement
                     $date    = $this->getShortPastTime($system_notification->dt_message);
                     $subject = $system_notification->subject;
                     $icon    = $system_notification->icon ? $system_notification->icon : 'fa fa-bell-o text-aqua';
+                    $icon    = str_replace( 'fa:', 'fa fa-', $icon);
                     
                     $li  = new TElement('li');
                     $a   = new TElement('a');
@@ -182,23 +191,17 @@ class NotificationList extends TElement
         $to = date('Y-m-d H:i:s');
         $start_date = new DateTime($from);
         $since_start = $start_date->diff(new DateTime($to));
-        if ($since_start->y > 0) {
+        if ($since_start->y > 0)
             return $since_start->y.' years ';
-        }
-        if ($since_start->m > 0) {
+        if ($since_start->m > 0)
             return $since_start->m.' months ';
-        }
-        if ($since_start->d > 0) {
+        if ($since_start->d > 0)
             return $since_start->d.' days ';
-        }
-        if ($since_start->h > 0) {
+        if ($since_start->h > 0)
             return $since_start->h.' hours ';
-        }
-        if ($since_start->i > 0) {
+        if ($since_start->i > 0)
             return $since_start->i.' minutes ';
-        }
-        if ($since_start->s > 0) {
-            return $since_start->s.' seconds ';
-        }
+        if ($since_start->s > 0)
+            return $since_start->s.' seconds ';    
     }
 }

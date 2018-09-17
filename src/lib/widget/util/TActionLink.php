@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Control\TAction;
 /**
  * Action Link
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -25,7 +25,8 @@ class TActionLink extends TTextDisplay
      */
     public function __construct($value, TAction $action, $color = null, $size = null, $decoration = null, $icon = null)
     {
-        if ($icon) {
+        if ($icon)
+        {
             $value = new TImage($icon) . $value;
         }
         
@@ -34,5 +35,13 @@ class TActionLink extends TTextDisplay
         
         $this->{'href'} = $action->serialize();
         $this->{'generator'} = 'adianti';
+    }
+    
+    /**
+     * Add CSS class
+     */
+    public function addStyleClass($class)
+    {
+        $this->{'class'} .= " {$class}";
     }
 }

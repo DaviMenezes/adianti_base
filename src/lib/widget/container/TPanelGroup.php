@@ -2,12 +2,12 @@
 namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 
 /**
  * Bootstrap native panel for Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -30,7 +30,8 @@ class TPanelGroup extends TElement
         $panel = new self($title);
         $panel->add($element);
         
-        if ($footer) {
+        if ($footer)
+        {
             $panel->addFooter($footer);
         }
         
@@ -42,7 +43,7 @@ class TPanelGroup extends TElement
      * @param $title  Panel Title
      * @param $footer Panel Footer
      */
-    public function __construct($title = null, $background = null)
+    public function __construct($title = NULL, $background = NULL)
     {
         parent::__construct('div');
         $this->{'class'} = 'panel panel-default';
@@ -50,12 +51,14 @@ class TPanelGroup extends TElement
         $this->head = new TElement('div');
         $this->head->{'class'} = 'panel-heading';
         
-        if ($title) {
+        if ($title)
+        {
             $panel_title = new TElement('div');
             $panel_title->{'class'} = 'panel-title';
-            $panel_title->add($title);
+            $panel_title->add( $title );
             
-            if (!empty($background)) {
+            if (!empty($background))
+            {
                 $this->head->{'style'} = 'background:'.$background;
             }
             $this->head->add($panel_title);
@@ -77,15 +80,20 @@ class TPanelGroup extends TElement
     {
         $this->body->add($content);
         
-        if ($content instanceof BootstrapFormWrapper) {
+        if ($content instanceof BootstrapFormWrapper)
+        {
             $buttons = $content->detachActionButtons();
-            if ($buttons) {
-                foreach ($buttons as $button) {
-                    $this->footer->add($button);
+            if ($buttons)
+            {
+                foreach ($buttons as $button)
+                {
+                    $this->footer->add( $button );
                 }
                 parent::add($this->footer);
             }
         }
+        
+        return $this->body;
     }
     
     /**
@@ -117,7 +125,7 @@ class TPanelGroup extends TElement
      */
     public function addFooter($footer)
     {
-        $this->footer->add($footer);
+        $this->footer->add( $footer );
         parent::add($this->footer);
     }
 }

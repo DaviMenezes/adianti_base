@@ -60,10 +60,11 @@ class SystemChangeLog extends TRecord
                 $log->operation  = 'changed';
                 $log->columnname = $key;
                 $log->oldvalue   = (string) $lastState[$key];
-                $log->newvalue   = (string) $value;
+                $log->newvalue   = (string) is_scalar($value) ? $value : serialize($value);
                 $log->store();
             }
-            if (!isset($lastState[$key]) and !empty($value)) {
+            if (!isset($lastState[$key]) AND !empty($value))
+            {
                 // created
                 $log = new self;
                 $log->tablename  = $table;
@@ -74,7 +75,7 @@ class SystemChangeLog extends TRecord
                 $log->operation  = 'created';
                 $log->columnname = $key;
                 $log->oldvalue   = '';
-                $log->newvalue   = (string) $value;
+                $log->newvalue   = (string) is_scalar($value) ? $value : serialize($value);
                 $log->store();
             }
         }

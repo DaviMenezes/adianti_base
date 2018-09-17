@@ -9,7 +9,7 @@ use Adianti\Base\Lib\Database\TTransaction;
 /**
  * Record rest service
  *
- * @version    5.0
+ * @version    5.5
  * @package    service
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -29,7 +29,7 @@ class AdiantiRecordService
         
         TTransaction::open($database);
         
-        $object = new $activeRecord($param['id'], false);
+        $object = new $activeRecord($param['id'], FALSE);
         
         TTransaction::close();
         return $object->toArray();
@@ -50,7 +50,7 @@ class AdiantiRecordService
         $return = $object->delete($param['id']);
         
         TTransaction::close();
-        return $return;
+        return;
     }
     
     /**
@@ -66,10 +66,10 @@ class AdiantiRecordService
         
         $object = new $activeRecord;
         $object->fromArray($param['data']);
-        $return = $object->store();
+        $object->store();
         
         TTransaction::close();
-        return $return;
+        return $object->toArray();
     }
     
     /**
@@ -85,30 +85,38 @@ class AdiantiRecordService
         TTransaction::open($database);
         
         $criteria = new TCriteria;
-        if (isset($param['offset'])) {
+        if (isset($param['offset']))
+        {
             $criteria->setProperty('offset', $param['offset']);
         }
-        if (isset($param['limit'])) {
+        if (isset($param['limit']))
+        {
             $criteria->setProperty('limit', $param['limit']);
         }
-        if (isset($param['order'])) {
+        if (isset($param['order']))
+        {
             $criteria->setProperty('order', $param['order']);
         }
-        if (isset($param['direction'])) {
+        if (isset($param['direction']))
+        {
             $criteria->setProperty('direction', $param['direction']);
         }
-        if (isset($param['filters'])) {
-            foreach ($param['filters'] as $filter) {
+        if (isset($param['filters']))
+        {
+            foreach ($param['filters'] as $filter)
+            {
                 $criteria->add(new TFilter($filter[0], $filter[1], $filter[2]));
             }
         }
         
         $repository = new TRepository($activeRecord);
-        $objects = $repository->load($criteria, false);
+        $objects = $repository->load($criteria, FALSE);
         
         $return = [];
-        if ($objects) {
-            foreach ($objects as $object) {
+        if ($objects)
+        {
+            foreach ($objects as $object)
+            {
                 $return[] = $object->toArray();
             }
         }
@@ -129,8 +137,10 @@ class AdiantiRecordService
         TTransaction::open($database);
         
         $criteria = new TCriteria;
-        if (isset($param['filters'])) {
-            foreach ($param['filters'] as $filter) {
+        if (isset($param['filters']))
+        {
+            foreach ($param['filters'] as $filter)
+            {
                 $criteria->add(new TFilter($filter[0], $filter[1], $filter[2]));
             }
         }
@@ -139,5 +149,48 @@ class AdiantiRecordService
         $return = $repository->delete($criteria);
         TTransaction::close();
         return $return;
+    }
+    
+    /**
+     * Handle HTTP Request and dispatch
+     * @param $param HTTP POST and php input vars
+     */
+    public function handle($param)
+    {
+        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        
+        unset($param['class']);
+        unset($param['method']);
+        $param['data'] = $param;
+        
+        switch( $method )
+        {
+            case 'GET':
+                if (!empty($param['id']))
+                {
+                    return self::load($param);
+                }
+                else
+                {
+                    return self::loadAll($param);
+                }
+                break;
+            case 'POST':
+                return self::store($param);
+                break;
+            case 'PUT':
+                return self::store($param);
+                break;        
+            case 'DELETE':
+                if (!empty($param['id']))
+                {
+                    return self::delete($param);
+                }
+                else
+                {
+                    return self::deleteAll($param);
+                }
+                break;
+        }
     }
 }

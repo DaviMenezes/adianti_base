@@ -3,13 +3,13 @@ namespace Adianti\Base\Lib\Widget\Wrapper;
 
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
-use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
+use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 
 /**
  * Create quick datagrids through its simple interface
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -24,12 +24,13 @@ class TQuickGrid extends TDataGrid
      * @param $object Field Object
      * @param $size   Field Size
      */
-    public function addQuickColumn($label, $name, $align = 'left', $size = 200, TAction $action = null, $param = null)
+    public function addQuickColumn($label, $name, $align = 'left', $size = 200, TAction $action = NULL, $param = NULL)
     {
         // creates a new column
         $object = new TDataGridColumn($name, $label, $align, $size);
         
-        if ($action instanceof TAction) {
+        if ($action instanceof TAction)
+        {
             // create ordering
             $action->setParameter($param[0], $param[1]);
             $object->setAction($action);
@@ -45,16 +46,20 @@ class TQuickGrid extends TDataGrid
      * @param $action TAction Object
      * @param $icon   Action Icon
      */
-    public function addQuickAction($label, TDataGridAction $action, $field, $icon = null)
+    public function addQuickAction($label, TDataGridAction $action, $field, $icon = NULL)
     {
         $action->setLabel($label);
-        if ($icon) {
+        if ($icon)
+        {
             $action->setImage($icon);
         }
         
-        if (is_array($field)) {
+        if (is_array($field))
+        {
             $action->setFields($field);
-        } else {
+        }
+        else
+        {
             $action->setField($field);
         }
         

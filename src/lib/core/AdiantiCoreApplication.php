@@ -13,7 +13,7 @@ use ReflectionMethod;
 /**
  * Basic structure to run a web application
  *
- * @version    5.0
+ * @version    5.5
  * @package    core
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -23,7 +23,7 @@ class AdiantiCoreApplication
 {
     private static $router;
     
-    public static function run($debug = false)
+    public static function run($debug = FALSE)
     {
         $class   = isset($_REQUEST['class'])    ? $_REQUEST['class']   : '';
         $static  = isset($_REQUEST['static'])   ? $_REQUEST['static']  : '';
@@ -32,47 +32,67 @@ class AdiantiCoreApplication
         $class = Route::getPath($class);
 
         $content = '';
-        set_error_handler(array(AdiantiCoreApplication::class, 'errorHandler'));
+        set_error_handler(array('AdiantiCoreApplication', 'errorHandler'));
         
-        if (in_array(strtolower($class), array_map('strtolower', AdiantiClassMap::getInternalClasses()))) {
+        if (in_array(strtolower($class), array_map('strtolower', AdiantiClassMap::getInternalClasses()) ))
+        {
             ob_start();
-            new TMessage('error', AdiantiCoreTranslator::translate('The internal class ^1 can not be executed', " <b><i><u>{$class}</u></i></b>"));
+            new TMessage( 'error', AdiantiCoreTranslator::translate('The internal class ^1 can not be executed', " <b><i><u>{$class}</u></i></b>") );
             $content = ob_get_contents();
             ob_end_clean();
-        } elseif (class_exists($class)) {
-            if ($static) {
+        }
+        else if (class_exists($class))
+        {
+            if ($static)
+            {
                 $rf = new ReflectionMethod($class, $method);
-                if ($rf-> isStatic()) {
+                if ($rf-> isStatic ())
+                {
                     call_user_func(array($class, $method), $_REQUEST);
-                } else {
+                }
+                else
+                {
                     call_user_func(array(new $class($_REQUEST), $method), $_REQUEST);
                 }
-            } else {
-                try {
-                    $page = new $class($_REQUEST);
+            }
+            else
+            {
+                try
+                {
+                    $page = new $class( $_REQUEST );
                     ob_start();
-                    $page->show($_REQUEST);
-                    $content = ob_get_contents();
-                    ob_end_clean();
-                } catch (Exception $e) {
+                    $page->show( $_REQUEST );
+	                $content = ob_get_contents();
+	                ob_end_clean();
+                }
+                catch(Exception $e)
+                {
                     ob_start();
-                    if ($debug) {
+                    if ($debug)
+                    {
                         new TExceptionView($e);
                         $content = ob_get_contents();
-                    } else {
+                    }
+                    else
+                    {
                         new TMessage('error', $e->getMessage());
                         $content = ob_get_contents();
                     }
                     ob_end_clean();
                 }
             }
-        } elseif (function_exists($method)) {
+        }
+        else if (function_exists($method))
+        {
             call_user_func($method, $_REQUEST);
-        } else {
+        }
+        else
+        {
             new TMessage('error', AdiantiCoreTranslator::translate('Class ^1 not found', " <b><i><u>{$class}</u></i></b>") . '.<br>' . AdiantiCoreTranslator::translate('Check the class name or the file name').'.');
         }
         
-        if (!$static) {
+        if (!$static)
+        {
             echo TPage::getLoadedCSS();
         }
         echo TPage::getLoadedJS();
@@ -83,7 +103,7 @@ class AdiantiCoreApplication
     /**
      * Set router callback
      */
-    public static function setRouter(callable $callback)
+    public static function setRouter(Callable $callback)
     {
         self::$router = $callback;
     }
@@ -103,11 +123,26 @@ class AdiantiCoreApplication
      * @param $method method name
      * @param $parameters array of parameters
      */
-    public static function executeMethod($class, $method = null, $parameters = null)
+    public static function executeMethod($class, $method = NULL, $parameters = NULL)
     {
         self::gotoPage($class, $method, $parameters);
     }
     
+    /**
+     * Process request and insert the result it into template
+     */
+    public static function processRequest($template)
+    {
+        ob_start();
+        AdiantiCoreApplication::run();
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        $template = str_replace('{content}', $content, $template);
+        
+        return $template;
+    }
+     
     /**
      * Goto a page
      *
@@ -115,7 +150,7 @@ class AdiantiCoreApplication
      * @param $method method name
      * @param $parameters array of parameters
      */
-    public static function gotoPage($class, $method = null, $parameters = null, $callback = null)
+    public static function gotoPage($class, $method = NULL, $parameters = NULL, $callback = NULL)
     {
         $query = self::buildHttpQuery($class, $method, $parameters);
         
@@ -129,7 +164,7 @@ class AdiantiCoreApplication
      * @param $method method name
      * @param $parameters array of parameters
      */
-    public static function loadPage($class, $method = null, $parameters = null)
+    public static function loadPage($class, $method = NULL, $parameters = NULL)
     {
         $query = self::buildHttpQuery($class, $method, $parameters);
         
@@ -143,7 +178,7 @@ class AdiantiCoreApplication
      * @param $method method name
      * @param $parameters array of parameters
      */
-    public static function postData($formName, $class, $method = null, $parameters = null)
+    public static function postData($formName, $class, $method = NULL, $parameters = NULL)
     {
         $url = array();
         $url['class']  = $class;
@@ -162,29 +197,36 @@ class AdiantiCoreApplication
      * @param $method method name
      * @param $parameters array of parameters
      */
-    public static function buildHttpQuery($class, $method = null, $parameters = null)
+    public static function buildHttpQuery($class, $method = NULL, $parameters = NULL)
     {
         $url = array();
-        $array = explode('\\', $class);
-        $class = array_pop($array);
         $url['class']  = $class;
-        $url['method'] = $method;
+        if ($method)
+        {
+            $url['method'] = $method;
+        }
         unset($parameters['class']);
         unset($parameters['method']);
         $query = http_build_query($url);
         $callback = self::$router;
         $short_url = null;
         
-        if ($callback) {
-            $query  = $callback($query, true);
-        } else {
+        if ($callback)
+        {
+            $query  = $callback($query, TRUE);
+        }
+        else
+        {
             $query = 'index.php?'.$query;
         }
         
-        if (strpos($query, '?') !== false) {
-            return $query . (count($parameters)>0 ? '&'.http_build_query($parameters) : '');
-        } else {
-            return $query . (count($parameters)>0 ? '?'.http_build_query($parameters) : '');
+        if (strpos($query, '?') !== FALSE)
+        {
+            return $query . ( (is_array($parameters) && count($parameters)>0) ? '&'.http_build_query($parameters) : '' );
+        }
+        else
+        {
+            return $query . ( (is_array($parameters) && count($parameters)>0) ? '?'.http_build_query($parameters) : '' );
         }
     }
     
@@ -211,10 +253,11 @@ class AdiantiCoreApplication
      */
     public static function errorHandler($errno, $errstr, $errfile, $errline)
     {
-        if ($errno === E_RECOVERABLE_ERROR) {
+        if ( $errno === E_RECOVERABLE_ERROR )
+        {
             throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-        }
-            
-        return false;
+        	}
+        	
+        	return false;
     }
 }

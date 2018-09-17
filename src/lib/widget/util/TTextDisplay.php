@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Text Display
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -29,29 +29,35 @@ class TTextDisplay extends TElement
         
         $style = array();
         
-        if (!empty($color)) {
+        if (!empty($color))
+        {
             $style['color'] = $color;
         }
         
-        if (!empty($size)) {
+        if (!empty($size))
+        {
             $style['font-size'] = (strpos($size, 'px') or strpos($size, 'pt')) ? $size : $size.'pt';
         }
         
-        if (!empty($decoration)) {
-            if (strpos(strtolower($decoration), 'b') !== false) {
+        if (!empty($decoration))
+        {
+            if (strpos(strtolower($decoration), 'b') !== FALSE)
+            {
                 $style['font-weight'] = 'bold';
             }
             
-            if (strpos(strtolower($decoration), 'i') !== false) {
+            if (strpos(strtolower($decoration), 'i') !== FALSE)
+            {
                 $style['font-style'] = 'italic';
             }
             
-            if (strpos(strtolower($decoration), 'u') !== false) {
+            if (strpos(strtolower($decoration), 'u') !== FALSE)
+            {
                 $style['text-decoration'] = 'underline';
             }
         }
         
         parent::add($value);
-        $this->{'style'} = substr(str_replace(['"',','], ['',';'], json_encode($style)), 1, -1);
+        $this->{'style'} = substr( str_replace(['"',','], ['',';'], json_encode($style) ), 1, -1);
     }
 }

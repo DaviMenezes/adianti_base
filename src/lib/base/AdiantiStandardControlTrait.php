@@ -4,11 +4,12 @@ namespace Adianti\Base\Lib\Base;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TRecord;
 use Exception;
+use ReflectionClass;
 
 /**
  * Standard Control Trait
  *
- * @version    5.0
+ * @version    5.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -27,11 +28,10 @@ trait AdiantiStandardControlTrait
     {
         $this->database = $database;
     }
-
+    
     /**
      * method setActiveRecord()
      * Define wich Active Record class will be used
-     * @throws Exception
      */
     public function setActiveRecord($activeRecord)
     {

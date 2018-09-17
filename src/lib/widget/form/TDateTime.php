@@ -2,12 +2,13 @@
 namespace Adianti\Base\Lib\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Form\TEntry;
 use DateTime;
 
 /**
- * DatTimePicker Widget
+ * DateTimePicker Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,6 +23,7 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     protected $size;
     protected $value;
     protected $options;
+    protected $replaceOnPost;
     
     /**
      * Class Constructor
@@ -34,14 +36,18 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         $this->mask = 'yyyy-mm-dd hh:ii';
         $this->dbmask = null;
         $this->options = [];
+        $this->replaceOnPost = FALSE;
+        
+        $this->setOption('fontAwesome', true);
         
         $newmask = $this->mask;
-        $newmask = str_replace('dd', '99', $newmask);
-        $newmask = str_replace('hh', '99', $newmask);
-        $newmask = str_replace('ii', '99', $newmask);
-        $newmask = str_replace('mm', '99', $newmask);
+        $newmask = str_replace('dd',   '99',   $newmask);
+        $newmask = str_replace('hh',   '99',   $newmask);
+        $newmask = str_replace('ii',   '99',   $newmask);
+        $newmask = str_replace('mm',   '99',   $newmask);
         $newmask = str_replace('yyyy', '9999', $newmask);
         parent::setMask($newmask);
+        $this->tag->{'widget'} = 'tdatetime';
     }
     
     /**
@@ -50,9 +56,12 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     public function setValue($value)
     {
         $value = str_replace('T', ' ', $value);
-        if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
-            return parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));
-        } else {
+        if (!empty($this->dbmask) and ($this->mask !== $this->dbmask) )
+        {
+            return parent::setValue( self::convertToMask($value, $this->dbmask, $this->mask) );
+        }
+        else
+        {
             return parent::setValue($value);
         }
     }
@@ -64,9 +73,12 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     {
         $value = parent::getPostData();
         
-        if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
+        if (!empty($this->dbmask) and ($this->mask !== $this->dbmask) )
+        {
             return self::convertToMask($value, $this->mask, $this->dbmask);
-        } else {
+        }
+        else
+        {
             return $value;
         }
     }
@@ -79,14 +91,16 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      */
     public static function convertToMask($value, $fromMask, $toMask)
     {
-        if ($value) {
-            $value = substr($value, 0, strlen($fromMask));
+        if ($value)
+        {
+            $value = substr($value,0,strlen($fromMask));
             
-            $phpFromMask = str_replace(['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $fromMask);
-            $phpToMask   = str_replace(['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $toMask);
+            $phpFromMask = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $fromMask);
+            $phpToMask   = str_replace( ['dd','mm', 'yyyy', 'hh', 'ii', 'ss'], ['d','m','Y', 'H', 'i', 's'], $toMask);
             
             $date = DateTime::createFromFormat($phpFromMask, $value);
-            if ($date) {
+            if ($date)
+            {
                 return $date->format($phpToMask);
             }
         }
@@ -98,16 +112,18 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      * Define the field's mask
      * @param $mask  Mask for the field (dd-mm-yyyy)
      */
-    public function setMask($mask)
+    public function setMask($mask, $replaceOnPost = FALSE)
     {
         $this->mask = $mask;
+        $this->replaceOnPost = $replaceOnPost;
         
         $newmask = $this->mask;
-        $newmask = str_replace('dd', '99', $newmask);
-        $newmask = str_replace('hh', '99', $newmask);
-        $newmask = str_replace('ii', '99', $newmask);
-        $newmask = str_replace('mm', '99', $newmask);
+        $newmask = str_replace('dd',   '99',   $newmask);
+        $newmask = str_replace('hh',   '99',   $newmask);
+        $newmask = str_replace('ii',   '99',   $newmask);
+        $newmask = str_replace('mm',   '99',   $newmask);
         $newmask = str_replace('yyyy', '9999', $newmask);
+        
         parent::setMask($newmask);
     }
     
@@ -134,7 +150,7 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tdate_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tdate_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -144,7 +160,7 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tdate_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -156,9 +172,11 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         $language = strtolower(LANG);
         $options = json_encode($this->options);
         
-        if (parent::getEditable()) {
+        if (parent::getEditable())
+        {
             $outer_size = 'undefined';
-            if (strstr($this->size, '%') !== false) {
+            if (strstr($this->size, '%') !== FALSE)
+            {
                 $outer_size = $this->size;
                 $this->size = '100%';
             }
@@ -166,8 +184,9 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         
         parent::show();
         
-        if (parent::getEditable()) {
-            TScript::create("tdatetime_start( '#{$this->id}', '{$this->mask}', '{$language}', '{$outer_size}', '{$options}');");
+        if (parent::getEditable())
+        {
+            TScript::create( "tdatetime_start( '#{$this->id}', '{$this->mask}', '{$language}', '{$outer_size}', '{$options}');");
         }
     }
 }

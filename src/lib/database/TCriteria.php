@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Database;
 /**
  * Provides an interface for filtering criteria definition
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -36,15 +36,20 @@ class TCriteria extends TExpression
     public static function create($simple_filters, $properties = null)
     {
         $criteria = new TCriteria;
-        if ($simple_filters) {
-            foreach ($simple_filters as $left_operand => $right_operand) {
+        if ($simple_filters)
+        {
+            foreach ($simple_filters as $left_operand => $right_operand)
+            {
                 $criteria->add(new TFilter($left_operand, '=', $right_operand));
             }
         }
         
-        if ($properties) {
-            foreach ($properties as $property => $value) {
-                if (!empty($value)) {
+        if ($properties)
+        {
+            foreach ($properties as $property => $value)
+            {
+                if (!empty($value))
+                {
                     $criteria->setProperty($property, $value);
                 }
             }
@@ -55,11 +60,12 @@ class TCriteria extends TExpression
     
     /**
      * When clonning criteria
-     */
-    public function __clone()
+     */    
+    function __clone()
     {
         $newExpressions = array();
-        foreach ($this->expressions as $key => $value) {
+        foreach ($this->expressions as $key => $value)
+        {
             $newExpressions[$key] = clone $value;
         }
         $this->expressions = $newExpressions;
@@ -67,7 +73,7 @@ class TCriteria extends TExpression
     
     /**
      * Adds a new Expression to the Criteria
-     *
+     * 
      * @param   $expression  TExpression object
      * @param   $operator    Logic Operator Constant
      * @author               Pablo Dall'Oglio
@@ -75,8 +81,9 @@ class TCriteria extends TExpression
     public function add(TExpression $expression, $operator = self::AND_OPERATOR)
     {
         // the first time, we don't need a logic operator to concatenate
-        if (empty($this->expressions)) {
-            $operator = null;
+        if (empty($this->expressions))
+        {
+            $operator = NULL;
         }
         
         // aggregates the expression to the list of expressions
@@ -90,9 +97,12 @@ class TCriteria extends TExpression
     public function getPreparedVars()
     {
         $preparedVars = array();
-        if (is_array($this->expressions)) {
-            if (count($this->expressions) > 0) {
-                foreach ($this->expressions as $expression) {
+        if (is_array($this->expressions))
+        {
+            if (count($this->expressions) > 0)
+            {
+                foreach ($this->expressions as $expression)
+                {
                     $preparedVars = array_merge($preparedVars, $expression->getPreparedVars());
                 }
                 return $preparedVars;
@@ -102,21 +112,24 @@ class TCriteria extends TExpression
     
     /**
      * Returns the final expression
-     *
+     * 
      * @param   $prepared Return a prepared expression
      * @return  A string containing the resulting expression
      * @author  Pablo Dall'Oglio
      */
-    public function dump($prepared = false)
+    public function dump( $prepared = FALSE)
     {
         // concatenates the list of expressions
-        if (is_array($this->expressions)) {
-            if (count($this->expressions) > 0) {
+        if (is_array($this->expressions))
+        {
+            if (count($this->expressions) > 0)
+            {
                 $result = '';
-                foreach ($this->expressions as $i=> $expression) {
+                foreach ($this->expressions as $i=> $expression)
+                {
                     $operator = $this->operators[$i];
                     // concatenates the operator with its respective expression
-                    $result .=  $operator. $expression->dump($prepared) . ' ';
+                    $result .=  $operator. $expression->dump( $prepared ) . ' ';
                 }
                 $result = trim($result);
                 return "({$result})";
@@ -126,18 +139,22 @@ class TCriteria extends TExpression
     
     /**
      * Define a Criteria property
-     *
+     * 
      * @param $property Name of the property (limit, offset, order, direction)
      * @param $value    Value for the property
      * @author          Pablo Dall'Oglio
      */
     public function setProperty($property, $value)
     {
-        if (isset($value)) {
+        if (isset($value))
+        {
             $this->properties[$property] = $value;
-        } else {
-            $this->properties[$property] = null;
         }
+        else
+        {
+            $this->properties[$property] = NULL;
+        }
+        
     }
     
     /**
@@ -145,9 +162,9 @@ class TCriteria extends TExpression
      */
     public function resetProperties()
     {
-        $this->properties['limit']  = null;
-        $this->properties['order']  = null;
-        $this->properties['offset'] = null;
+        $this->properties['limit']  = NULL;
+        $this->properties['order']  = NULL;
+        $this->properties['offset'] = NULL;
     }
     
     /**
@@ -156,29 +173,33 @@ class TCriteria extends TExpression
      */
     public function setProperties($properties)
     {
-        if (isset($properties['order']) and $properties['order']) {
+        if (isset($properties['order']) AND $properties['order'])
+        {
             $this->properties['order'] = addslashes($properties['order']);
         }
         
-        if (isset($properties['offset']) and $properties['offset']) {
+        if (isset($properties['offset']) AND $properties['offset'])
+        {
             $this->properties['offset'] = (int) $properties['offset'];
         }
         
-        if (isset($properties['direction']) and $properties['direction']) {
+        if (isset($properties['direction']) AND $properties['direction'])
+        {
             $this->properties['direction'] = $properties['direction'];
         }
     }
     
     /**
      * Return a Criteria property
-     *
+     * 
      * @param $property Name of the property (LIMIT, OFFSET, ORDER)
      * @return          A String containing the property value
      * @author          Pablo Dall'Oglio
      */
     public function getProperty($property)
     {
-        if (isset($this->properties[$property])) {
+        if (isset($this->properties[$property]))
+        {
             return $this->properties[$property];
         }
     }

@@ -20,7 +20,7 @@ use Exception;
  */
 class SystemUser extends DviModel
 {
-    const TABLENAME = 'sys_user';
+    const TABLENAME = 'system_user';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
@@ -232,18 +232,40 @@ class SystemUser extends DviModel
         // delete the object itself
         parent::delete($id);
     }
-
+    
+    /**
+     * Validate user login
+     * @param $login String with user login
+     */
+    public static function validate($login)
+    {
+        $user = self::newFromLogin($login);
+        
+        if ($user instanceof SystemUser)
+        {
+            if ($user->active == 'N')
+            {
+                throw new Exception(_t('Inactive user'));
+            }
+        }
+        else
+        {
+            throw new Exception(_t('User not found'));
+        }
+        
+        return $user;
+    }
+    
     /**
      * Authenticate the user
      * @param $login String with user login
      * @param $password String with user password
      * @returns TRUE if the password matches, otherwise throw Exception
-     * @throws Exception
      */
     public static function authenticate($login, $password)
     {
         $user = self::newFromLogin($login);
-        
+
         if ($user instanceof SystemUser) {
             if ($user->active == 'N') {
                 throw new Exception(_t('Inactive user'));
@@ -256,22 +278,23 @@ class SystemUser extends DviModel
             throw new Exception(_t('User not found'));
         }
     }
-
+    
     /**
      * Returns a SystemUser object based on its login
      * @param $login String with user login
-     * @return
-     * @throws Exception
      */
-    public static function newFromLogin($login)
+    static public function newFromLogin($login)
     {
-        $repos = new TRepository(SystemUser::class);
-        $criteria = new TCriteria;
-        $criteria->add(new TFilter('login', '=', $login));
-        $objects = $repos->load($criteria);
-        if (isset($objects[0])) {
-            return $objects[0];
-        }
+        return SystemUser::where('login', '=', $login)->first();
+    }
+    
+    /**
+     * Returns a SystemUser object based on its e-mail
+     * @param $email String with user email
+     */
+    static public function newFromEmail($email)
+    {
+        return SystemUser::where('email', '=', $email)->first();
     }
     
     /**

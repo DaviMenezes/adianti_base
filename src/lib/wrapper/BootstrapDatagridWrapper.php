@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 /**
  * Bootstrap datagrid decorator for Adianti Framework
  *
- * @version    5.0
+ * @version    5.5
  * @package    wrapper
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -33,7 +33,7 @@ class BootstrapDatagridWrapper
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array(array($this->decorated, $method), $parameters);
+        return call_user_func_array(array($this->decorated, $method),$parameters);
     }
     
     /**
@@ -60,16 +60,23 @@ class BootstrapDatagridWrapper
         $this->decorated->{'style'} .= ';border-collapse:collapse';
         
         $sessions = $this->decorated->getChildren();
-        if ($sessions) {
-            foreach ($sessions as $section) {
+        if ($sessions)
+        {
+            foreach ($sessions as $section)
+            {
                 unset($section->{'class'});
                 
                 $rows = $section->getChildren();
-                if ($rows) {
-                    foreach ($rows as $row) {
-                        if ($row->{'class'} == 'tdatagrid_group') {
+                if ($rows)
+                {
+                    foreach ($rows as $row)
+                    {
+                        if ($row->{'class'} == 'tdatagrid_group')
+                        {
                             $row->{'class'} = 'info';
-                        } else {
+                        }
+                        else
+                        {
                             unset($row->{'class'});
                         }
                     }

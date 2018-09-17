@@ -2,11 +2,12 @@
 namespace Adianti\Base\App\Lib\Util;
 
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 /**
  * TMail
  *
- * @version    5.0
+ * @version    5.5
  * @package    util
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -19,7 +20,7 @@ class TMail
     /**
      * Class Constructor
      */
-    public function __construct()
+    function __construct()
     {
         $this->pm = new PHPMailer(true);
         
@@ -31,13 +32,13 @@ class TMail
                 )
             );
             
-        $this->pm->CharSet = 'utf-8';
+        $this->pm-> CharSet = 'utf-8';
     }
     
     /**
      * Turn ON/OFF the debug
      */
-    public function setDebug($bool)
+    function setDebug($bool)
     {
         $this->pm-> SMTPDebug    = $bool;
     }
@@ -47,12 +48,13 @@ class TMail
      * @param  $from = from email
      * @param  $name = from name
      */
-    public function setFrom($from, $name = null)
+    function setFrom($from, $name = null)
     {
-        $this->pm->From     = $from;
+        $this->pm-> From     = $from;
         
-        if ($name) {
-            $this->pm->FromName = $name;
+        if ($name)
+        {
+            $this->pm-> FromName = $name;
         }
     }
     
@@ -61,37 +63,37 @@ class TMail
      * @param  $email = reply-to email
      * @param  $name  = reply-to name
      */
-    public function setReplyTo($address, $name = '')
+    function setReplyTo($address, $name = '')
     {
-        $this->pm->AddReplyTo($address, $name = '');
+        $this->pm-> AddReplyTo($address, $name = '');
     }
     
     /**
      * Set the message subject
      * @param  $subject of the message
      */
-    public function setSubject($subject)
+    function setSubject($subject)
     {
-        $this->pm->Subject = $subject;
+        $this->pm-> Subject = $subject;
     }
     
     /**
      * Set the email text body
      * @param  $body = text body
      */
-    public function setTextBody($body)
+    function setTextBody($body)
     {
-        $this->pm->Body = $body;
-        $this->pm->IsHTML(false);
+        $this->pm-> Body = $body;
+        $this->pm-> IsHTML(false);
     }
     
     /**
      * Set the email html body
      * @param  $body = html body
      */
-    public function setHtmlBody($html)
+    function setHtmlBody($html)
     {
-        $this->pm->MsgHTML($html);
+        $this->pm-> MsgHTML($html);
     }
     
     /**
@@ -101,12 +103,13 @@ class TMail
      */
     public function addAddress($address, $name = '')
     {
-        if (!$name) {
+        if (!$name)
+        {
             // search by pattern: nome <email@mail.com>
             list($address, $name) = $this->parseMail($address);
         }
         
-        $this->pm->AddAddress($address, $name);
+        $this->pm-> AddAddress($address, $name);
     }
     
     /**
@@ -116,7 +119,7 @@ class TMail
      */
     public function addCC($address, $name = '')
     {
-        $this->pm->AddCC($address, $name);
+        $this->pm-> AddCC($address, $name);
     }
     
     /**
@@ -126,7 +129,7 @@ class TMail
      */
     public function addBCC($address, $name = '')
     {
-        $this->pm->AddBCC($address, $name);
+        $this->pm-> AddBCC($address, $name);
     }
     
     /**
@@ -136,7 +139,7 @@ class TMail
      */
     public function addAttach($path, $name = '')
     {
-        $this->pm->AddAttachment($path, $name);
+        $this->pm-> AddAttachment($path, $name);
     }
     
     /**
@@ -144,8 +147,8 @@ class TMail
      */
     public function SetUseSmtp($auth = true)
     {
-        $this->pm->IsSMTP();            // set mailer to use SMTP
-        $this->pm->SMTPAuth = $auth;    // turn on SMTP authentication
+        $this->pm-> IsSMTP();            // set mailer to use SMTP
+        $this->pm-> SMTPAuth = $auth;    // turn on SMTP authentication
     }
     
     /**
@@ -154,11 +157,12 @@ class TMail
      */
     public function SetSmtpHost($host, $port = 25)
     {
-        $this->pm->Host = $host;
-        $this->pm->Port = $port;
+        $this->pm-> Host = $host;
+        $this->pm-> Port = $port;
         
-        if (strstr($this->pm-> Host, 'gmail') !== false) {
-            $this->pm->SMTPSecure = "ssl";
+        if (strstr($this->pm-> Host, 'gmail') !== FALSE)
+        {
+            $this->pm-> SMTPSecure = "ssl";
         }
     }
     
@@ -169,8 +173,8 @@ class TMail
      */
     public function SetSmtpUser($user, $pass)
     {
-        $this->pm->Username = $user;
-        $this->pm->Password = $pass;
+        $this->pm-> Username = $user;
+        $this->pm-> Password = $pass;
     }
     
     /**
@@ -179,7 +183,8 @@ class TMail
     public function parseMail($fullmail)
     {
         $pos = strpos($fullmail, '<');
-        if ($pos !== false) {
+        if ( $pos !== FALSE )
+        {
             $name  = trim(substr($fullmail, 0, $pos-1));
             $email = trim(substr($fullmail, $pos+1, -1));
             $name  = str_replace("'", "''", $name);
@@ -195,7 +200,7 @@ class TMail
      */
     public function send()
     {
-        $this->pm->Send();
-        return true;
+        $this->pm-> Send();
+        return TRUE;
     }
 }

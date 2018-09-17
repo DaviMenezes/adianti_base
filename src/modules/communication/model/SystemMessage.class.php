@@ -17,7 +17,7 @@ use Adianti\Base\Modules\Admin\Model\SystemUser;
  */
 class SystemMessage extends TRecord
 {
-    const TABLENAME = 'sys_message';
+    const TABLENAME = 'system_message';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     

@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Database\TRecord;
  */
 class SystemUserGroup extends TRecord
 {
-    const TABLENAME = 'sys_user_group';
+    const TABLENAME = 'system_user_group';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     

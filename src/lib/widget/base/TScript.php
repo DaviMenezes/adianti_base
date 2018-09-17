@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Widget\Base;
 /**
  * Base class for scripts
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage base
  * @author     Pablo Dall'Oglio
@@ -17,14 +17,15 @@ class TScript
      * Create a script
      * @param $code source code
      */
-    public static function create($code, $show = true)
+    public static function create( $code, $show = TRUE )
     {
         $script = new TElement('script');
         $script->{'language'} = 'JavaScript';
-        $script->setUseSingleQuotes(true);
-        $script->setUseLineBreaks(false);
-        $script->add(str_replace(["\n", "\r"], [' ', ' '], $code));
-        if ($show) {
+        $script->setUseSingleQuotes(TRUE);
+        $script->setUseLineBreaks(FALSE);
+        $script->add( str_replace( ["\n", "\r"], [' ', ' '], $code) );
+        if ($show)
+        {
             $script->show();
         }
         return $script;

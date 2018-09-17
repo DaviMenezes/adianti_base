@@ -107,6 +107,8 @@ class MessageList extends TElement
                 $ul_wrapper = new TElement('ul');
                 $ul_wrapper->{'class'} = 'menu';
                 $li_master->add($ul_wrapper);
+                
+                parent::add( TElement::tag('li', _t('Messages'), ['class'=>'header']));
                 parent::add($li_master);
                 
                 TTransaction::open('permission');
@@ -217,23 +219,17 @@ class MessageList extends TElement
         $to = date('Y-m-d H:i:s');
         $start_date = new DateTime($from);
         $since_start = $start_date->diff(new DateTime($to));
-        if ($since_start->y > 0) {
+        if ($since_start->y > 0)
             return $since_start->y.' years ';
-        }
-        if ($since_start->m > 0) {
+        if ($since_start->m > 0)
             return $since_start->m.' months ';
-        }
-        if ($since_start->d > 0) {
+        if ($since_start->d > 0)
             return $since_start->d.' days ';
-        }
-        if ($since_start->h > 0) {
+        if ($since_start->h > 0)
             return $since_start->h.' hours ';
-        }
-        if ($since_start->i > 0) {
+        if ($since_start->i > 0)
             return $since_start->i.' minutes ';
-        }
-        if ($since_start->s > 0) {
-            return $since_start->s.' seconds ';
-        }
+        if ($since_start->s > 0)
+            return $since_start->s.' seconds ';    
     }
 }

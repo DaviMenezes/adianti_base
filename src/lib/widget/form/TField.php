@@ -2,17 +2,18 @@
 namespace Adianti\Base\Lib\Widget\Form;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Validator\TFieldValidator;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Validator\TFieldValidator;
+use Adianti\Base\Lib\Validator\TRequiredValidator;
+
 use Exception;
 use ReflectionClass;
 
 /**
  * Base class to construct all the widgets
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -29,25 +30,24 @@ abstract class TField
     protected $tag;
     protected $formName;
     protected $label;
-    private $validations;
-
+    private   $validations;
+    
     /**
      * Class Constructor
      * @param  $name name of the field
-     * @throws Exception
      */
     public function __construct($name)
     {
-        $rc = new ReflectionClass($this);
+        $rc = new ReflectionClass( $this );
         $classname = $rc->getShortName();
         
-        if (empty($name)) {
-            $str = 'The parameter (^1) of ^2 constructor is required';
-            throw new Exception(AdiantiCoreTranslator::translate($str, 'name', $classname));
+        if (empty($name))
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 constructor is required', 'name', $classname));
         }
         
         // define some default properties
-        self::setEditable(true);
+        self::setEditable(TRUE);
         self::setName(trim($name));
         
         // initialize validations array
@@ -67,7 +67,8 @@ abstract class TField
     public function __set($name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value)) {
+        if (is_scalar($value))
+        {              
             // store the property's value
             $this->setProperty($name, $value);
         }
@@ -85,7 +86,7 @@ abstract class TField
     /**
      * Clone the object
      */
-    public function __clone()
+    function __clone()
     {
         $this->tag = clone $this->tag;
     }
@@ -97,7 +98,14 @@ abstract class TField
      */
     public function __call($method, $param)
     {
-        return call_user_func_array(array($this->tag, $method), $param);
+        if (method_exists($this->tag, $method))
+        {
+            return call_user_func_array( array($this->tag, $method), $param );
+        }
+        else
+        {
+            throw new Exception(AdiantiCoreTranslator::translate("Method ^1 not found", $method.'()'));
+        }
     }
     
     /**
@@ -200,9 +208,12 @@ abstract class TField
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name])) {
+        if (isset($_POST[$this->name]))
+        {
             return $_POST[$this->name];
-        } else {
+        }
+        else
+        {
             return '';
         }
     }
@@ -230,17 +241,23 @@ abstract class TField
      * @param $name  Property Name
      * @param $value Property Value
      */
-    public function setProperty($name, $value, $replace = true)
+    public function setProperty($name, $value, $replace = TRUE)
     {
-        if ($replace) {
+        if ($replace)
+        {
             // delegates the property assign to the composed object
             $this->tag->$name = $value;
-        } else {
-            if ($this->tag->$name) {
+        }
+        else
+        {
+            if ($this->tag->$name)
+            {
             
                 // delegates the property assign to the composed object
                 $this->tag->$name = $this->tag->$name . ';' . $value;
-            } else {
+            }
+            else
+            {
                 // delegates the property assign to the composed object
                 $this->tag->$name = $value;
             }
@@ -261,7 +278,7 @@ abstract class TField
      * Define the Field's width
      * @param $width Field's width in pixels
      */
-    public function setSize($width, $height = null)
+    public function setSize($width, $height = NULL)
     {
         $this->size = $width;
     }
@@ -280,7 +297,7 @@ abstract class TField
      * @param $validator TFieldValidator object
      * @param $parameters Aditional parameters
      */
-    public function addValidation($label, TFieldValidator $validator, $parameters = null)
+    public function addValidation($label, TFieldValidator $validator, $parameters = NULL)
     {
         $this->validations[] = array($label, $validator, $parameters);
     }
@@ -298,15 +315,18 @@ abstract class TField
      */
     public function isRequired()
     {
-        if ($this->validations) {
-            foreach ($this->validations as $validation) {
+        if ($this->validations)
+        {
+            foreach ($this->validations as $validation)
+            {
                 $validator = $validation[1];
-                if ($validator instanceof TRequiredValidator) {
-                    return true;
+                if ($validator instanceof TRequiredValidator)
+                {
+                    return TRUE;
                 }
             }
         }
-        return false;
+        return FALSE;
     }
     
     /**
@@ -314,8 +334,10 @@ abstract class TField
      */
     public function validate()
     {
-        if ($this->validations) {
-            foreach ($this->validations as $validation) {
+        if ($this->validations)
+        {
+            foreach ($this->validations as $validation)
+            {
                 $label      = $validation[0];
                 $validator  = $validation[1];
                 $parameters = $validation[2];
@@ -344,7 +366,7 @@ abstract class TField
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tfield_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tfield_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -354,7 +376,7 @@ abstract class TField
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tfield_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tfield_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -364,6 +386,6 @@ abstract class TField
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create(" tfield_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tfield_clear_field('{$form_name}', '{$field}'); " );
     }
 }

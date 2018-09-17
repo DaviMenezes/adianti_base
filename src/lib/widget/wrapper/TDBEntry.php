@@ -10,7 +10,7 @@ use Exception;
 /**
  * Database Entry Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage wrapper
  * @author     Pablo Dall'Oglio
@@ -20,6 +20,7 @@ use Exception;
 class TDBEntry extends TEntry
 {
     protected $minLength;
+    protected $service;
     private $database;
     private $model;
     private $column;
@@ -36,22 +37,25 @@ class TDBEntry extends TEntry
      * @param  $ordercolumn column to order the fields (optional)
      * @param  $criteria criteria (TCriteria object) to filter the model (optional)
      */
-    public function __construct($name, $database, $model, $value, $orderColumn = null, TCriteria $criteria = null)
+    public function __construct($name, $database, $model, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name);
         
         $value = trim($value);
         
-        if (empty($database)) {
+        if (empty($database))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
         }
         
-        if (empty($model)) {
+        if (empty($model))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'model', __CLASS__));
         }
         
-        if (empty($value)) {
+        if (empty($value))
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'value', __CLASS__));
         }
         
@@ -59,9 +63,19 @@ class TDBEntry extends TEntry
         $this->database = $database;
         $this->model = $model;
         $this->column = $value;
-        $this->operator = 'like';
-        $this->orderColumn = isset($orderColumn) ? $orderColumn : null;
+        $this->operator = null;
+        $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
+        $this->service = 'AdiantiAutocompleteService';
+    }
+    
+    /**
+     * Define the search service
+     * @param $service Search service
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
     }
     
     /**
@@ -91,15 +105,16 @@ class TDBEntry extends TEntry
         $min = $this->minLength;
         $orderColumn = isset($this->orderColumn) ? $this->orderColumn : $this->column;
         $criteria = '';
-        if ($this->criteria) {
+        if ($this->criteria)
+        {
             $criteria = base64_encode(serialize($this->criteria));
         }
         
         $seed = APPLICATION_NAME.'s8dkld83kf73kf094';
         $hash = md5("{$seed}{$this->database}{$this->column}{$this->model}");
         $length = $this->minLength;
-
-        $class = 'AdiantiAutocompleteService';
+        
+        $class = $this->service;
         $callback = array($class, 'onSearch');
         $method = $callback[1];
         $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&hash={$hash}";

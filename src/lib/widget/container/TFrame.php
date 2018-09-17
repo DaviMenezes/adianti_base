@@ -2,12 +2,11 @@
 namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Form\TLabel;
 
 /**
  * Frame Widget: creates a bordered area with a title located at its top-left corner
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -24,7 +23,7 @@ class TFrame extends TElement
      * Class Constructor
      * @param  $value text label
      */
-    public function __construct($width = null, $height = null)
+    public function __construct($width = NULL, $height = NULL)
     {
         parent::__construct('fieldset');
         $this->{'id'}    = 'tfieldset_' . mt_rand(1000000000, 1999999999);
@@ -33,12 +32,14 @@ class TFrame extends TElement
         $this->width  = $width;
         $this->height = $height;
         
-        if ($width) {
-            $this->{'style'} .= (strstr($width, '%') !== false) ? ";width:{$width}" : ";width:{$width}px";
+        if ($width)
+        {
+            $this->{'style'} .= (strstr($width, '%') !== FALSE) ? ";width:{$width}" : ";width:{$width}px";
         }
         
-        if ($height) {
-            $this->{'style'} .= (strstr($height, '%') !== false) ? ";height:{$height}" : ";height:{$height}px";
+        if ($height)
+        {
+            $this->{'style'} .= (strstr($height, '%') !== FALSE) ? ";height:{$height}" : ";height:{$height}px";
         }
     }
     

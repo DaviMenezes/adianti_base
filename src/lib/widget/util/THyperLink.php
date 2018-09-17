@@ -1,10 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Util;
 
+use Adianti\Widget\Util\TTextDisplay;
+
 /**
  * File Link
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -23,16 +25,20 @@ class THyperLink extends TTextDisplay
      */
     public function __construct($value, $location, $color = null, $size = null, $decoration = null, $icon = null)
     {
-        if ($icon) {
+        if ($icon)
+        {
             $value = new TImage($icon) . $value;
         }
         
         parent::__construct($value, $color, $size, $decoration);
         parent::setName('a');
         
-        if (file_exists($value)) {
+        if (file_exists($value))
+        {
             $this->{'href'} = 'download.php?file='.$location;
-        } else {
+        }
+        else
+        {
             $this->{'href'} = $location;
         }
         

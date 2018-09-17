@@ -2,11 +2,11 @@
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Widget\FormTSortList;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TCriteria;
 
+use Adianti\Base\Lib\Widget\Form\TSortList;
 use Exception;
 
 /**

@@ -1,10 +1,12 @@
 <?php
 namespace Adianti\Base\App\Lib\Html;
 
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Exception;
 
 /**
  * HTML Document parser

@@ -2,10 +2,10 @@
 namespace Adianti\Base\Widget\Menu;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use SimpleXMLElement;
+use DOMDocument;
+use DOMElement;
 use Exception;
-use DomDocument;
-use DomElement;
+use SimpleXMLElement;
 
 /**
  * Menu Parser

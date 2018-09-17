@@ -1,9 +1,9 @@
 <?php
 namespace Adianti\Database;
 
-use Adianti\Database\TSqlStatement;
-use Adianti\Database\TTransaction;
-use Adianti\Database\TCriteria;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TSqlStatement;
+use Adianti\Base\Lib\Database\TTransaction;
 use Exception;
 
 /**

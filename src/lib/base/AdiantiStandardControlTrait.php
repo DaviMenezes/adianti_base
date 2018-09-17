@@ -4,7 +4,6 @@ namespace Adianti\Base\Lib\Base;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TRecord;
 use Exception;
-use ReflectionClass;
 
 /**
  * Standard Control Trait

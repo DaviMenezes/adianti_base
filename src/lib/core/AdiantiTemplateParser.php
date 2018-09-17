@@ -1,9 +1,9 @@
 <?php
 namespace Adianti\Core;
 
-use Adianti\Control\TPage;
-use Adianti\Registry\TSession;
-use Exception;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Registry\TSession;
 
 /**
  * Template parser

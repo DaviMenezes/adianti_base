@@ -2,7 +2,6 @@
 namespace Adianti\Base\Widget\Menu;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-
 use SimpleXMLElement;
 
 /**

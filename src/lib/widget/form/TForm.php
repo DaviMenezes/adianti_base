@@ -1,12 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Form\TField;
-use Adianti\Base\Lib\Widget\Form\TButton;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 use ReflectionClass;
 

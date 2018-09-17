@@ -2,10 +2,12 @@
 namespace Adianti\Base\App\Lib\Reports;
 
 /**
- * Base class for all HTML Elements
- * Copyright (c) 2006-2010 Pablo Dall'Oglio
- * @author  Pablo Dall'Oglio <pablo [at] adianti.com.br>
- * @version 2.0, 2007-08-01
+ * DOM Element
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TAdiantiElement
 {
@@ -31,7 +33,8 @@ class TAdiantiElement
     public function __set($name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value)) {
+        if (is_scalar($value))
+        {              
             // store the property's value
             $this->properties[$name] = $value;
         }
@@ -43,7 +46,8 @@ class TAdiantiElement
      */
     public function __get($name)
     {
-        if (isset($this->properties[$name])) {
+        if (isset($this->properties[$name]))
+        {              
             return $this->properties[$name];
         }
     }
@@ -69,9 +73,11 @@ class TAdiantiElement
     {
         // exibe a tag de abertura
         echo "<{$this->name}";
-        if ($this->properties) {
+        if ($this->properties)
+        {
             // percorre as propriedades
-            foreach ($this->properties as $name => $value) {
+            foreach ($this->properties as $name=>$value)
+            {
                 echo " {$name}=\"{$value}\"";
             }
         }
@@ -87,18 +93,23 @@ class TAdiantiElement
         $this->open();
         
         // verify if the tag has child elements
-        if ($this->children) {
-            if (count($this->children)>1) {
+        if ($this->children)
+        {
+            if (count($this->children)>1)
+            {
                 echo "\n";
             }
             // iterate all child elements
-            foreach ($this->children as $child) {
+            foreach ($this->children as $child)
+            {
                 // verify if the child is an object
-                if (is_object($child)) {
+                if (is_object($child))
+                {
                     $child->show();
                 }
                 // otherwise, the child is a scalar
-                elseif ((is_string($child)) or (is_numeric($child))) {
+                else if ((is_string($child)) or (is_numeric($child)))
+                {
                     echo $child;
                 }
             }
@@ -115,3 +126,4 @@ class TAdiantiElement
         echo "</{$this->name}>\n";
     }
 }
+?>

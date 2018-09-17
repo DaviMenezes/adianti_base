@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Container\TJQueryDialog;
 /**
  * Window Container (JQueryDialog wrapper)
  *
- * @version    5.0
+ * @version    5.5
  * @package    control
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -20,12 +20,20 @@ class TWindow extends TPage
     {
         parent::__construct();
         $this->wrapper = new TJQueryDialog;
-        $this->wrapper->setUseOKButton(false);
+        $this->wrapper->setUseOKButton(FALSE);
         $this->wrapper->setTitle('');
         $this->wrapper->setSize(1000, 500);
-        $this->wrapper->setModal(true);
+        $this->wrapper->setModal(TRUE);
         $this->wrapper->{'widget'} = 'T'.'Window';
         parent::add($this->wrapper);
+    }
+    
+    /**
+     * Returns ID
+     */
+    public function getId()
+    {
+        return $this->wrapper->getId();
     }
     
     /**
@@ -34,7 +42,7 @@ class TWindow extends TPage
     public static function create($title, $width, $height, $params = null)
     {
         $inst = new static($params);
-        $inst->setIsWrapped(true);
+        $inst->setIsWrapped(TRUE);
         $inst->setTitle($title);
         $inst->setSize($width, $height);
         unset($inst->wrapper->{'widget'});
@@ -66,6 +74,14 @@ class TWindow extends TPage
     public function setModal($modal)
     {
         $this->wrapper->setModal($modal);
+    }
+    
+    /**
+     * Disable scrolling
+     */
+    public function disableScrolling()
+    {
+        $this->wrapper->disableScrolling();
     }
     
     /**
@@ -108,10 +124,26 @@ class TWindow extends TPage
     }
     
     /**
+     * set close action
+     * @param $action close action
+     */
+    public function setCloseAction(TAction $action)
+    {
+        $this->wrapper->setCloseAction($action);
+    }
+    
+    /**
      * Close TJQueryDialog's
      */
-    public static function closeWindow()
+    public static function closeWindow($id = null)
     {
-        TJQueryDialog::closeAll();
+        if (!empty($id))
+        {
+            TJQueryDialog::closeById($id);
+        }
+        else
+        {
+            TJQueryDialog::closeAll();
+        }
     }
 }

@@ -8,7 +8,7 @@ use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 /**
  * DBUnique Search Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -28,15 +28,14 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
      * Class Constructor
      * @param  $name Widget's name
      */
-    public function __construct($name, $database, $model, $key, $value, $orderColumn = null, TCriteria $criteria = null)
+    public function __construct($name, $database, $model, $key, $value, $orderColumn = NULL, TCriteria $criteria = NULL)
     {
         // executes the parent class constructor
         parent::__construct($name, $database, $model, $key, $value, $orderColumn, $criteria);
         parent::setMaxSize(1);
-        parent::setDefaultOption(true);
+        parent::setDefaultOption(TRUE);
         parent::disableMultiple();
         
-        $this->tag->{'name'}  = $this->name;    // tag name
         $this->tag->{'widget'} = 'tdbuniquesearch';
     }
     
@@ -46,17 +45,34 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if ($value) {
+        if ($value)
+        {
             TTransaction::open($this->database);
             $model = $this->model;
-            $object = $model::find($value);
-            if ($object) {
+            
+            $pk = constant("{$model}::PRIMARYKEY");
+            
+            if ($pk === $this->key) // key is the primary key (default)
+            {
+                // use find because it uses cache
+                $object = $model::find( $value );
+            }
+            else // key is an alternative key (uses where->first)
+            {
+                $object = $model::where( $this->key, '=', $value )->first();
+            }
+            
+            if ($object)
+            {
                 $description = $object->render($this->mask);
                 $this->value = $value; // avoid use parent::setValue() because compat mode
-                parent::addItems([$value => $description ]);
+                parent::addItems( [$value => $description ] );
             }
+            
             TTransaction::close();
-        } else {
+        }
+        else
+        {
             $this->value = null;
             parent::addItems([]);
         }
@@ -67,11 +83,33 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name])) {
-            $val = $_POST[$this->name];
-            return $val;
-        } else {
+        $name = str_replace(['[',']'], ['',''], $this->name);
+        
+        if (isset($_POST[$name]))
+        {
+            $val = $_POST[$name];
+            
+            if ($val == '') // empty option
+            {
+                return '';
+            }
+            else
+            {
+                return $val;
+            }
+        }
+        else
+        {
             return '';
         }
+    }
+    
+    /**
+     * Show the component
+     */
+    public function show()
+    {
+        $this->tag->{'name'}  = $this->name; // tag name
+        parent::show();
     }
 }

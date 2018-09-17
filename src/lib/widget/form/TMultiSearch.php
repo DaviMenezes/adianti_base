@@ -9,7 +9,7 @@ use Exception;
 /**
  * Multi Search Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Matheus Agnes Dias
@@ -44,13 +44,12 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
         $this->id   = 'tmultisearch_'.mt_rand(1000000000, 1999999999);
 
         $this->height = 100;
-        $this->minLength = 5;
+        $this->minLength = 3;
         $this->maxSize = 0;
-        $this->allowClear = true;
-        $this->allowSearch = true;
+        $this->allowClear = TRUE;
+        $this->allowSearch = TRUE;
         
-        parent::setDefaultOption(false);
-        $this->tag->{'name'}  = $this->name.'[]';    // tag name
+        parent::setDefaultOption(FALSE);
         $this->tag->{'component'} = 'multisearch';
         $this->tag->{'widget'} = 'tmultisearch';
     }
@@ -68,7 +67,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public function disableClear()
     {
-        $this->allowClear = false;
+        $this->allowClear = FALSE;
     }
     
     /**
@@ -76,7 +75,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public function disableSearch()
     {
-        $this->allowSearch = false;
+        $this->allowSearch = FALSE;
     }
     
     /**
@@ -84,10 +83,11 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      * @param  $width   Widget's width
      * @param  $height  Widget's height
      */
-    public function setSize($width, $height = null)
+    public function setSize($width, $height = NULL)
     {
         $this->size   = $width;
-        if ($height) {
+        if ($height)
+        {
             $this->height = $height;
         }
     }
@@ -116,9 +116,10 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     {
         $this->maxSize = $maxsize;
         
-        if ($maxsize == 1) {
+        if ($maxsize == 1)
+        {
             unset($this->height);
-            parent::setDefaultOption(true);
+            parent::setDefaultOption(TRUE);
         }
     }
     
@@ -138,12 +139,16 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     public function setValue($value)
     {
         $ini = AdiantiApplicationConfig::get();
-
-        if (isset($ini['general']['compat']) and $ini['general']['compat'] ==  '4') {
-            if ($value) {
+        
+        if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+        {
+            if ($value)
+            {
                 parent::setValue(array_keys((array)$value));
             }
-        } else {
+        }
+        else
+        {
             parent::setValue($value);
         }
     }
@@ -155,25 +160,36 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     {
         $ini = AdiantiApplicationConfig::get();
         
-        if (isset($_POST[$this->name])) {
+        if (isset($_POST[$this->name]))
+        {
             $values = $_POST[$this->name];
             
-            if (isset($ini['general']['compat']) and $ini['general']['compat'] ==  '4') {
+            if (isset($ini['general']['compat']) AND $ini['general']['compat'] ==  '4')
+            {
                 $return = [];
-                if (is_array($values)) {
-                    foreach ($values as $item) {
+                if (is_array($values))
+                {
+                    foreach ($values as $item)
+                    {
                         $return[$item] = $this->items[$item];
                     }
                 }
                 return $return;
-            } else {
-                if (empty($this->separator)) {
+            }
+            else
+            {
+                if (empty($this->separator))
+                {
                     return $values;
-                } else {
+                }
+                else
+                {
                     return implode($this->separator, $values);
                 }
             }
-        } else {
+        }
+        else
+        {
             return '';
         }
     }
@@ -185,7 +201,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tmultisearch_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultisearch_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -195,7 +211,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tmultisearch_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultisearch_disable_field('{$form_name}', '{$field}'); " );
     }
 
     /**
@@ -205,7 +221,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create(" tmultisearch_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultisearch_clear_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -214,42 +230,55 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
     public function show()
     {
         // define the tag properties
-        $this->tag->{'id'}  = $this->id;    // tag name
+        $this->tag->{'id'}    = $this->id; // tag id
         
-        if (strstr($this->size, '%') !== false) {
+        if (empty($this->tag->{'name'})) // may be defined by child classes
+        {
+            $this->tag->{'name'}  = $this->name.'[]'; // tag name
+        }
+        
+        if (strstr($this->size, '%') !== FALSE)
+        {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
             $size  = "{$this->size}";
-        } else {
+        }
+        else
+        {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
             $size  = "{$this->size}px";
         }
         
         $multiple = $this->maxSize == 1 ? 'false' : 'true';
-        $search_word = AdiantiCoreTranslator::translate('Search');
+        $search_word = !empty($this->getProperty('placeholder'))? $this->getProperty('placeholder') : AdiantiCoreTranslator::translate('Search');
         $change_action = 'function() {}';
         $allowclear  = $this->allowClear  ? 'true' : 'false';
         $allowsearch = $this->allowSearch ? '1' : 'Infinity';
         
-        if (isset($this->changeAction)) {
-            if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+        if (isset($this->changeAction))
+        {
+            if (!TForm::getFormByName($this->formName) instanceof TForm)
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
             }
             
-            $string_action = $this->changeAction->serialize(false);
+            $string_action = $this->changeAction->serialize(FALSE);
             $change_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback'); }";
             $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
-        } elseif (isset($this->changeFunction)) {
+        }
+        else if (isset($this->changeFunction))
+        {
             $change_action = "function() { $this->changeFunction }";
-            $this->setProperty('changeaction', $this->changeFunction, false);
+            $this->setProperty('changeaction', $this->changeFunction, FALSE);
         }
         
         // shows the component
-        parent::renderItems(false);
+        parent::renderItems( false );
         $this->tag->show();
         
         TScript::create(" tmultisearch_start( '{$this->id}', '{$this->minLength}', '{$this->maxSize}', '{$search_word}', $multiple, '{$size}', '{$this->height}px', {$allowclear}, {$allowsearch}, $change_action ); ");
         
-        if (!$this->editable) {
+        if (!$this->editable)
+        {
             TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
         }
     }

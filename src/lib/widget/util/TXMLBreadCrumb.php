@@ -2,14 +2,14 @@
 namespace Adianti\Base\Lib\Widget\Util;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Widget\Menu\TMenuParser;
+use Adianti\Base\Widget\Menu\TMenuParser;
 use Dvi\Adianti\Route;
 use Exception;
 
 /**
  * XMLBreadCrumb
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -30,16 +30,22 @@ class TXMLBreadCrumb extends TBreadCrumb
         
         $this->parser = new TMenuParser($xml_file);
         $paths = $this->parser->getPath(Route::getClassName($controller));
-        
+
         if (!empty($paths)) {
             parent::addHome();
             
             $count = 1;
-            foreach ($paths as $path) {
-                parent::addItem($path, $count == count($paths));
-                $count++;
+            foreach ($paths as $path)
+            {
+                if (!empty($path))
+                {
+                    parent::addItem($path, $count == count($paths));
+                    $count++;
+                }
             }
-        } else {
+        }
+        else
+        {
             throw new Exception(AdiantiCoreTranslator::translate('Class ^1 not found in ^2', $controller, $xml_file));
         }
     }

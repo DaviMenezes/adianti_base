@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Widget\Form;
 /**
  * Unique Search Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -22,10 +22,9 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         // executes the parent class constructor
         parent::__construct($name);
         parent::setMaxSize(1);
-        parent::setDefaultOption(true);
+        parent::setDefaultOption(TRUE);
         parent::disableMultiple();
         
-        $this->tag->{'name'}  = $this->name;    // tag name
         $this->tag->{'widget'} = 'tuniquesearch';
     }
     
@@ -42,11 +41,23 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name])) {
+        if (isset($_POST[$this->name]))
+        {
             $val = $_POST[$this->name];
             return $val;
-        } else {
+        }
+        else
+        {
             return '';
         }
+    }
+    
+    /**
+     * Show the component
+     */
+    public function show()
+    {
+        $this->tag->{'name'}  = $this->name; // tag name
+        parent::show();
     }
 }

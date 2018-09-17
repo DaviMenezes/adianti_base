@@ -175,7 +175,9 @@ class SystemDocumentForm extends TPage
             
             //$action = new TAction;
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             new TMessage('error', $e->getMessage()); // shows the exception error message
             $this->form->setData($this->form->getData()); // keep form data
             TTransaction::rollback(); // undo all pending operations

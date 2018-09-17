@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * BreadCrumb
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage util
  * @author     Pablo Dall'Oglio
@@ -31,20 +31,22 @@ class TBreadCrumb extends TElement
         
         $this->container = new TElement('ol');
         $this->container->{'class'} = 'tbreadcrumb';
-        parent::add($this->container);
+        parent::add( $this->container );
     }
     
     /**
      * Static constructor
      */
-    public static function create($options, $home = true)
+    public static function create( $options, $home = true)
     {
         $breadcrumb = new TBreadCrumb;
-        if ($home) {
+        if ($home)
+        {
             $breadcrumb->addHome();
         }
-        foreach ($options as $option) {
-            $breadcrumb->addItem($option);
+        foreach ($options as $option)
+        {
+            $breadcrumb->addItem( $option );
         }
         return $breadcrumb;
     }
@@ -60,19 +62,22 @@ class TBreadCrumb extends TElement
         $a->{'class'} = 'bread';
         $a->generator = 'adianti';
         
-        if (self::$homeController) {
+        if (self::$homeController)
+        {
             $a->{'href'} = 'engine.php?class='.self::$homeController;
-        } else {
+        }
+        else
+        {
             $a->{'href'} = 'engine.php';
         }
         
         $a->{'title'} = 'Home';
         
         $span = new TElement('span');
-        $span->add('h');
-        $li->add($a);
-        $a->add($span);
-        $this->container->add($li);
+        $span->add( 'h' );
+        $li->add( $a );
+        $a->add( $span );
+        $this->container->add( $li );
     }
     
     /**
@@ -80,23 +85,27 @@ class TBreadCrumb extends TElement
      * @param $path Path to be shown
      * @param $last If the item is the last one
      */
-    public function addItem($path, $last = false)
+    public function addItem($path, $last = FALSE)
     {
         $li = new TElement('li');
-        $this->container->add($li);
+        $this->container->add( $li );
         
         $span = new TElement('span');
-        $span->add($path);
+        $span->add( $path );
         
         $this->items[$path] = $span;
-        if ($last) {
-            $li->add($span);
-        } else {
+        if( $last )
+        {
+            $li->add( $span );
+        }
+        else
+        {
             $a = new TElement('a');
             
-            $li->add($a);
-            $a->add($span);
+            $li->add( $a );
+            $a->add( $span );
         }
+            
     }
     
     /**
@@ -104,10 +113,14 @@ class TBreadCrumb extends TElement
      */
     public function select($path)
     {
-        foreach ($this->items as $key => $span) {
-            if ($key == $path) {
+        foreach ($this->items as $key => $span)
+        {
+            if ($key == $path)
+            {
                 $span->{'class'} = 'selected';
-            } else {
+            }
+            else
+            {
                 $span->{'class'} = '';
             }
         }

@@ -1,13 +1,14 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
+use Adianti\Base\Lib\Validator\TFieldValidator;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 
 /**
  * Maximum length validation
  *
- * @version    5.0
+ * @version    5.5
  * @package    validator
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -21,11 +22,12 @@ class TMaxLengthValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (length)
      */
-    public function validate($label, $value, $parameters = null)
+    public function validate($label, $value, $parameters = NULL)
     {
         $length = $parameters[0];
         
-        if (strlen($value) > $length) {
+        if (strlen($value) > $length)
+        {
             throw new Exception(AdiantiCoreTranslator::translate('The field ^1 can not be greater than ^2 characters', $label, $length));
         }
     }

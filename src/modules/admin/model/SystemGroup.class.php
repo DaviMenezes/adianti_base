@@ -18,26 +18,22 @@ use Adianti\Base\Lib\Database\TRepository;
  */
 class SystemGroup extends TRecord
 {
-    const TABLENAME = 'sys_group';
-    const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const TABLENAME  = 'system_group';
+    const PRIMARYKEY = 'id';
+    const IDPOLICY   = 'max'; // {max, serial}
     
-    
-    private $system_programs = array();
-
     /**
      * Constructor method
      */
-    public function __construct($id = null)
+    public function __construct($id = NULL)
     {
         parent::__construct($id);
         parent::addAttribute('name');
     }
 
     /**
-     * Method addSystem_program
-     * Add a System_program to the System_group
-     * @param $object Instance of System_program
+     * Add a SystemProgram to the SystemGroup
+     * @param $object Instance of SystemProgram
      */
     public function addSystemProgram(SystemProgram $systemprogram)
     {
@@ -48,9 +44,8 @@ class SystemGroup extends TRecord
     }
     
     /**
-     * Method getSystem_programs
-     * Return the System_group' System_program's
-     * @return Collection of System_program
+     * Return the SystemProgram's
+     * @return Collection of SystemProgram
      */
     public function getSystemPrograms()
     {
@@ -61,9 +56,11 @@ class SystemGroup extends TRecord
         $criteria = new TCriteria;
         $criteria->add(new TFilter('system_group_id', '=', $this->id));
         $system_group_system_programs = $repository->load($criteria);
-        if ($system_group_system_programs) {
-            foreach ($system_group_system_programs as $system_group_system_program) {
-                $system_programs[] = new SystemProgram($system_group_system_program->system_program_id);
+        if ($system_group_system_programs)
+        {
+            foreach ($system_group_system_programs as $system_group_system_program)
+            {
+                $system_programs[] = new SystemProgram( $system_group_system_program->system_program_id );
             }
         }
         
@@ -75,25 +72,21 @@ class SystemGroup extends TRecord
      */
     public function clearParts()
     {
-        // delete the related System_groupSystem_program objects
-        $criteria = new TCriteria;
-        $criteria->add(new TFilter('system_group_id', '=', $this->id));
-        $repository = new TRepository(SystemGroupProgram::class);
-        $repository->delete($criteria);
+        // delete the related objects
+        SystemGroupProgram::where('system_group_id', '=', $this->id)->delete();
     }
     
     /**
      * Delete the object and its aggregates
      * @param $id object ID
      */
-    public function delete($id = null)
+    public function delete($id = NULL)
     {
         // delete the related System_groupSystem_program objects
         $id = isset($id) ? $id : $this->id;
-        $repository = new TRepository('SystemGroupProgram');
-        $criteria = new TCriteria;
-        $criteria->add(new TFilter('system_group_id', '=', $id));
-        $repository->delete($criteria);
+        
+        SystemGroupProgram::where('system_group_id', '=', $id)->delete();
+        SystemUserGroup::where('system_group_id', '=', $id)->delete();
         
         // delete the object itself
         parent::delete($id);

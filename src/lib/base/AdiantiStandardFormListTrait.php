@@ -13,7 +13,7 @@ use Exception;
 /**
  * Standard Form List Trait
  *
- * @version    5.0
+ * @version    5.5
  * @package    base
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -65,35 +65,40 @@ trait AdiantiStandardFormListTrait
      * method onReload()
      * Load the datagrid with the database objects
      */
-    public function onReload($param = null)
+    public function onReload($param = NULL)
     {
-        try {
+        try
+        {
             // open a transaction with database
             TTransaction::open($this->database);
             
             // instancia um repositório
             $repository = new TRepository($this->activeRecord);
-            $limit = isset($this->limit) ? ($this->limit > 0 ? $this->limit : null) : 10;
+            $limit = isset($this->limit) ? ( $this->limit > 0 ? $this->limit : NULL) : 10;
             // creates a criteria
             $criteria = isset($this->criteria) ? clone $this->criteria : new TCriteria;
-            if ($this->order) {
-                $criteria->setProperty('order', $this->order);
+            if ($this->order)
+            {
+                $criteria->setProperty('order',     $this->order);
                 $criteria->setProperty('direction', $this->direction);
             }
             $criteria->setProperties($param); // order, offset
             $criteria->setProperty('limit', $limit);
             
             // load the objects according to criteria
-            $objects = $repository->load($criteria, false);
+            $objects = $repository->load($criteria, FALSE);
             
-            if (is_callable($this->transformCallback)) {
+            if (is_callable($this->transformCallback))
+            {
                 call_user_func($this->transformCallback, $objects);
             }
             
             $this->datagrid->clear();
-            if ($objects) {
+            if ($objects)
+            {
                 // iterate the collection of active records
-                foreach ($objects as $object) {
+                foreach ($objects as $object)
+                {
                     // add the object inside the datagrid
                     $this->datagrid->addItem($object);
                 }
@@ -103,7 +108,8 @@ trait AdiantiStandardFormListTrait
             $criteria->resetProperties();
             $count= $repository->count($criteria);
             
-            if (isset($this->pageNavigation)) {
+            if (isset($this->pageNavigation))
+            {
                 $this->pageNavigation->setCount($count); // count of records
                 $this->pageNavigation->setProperties($param); // order, page
                 $this->pageNavigation->setLimit($limit); // limit
@@ -112,7 +118,9 @@ trait AdiantiStandardFormListTrait
             // close the transaction
             TTransaction::close();
             $this->loaded = true;
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // shows the exception error message
             new TMessage('error', $e->getMessage());
             // undo all pending operations
@@ -126,7 +134,8 @@ trait AdiantiStandardFormListTrait
      */
     public function onSave()
     {
-        try {
+        try
+        {
             // open a transaction with database
             TTransaction::open($this->database);
             
@@ -152,7 +161,9 @@ trait AdiantiStandardFormListTrait
             $this->onReload();
             
             return $object;
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // get the form data
             $object = $this->form->getData($this->activeRecord);
             
@@ -188,7 +199,8 @@ trait AdiantiStandardFormListTrait
      */
     public function Delete($param)
     {
-        try {
+        try
+        {
             // get the parameter $key
             $key=$param['key'];
             // open a transaction with database
@@ -206,10 +218,12 @@ trait AdiantiStandardFormListTrait
             TTransaction::close();
             
             // reload the listing
-            $this->onReload($param);
+            $this->onReload( $param );
             // shows the success message
             new TMessage('info', AdiantiCoreTranslator::translate('Record deleted'));
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // shows the exception error message
             new TMessage('error', $e->getMessage());
             // undo all pending operations
@@ -228,11 +242,13 @@ trait AdiantiStandardFormListTrait
     /**
      * method onEdit()
      * Executed whenever the user clicks at the edit button da datagrid
-     */
+     */ 
     public function onEdit($param)
     {
-        try {
-            if (isset($param['key'])) {
+        try
+        {
+            if (isset($param['key']))
+            {
                 // get the parameter $key
                 $key=$param['key'];
                 
@@ -250,13 +266,17 @@ trait AdiantiStandardFormListTrait
                 // close the transaction
                 TTransaction::close();
                 
-                $this->onReload($param);
+                $this->onReload( $param );
                 
                 return $object;
-            } else {
+            }
+            else
+            {
                 $this->form->clear();
             }
-        } catch (Exception $e) { // in case of exception
+        }
+        catch (Exception $e) // in case of exception
+        {
             // shows the exception error message
             new TMessage('error', $e->getMessage());
             // undo all pending operations
@@ -270,8 +290,9 @@ trait AdiantiStandardFormListTrait
     public function show()
     {
         // check if the datagrid is already loaded
-        if (!$this->loaded and (!isset($_GET['method']) or $_GET['method'] !== 'onReload')) {
-            $this->onReload(func_get_arg(0));
+        if (!$this->loaded AND (!isset($_GET['method']) OR $_GET['method'] !== 'onReload') )
+        {
+            $this->onReload( func_get_arg(0) );
         }
         parent::show();
     }

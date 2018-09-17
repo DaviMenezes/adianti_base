@@ -2,16 +2,17 @@
 namespace Adianti\Base\App\Lib\Barcode;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Wrapper\AdiantiPDFDesigner;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 use Exception;
 use Picqer\Barcode\BarcodeGeneratorPNG;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
 
 /**
  * Barcode generator
  *
- * @version    5.0
+ * @version    5.5
  * @package    app
  * @subpackage lib
  * @author     Pablo Dall'Oglio
@@ -61,15 +62,16 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
         $this->imageMargin   = 0;
         $this->labelTemplate = '#barcode#';
     }
-
+    
     /**
      * Set barcode properties
-     * @throws Exception
      */
     public function setProperties($properties)
     {
-        if (isset($properties['barcodeMethod'])) {
-            if (!in_array(strtoupper($properties['barcodeMethod']), $this->standards)) {
+        if (isset($properties['barcodeMethod']))
+        {
+            if (!in_array( strtoupper($properties['barcodeMethod']), $this->standards))
+            {
                 throw new Exception(AdiantiCoreTranslator::translate('Method ^1 not found', $properties['barcodeMethod']));
             }
             $this->barcodeMethod = strtoupper($properties['barcodeMethod']);
@@ -98,7 +100,7 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
     /**
      * Add Database object to be processed
      */
-    public function addObject($object)
+    public function addObject(TRecord $object)
     {
         $this->objects[] = $object;
     }
@@ -124,74 +126,74 @@ class AdiantiBarcodeDocumentGenerator extends AdiantiPDFDesigner
         $barcodemask = $this->barcodeContent;
         $lineBreak   = ($this->fontSize/3) +1;
         
-        if (!empty($this->objects)) {
+        if (!empty($this->objects))
+        {
             $col = 0;
             $row = 0;
             $y = $this->topMargin;
             $counter = 1;
-            foreach ($this->objects as $key => $object) {
+            foreach ($this->objects as $key => $object)
+            {
                 $barcode = isset($object->$barcodemask) ? $object->$barcodemask : $object->render($barcodemask);
                 
-                if (!empty($barcode)) {
-                    $label = $this->labelTemplate;
-                    preg_match_all('/{(.*?)}/', $label, $matches);
-                    $raw_attributes = $matches[0];
-                    foreach ($raw_attributes as $raw_attribute) {
-                        $attribute = substr($raw_attribute, 1, -1);
-                        if (substr($attribute, 0, 1) == '$') {
-                            $attribute = substr($attribute, 1);
-                        }
-                        
-                        if (isset($object->$attribute)) {
-                            $label = str_replace($raw_attribute, $object->$attribute, $label);
-                        }
-                    }
+                if (!empty($barcode))
+                {
+                    $label = $object->render($this->labelTemplate);
                     
                     parent::SetY($y);
                     
                     // iterate rows
-                    foreach (explode("\n", $label) as $label_line) {
+                    foreach (explode("\n", $label) as $label_line)
+                    {
                         // horizontal positioning
-                        if ($col) {
+                        if ($col)
+                        {
                             parent::SetX(parent::GetX() + $this->spaceBetween + ($this->labelWidth * $col));
                         }
                         
-                        if (trim($label_line) == '#barcode#') {
+                        if (trim($label_line) == '#barcode#')
+                        {
                             $rand   = mt_rand(1000000000, 1999999999);
                             $output = "tmp/barcode_{$counter}_{$rand}.png";
                             $generator = new BarcodeGeneratorPNG;
                             $img = $generator->getBarcode($barcode, $this->barcodeMethod, 2, (int) ($this->barcodeHeight * 3.78));
                             file_put_contents($output, $img);
-                            list($w, $h) = $this->Image($output, parent::GetX() + $this->imageMargin, parent::GetY(), $this->labelWidth -10 - $this->imageMargin, 0, '', '', true);
+                            list($w,$h) = $this->Image($output, parent::GetX() + $this->imageMargin, parent::GetY(), $this->labelWidth -10 - $this->imageMargin, 0, '', '', true);
                             
                             unlink($output);
                             parent::Ln($h);
                             parent::SetX(parent::GetX() - $this->imageMargin);
-                        } elseif (trim($label_line) == '#qrcode#') {
+                        }
+                        else if (trim($label_line) == '#qrcode#')
+                        {
                             $rand   = mt_rand(1000000000, 1999999999);
                             $output = "tmp/barcode_{$counter}_{$rand}.png";
                             $renderer = new Png;
-                            $renderer->setHeight($this->barcodeHeight * 3.78);
-                            $renderer->setWidth($this->barcodeHeight * 3.78);
+                            $renderer->setHeight( $this->barcodeHeight * 3.78 );
+                            $renderer->setWidth( $this->barcodeHeight * 3.78 );
                             $renderer->setMargin(0);
                             $writer = new Writer($renderer);
                             $writer->writeFile($barcode, $output);
-                            list($w, $h) = $this->Image($output, parent::GetX() + $this->imageMargin, parent::GetY(), 0, $this->barcodeHeight, '', '', true);
+                            list($w,$h) = $this->Image($output, parent::GetX() + $this->imageMargin, parent::GetY(), 0, $this->barcodeHeight, '', '', true);
                             
                             unlink($output);
                             parent::Ln($h);
                             parent::SetX(parent::GetX() - $this->imageMargin);
-                        } else {
+                        }
+                        else
+                        {
                             parent::writeHTML(parent::GetX(), parent::GetY(), utf8_decode($label_line));
-                            parent::Ln($lineBreak);
+                            parent::Ln( $lineBreak );
                         }
                     }
                     
                     // check row and col change
-                    if (++$col == $this->colsPerPage) {
+                    if (++$col == $this->colsPerPage)
+                    {
                         $y = ($this->labelHeight * ++$row) + $this->topMargin;
         
-                        if ($row > 0 and $row % $this->rowsPerPage == 0 and $counter< count($this->objects)) {
+                        if ($row > 0 and $row % $this->rowsPerPage == 0 and $counter< count($this->objects))
+                        {
                             parent::AddPage();
                             $y = $this->topMargin;
                             $row = 0;

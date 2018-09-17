@@ -10,7 +10,7 @@ use Exception;
 /**
  * Select Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -68,7 +68,8 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public function addItems($items)
     {
-        if (is_array($items)) {
+        if (is_array($items))
+        {
             $this->items = $items;
         }
     }
@@ -86,10 +87,19 @@ class TSelect extends TField implements AdiantiWidgetInterface
      * @param $width Field's width in pixels
      * @param $height Field's height in pixels
      */
-    public function setSize($width, $height = null)
+    public function setSize($width, $height = NULL)
     {
         $this->size = $width;
         $this->height = $height;
+    }
+    
+    /**
+     * Returns the size
+     * @return array(width, height)
+     */
+    public function getSize()
+    {
+        return array( $this->size, $this->height );
     }
     
     /**
@@ -107,10 +117,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public function setValue($value)
     {
-        if (empty($this->separator)) {
+        if (empty($this->separator))
+        {
             $this->value = $value;
-        } else {
-            if ($value) {
+        }
+        else
+        {
+            if ($value)
+            {
                 $this->value = explode($this->separator, $value);
             }
         }
@@ -121,17 +135,26 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name])) {
-            if ($this->tag->{'multiple'}) {
-                if (empty($this->separator)) {
+        if (isset($_POST[$this->name]))
+        {
+            if ($this->tag->{'multiple'})
+            {
+                if (empty($this->separator))
+                {
                     return $_POST[$this->name];
-                } else {
+                }
+                else
+                {
                     return implode($this->separator, $_POST[$this->name]);
                 }
-            } else {
+            }
+            else
+            {
                 return $_POST[$this->name][0];
             }
-        } else {
+        }
+        else
+        {
             return array();
         }
     }
@@ -142,9 +165,12 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public function setChangeAction(TAction $action)
     {
-        if ($action->isStatic()) {
+        if ($action->isStatic())
+        {
             $this->changeAction = $action;
-        } else {
+        }
+        else
+        {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -165,15 +191,18 @@ class TSelect extends TField implements AdiantiWidgetInterface
      * @param $items array with items
      * @param $startEmpty ...
      */
-    public static function reload($formname, $name, $items, $startEmpty = false)
+    public static function reload($formname, $name, $items, $startEmpty = FALSE)
     {
         $code = "tselect_clear('{$formname}', '{$name}'); ";
-        if ($startEmpty) {
+        if ($startEmpty)
+        {
             $code .= "tselect_add_option('{$formname}', '{$name}', '', ''); ";
         }
         
-        if ($items) {
-            foreach ($items as $key => $value) {
+        if ($items)
+        {
+            foreach ($items as $key => $value)
+            {
                 $code .= "tselect_add_option('{$formname}', '{$name}', '{$key}', '{$value}'); ";
             }
         }
@@ -187,7 +216,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tselect_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tselect_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -197,7 +226,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tselect_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tselect_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -207,54 +236,66 @@ class TSelect extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create(" tselect_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tselect_clear_field('{$form_name}', '{$field}'); " );
     }
     
     /**
      * Render items
      */
-    protected function renderItems($with_titles = true)
+    protected function renderItems( $with_titles = true )
     {
-        if ($this->defaultOption !== false) {
+        if ($this->defaultOption !== FALSE)
+        {
             // creates an empty <option> tag
             $option = new TElement('option');
             
-            $option->add($this->defaultOption);
+            $option->add( $this->defaultOption );
             $option->{'value'} = '';   // tag value
 
             // add the option tag to the combo
             $this->tag->add($option);
         }
         
-        if ($this->items) {
+        if ($this->items)
+        {
             // iterate the combobox items
-            foreach ($this->items as $chave => $item) {
-                if (substr($chave, 0, 3) == '>>>') {
+            foreach ($this->items as $chave => $item)
+            {
+                if (substr($chave, 0, 3) == '>>>')
+                {
                     $optgroup = new TElement('optgroup');
                     $optgroup->{'label'} = $item;
                     // add the option to the combo
                     $this->tag->add($optgroup);
-                } else {
+                }
+                else
+                {
                     // creates an <option> tag
                     $option = new TElement('option');
                     $option->{'value'} = $chave;  // define the index
-                    if ($with_titles) {
+                    if ($with_titles)
+                    {
                         $option->{'title'} = $item;  // define the title
                     }
                     $option->{'titside'} = 'right';  // define the title side
                     $option->add(htmlspecialchars($item));      // add the item label
                     
                     // verify if this option is selected
-                    if (@in_array($chave, (array) $this->value)) {
+                    if ( (is_array($this->value)  AND @in_array($chave, $this->value)) OR
+                         (is_scalar($this->value) AND strlen( (string) $this->value ) > 0 AND @in_array($chave, (array) $this->value)))
+                    {
                         // mark as selected
                         $option->{'selected'} = 1;
                     }
                     
-                    if (isset($optgroup)) {
+                    if (isset($optgroup))
+                    {
                         $optgroup->add($option);
-                    } else {
-                        $this->tag->add($option);
                     }
+                    else
+                    {
+                        $this->tag->add($option);
+                    }                    
                 }
             }
         }
@@ -269,29 +310,32 @@ class TSelect extends TField implements AdiantiWidgetInterface
         $this->tag->{'name'}  = $this->name.'[]';    // tag name
         $this->tag->{'id'}    = $this->id;
         
-        if (strstr($this->size, '%') !== false) {
-            $this->setProperty('style', "width:{$this->size};height:{$this->height}", false); //aggregate style info
-        } else {
-            $this->setProperty('style', "width:{$this->size}px;height:{$this->height}px", false); //aggregate style info
-        }
+        $this->setProperty('style', (strstr($this->size, '%') !== FALSE)   ? "width:{$this->size}"    : "width:{$this->size}px",   false); //aggregate style info
+        $this->setProperty('style', (strstr($this->height, '%') !== FALSE) ? "height:{$this->height}" : "height:{$this->height}px", false); //aggregate style info
         
         // verify whether the widget is editable
-        if (parent::getEditable()) {
-            if (isset($this->changeAction)) {
-                if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+        if (parent::getEditable())
+        {
+            if (isset($this->changeAction))
+            {
+                if (!TForm::getFormByName($this->formName) instanceof TForm)
+                {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
                 }
                 
-                $string_action = $this->changeAction->serialize(false);
+                $string_action = $this->changeAction->serialize(FALSE);
                 $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
                 $this->setProperty('onChange', $this->getProperty('changeaction'));
             }
             
-            if (isset($this->changeFunction)) {
-                $this->setProperty('changeaction', $this->changeFunction, false);
-                $this->setProperty('onChange', $this->changeFunction, false);
+            if (isset($this->changeFunction))
+            {
+                $this->setProperty('changeaction', $this->changeFunction, FALSE);
+                $this->setProperty('onChange', $this->changeFunction, FALSE);
             }
-        } else {
+        }
+        else
+        {
             // make the widget read-only
             $this->tag->{'onclick'} = "return false;";
             $this->tag->{'style'}  .= ';pointer-events:none';

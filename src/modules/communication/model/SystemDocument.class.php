@@ -21,7 +21,7 @@ use Adianti\Base\Modules\Admin\Model\SystemUser;
  */
 class SystemDocument extends TRecord
 {
-    const TABLENAME = 'sys_document';
+    const TABLENAME = 'system_document';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     
@@ -71,10 +71,10 @@ class SystemDocument extends TRecord
             $criteria = new TCriteria;
             $criteria->add(new TFilter('document_id', '=', $this->id));
             
-            $repository = new TRepository('SystemDocumentUser');
+            $repository = new TRepository(SystemDocumentUser::class);
             $repository->delete($criteria);
             
-            $repository = new TRepository('SystemDocumentGroup');
+            $repository = new TRepository(SystemDocumentGroup::class);
             $repository->delete($criteria);
         }
     }
@@ -92,10 +92,10 @@ class SystemDocument extends TRecord
         $criteria = new TCriteria;
         $criteria->add(new TFilter('document_id', '=', $id));
         
-        $repository = new TRepository('SystemDocumentUser');
+        $repository = new TRepository(SystemDocumentUser::class);
         $repository->delete($criteria);
         
-        $repository = new TRepository('SystemDocumentGroup');
+        $repository = new TRepository(SystemDocumentGroup::class);
         $repository->delete($criteria);
         
         // delete the object itself

@@ -20,6 +20,7 @@ class TAction
 {
     protected $action;
     protected $param;
+    protected $properties;
     
     /**
      * Class Constructor
@@ -33,13 +34,15 @@ class TAction
         }
 
         $this->action = $action;
-        if (!is_callable($this->action)) {
+        if (!is_callable($this->action))
+        {
             $action_string = $this->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 must receive a parameter of type ^2', __METHOD__, 'Callback'). ' <br> '.
                                 AdiantiCoreTranslator::translate('Check if the action (^1) exists', $action_string));
         }
         
-        if (!empty($parameters)) {
+        if (!empty($parameters))
+        {
             $this->setParameters($parameters);
         }
     }
@@ -50,12 +53,18 @@ class TAction
     public function toString()
     {
         $action_string = '';
-        if (is_string($this->action)) {
+        if (is_string($this->action))
+        {
             $action_string = $this->action;
-        } elseif (is_array($this->action)) {
-            if (is_object($this->action[0])) {
+        }
+        else if (is_array($this->action))
+        {
+            if (is_object($this->action[0]))
+            {
                 $action_string = get_class($this->action[0]) . '::' . $this->action[1];
-            } else {
+            }
+            else
+            {
                 $action_string = $this->action[0] . '::' . $this->action[1];
             }
         }
@@ -90,10 +99,11 @@ class TAction
      */
     public function getParameter($param)
     {
-        if (isset($this->param[$param])) {
+        if (isset($this->param[$param]))
+        {
             return $this->param[$param];
         }
-        return null;
+        return NULL;
     }
     
     /**
@@ -111,13 +121,69 @@ class TAction
     {
         return $this->action;
     }
-
+    
+    /**
+     * Set property
+     */
+    public function setProperty($property, $value)
+    {
+        $this->properties[$property] = $value;
+    }
+    
+    /**
+     * Get property
+     */
+    public function getProperty($property)
+    {
+        return $this->properties[$property];
+    }
+    
+    /**
+     * Prepare action for use over an object
+     * @param $object Data Object
+     */
+    public function prepare($object)
+    {
+        $parameters = $this->param;
+        $action     = clone $this;
+        
+        if ($parameters)
+        {
+            foreach ($parameters as $parameter => $value)
+            {
+                // replace {attribute}s
+                $action->setParameter($parameter, $this->replace($value, $object) );
+            }
+        }
+        
+        return $action;
+    }
+    
+    /**
+     * Replace a string with object properties within {pattern}
+     * @param $content String with pattern
+     * @param $object  Any object
+     */
+    private function replace($content, $object)
+    {
+        if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
+        {
+            foreach ($matches[0] as $match)
+            {
+                $property = substr($match, 1, -1);
+                $value    = isset($object->$property)? $object->$property : null;
+                $content  = str_replace($match, $value, $content);
+            }
+        }
+        
+        return $content;
+    }
+    
     /**
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
-     * @return string
      */
-    public function serialize($format_action = true)
+    public function serialize($format_action = TRUE)
     {
         // check if the callback is a method of an object
         if (is_array($this->action)) {
@@ -126,26 +192,33 @@ class TAction
             $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
             // get the method name
             $url['method'] = $this->action[1];
-
-        } elseif (is_string($this->action)) {
-            // otherwise the callback is a function
-
+        }
+        // otherwise the callback is a function
+        else if (is_string($this->action))
+        {
             // get the function name
             $url['method'] = $this->action;
         }
         
         // check if there are parameters
-        if ($this->param) {
+        if ($this->param)
+        {
             $url = array_merge($url, $this->param);
         }
         
-        if ($format_action) {
-            if ($router = AdiantiCoreApplication::getRouter()) {
+        if ($format_action)
+        {
+            if ($router = AdiantiCoreApplication::getRouter())
+            {
                 return $router(http_build_query($url));
-            } else {
+            }
+            else
+            {
                 return 'index.php?'.http_build_query($url);
             }
-        } else {
+        }
+        else
+        {
             return http_build_query($url);
         }
     }
@@ -155,17 +228,21 @@ class TAction
      */
     public function isStatic()
     {
-        if (is_callable($this->action) and is_array($this->action)) {
+        if (is_callable($this->action) AND is_array($this->action))
+        {
             $class  = is_string($this->action[0])? $this->action[0]: get_class($this->action[0]);
             $method = $this->action[1];
             
-            if (method_exists($class, $method)) {
-                $rm = new ReflectionMethod($class, $method);
-                return $rm-> isStatic();
-            } else {
-                return false;
+            if (method_exists($class, $method))
+            {
+                $rm = new ReflectionMethod( $class, $method );
+                return $rm-> isStatic ();
+            }
+            else
+            {
+                return FALSE;
             }
         }
-        return false;
+        return FALSE;
     }
 }

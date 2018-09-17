@@ -2,16 +2,18 @@
 namespace Adianti\Base\App\Lib\Reports;
 
 /**
- * StyleSheet Constructor
- * Copyright (c) 2006-2010 Pablo Dall'Oglio
- * @author  Pablo Dall'Oglio <pablo [at] adianti.com.br>
- * @version 2.0, 2007-08-01
+ * Style
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TAdiantiStyle
 {
     private $name;           // stylesheet name
     private $properties;     // properties
-    private static $loaded; // array of loaded styles
+    static  private $loaded; // array of loaded styles
     
     /**
      * Class Constructor
@@ -48,7 +50,8 @@ class TAdiantiStyle
      */
     public function __get($name)
     {
-        if (isset($this->properties[$name])) {
+        if (isset($this->properties[$name]))
+        {
             return $this->properties[$name];
         }
     }
@@ -59,14 +62,17 @@ class TAdiantiStyle
     public function show()
     {
         // check if the style is already loaded
-        if (!isset(self::$loaded[$this->name])) {
+        if (!isset(self::$loaded[$this->name]))
+        {
             // open the style
             $style = '';
             $style.= "    .{$this->name}\n";
             $style.= "    {\n";
-            if ($this->properties) {
+            if ($this->properties)
+            {
                 // iterate the style properties
-                foreach ($this->properties as $name=>$value) {
+                foreach ($this->properties as $name=>$value)
+                {
                     $name = str_replace('_', '-', $name);
                     $style.= "        {$name}: {$value};\n";
                 }
@@ -83,13 +89,15 @@ class TAdiantiStyle
     
     /**
      * Return the style inline code
-     */
+     */ 
     public function getInline()
     {
         $style = '';
-        if ($this->properties) {
+        if ($this->properties)
+        {
             // iterate the style properties
-            foreach ($this->properties as $name=>$value) {
+            foreach ($this->properties as $name=>$value)
+            {
                 $name = str_replace('_', '-', $name);
                 $style.= "{$name}: {$value};";
             }
@@ -98,3 +106,4 @@ class TAdiantiStyle
         return $style;
     }
 }
+?>

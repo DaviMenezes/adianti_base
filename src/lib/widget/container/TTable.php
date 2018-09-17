@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 /**
  * Creates a table layout, with rows and columns
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -31,11 +31,16 @@ class TTable extends TElement
      */
     public function addSection($type)
     {
-        if ($type == 'thead') {
+        if ($type == 'thead')
+        {
             $this->section = new TElement('thead');
-        } elseif ($type == 'tbody') {
+        }
+        else if ($type == 'tbody')
+        {
             $this->section = new TElement('tbody');
-        } elseif ($type == 'tfoot') {
+        }
+        else if ($type == 'tfoot')
+        {
             $this->section = new TElement('tfoot');
         }
         parent::add($this->section);
@@ -50,12 +55,15 @@ class TTable extends TElement
     public function addRow()
     {
         // creates a new Table Row
-        $row = new TTableRow;
+        $row = new TTableRow( $this->section ? $this->section->getName() : 'tbody');
         
         // add this row to the table element
-        if (isset($this->section)) {
+        if (isset($this->section))
+        {
             $this->section->add($row);
-        } else {
+        }
+        else
+        {
             parent::add($row);
         }
         return $row;
@@ -72,13 +80,18 @@ class TTable extends TElement
         $row = $this->addRow();
         
         $args = func_get_args();
-        if ($args) {
-            foreach ($args as $arg) {
-                if (is_array($arg)) {
+        if ($args)
+        {
+            foreach ($args as $arg)
+            {
+                if (is_array($arg))
+                {
                     $inst = $row;
                     call_user_func_array(array($inst, 'addMultiCell'), $arg);
-                } else {
-                    $row->addCell($arg);
+                }
+                else
+                {
+                    $row->addCell($arg, ($this->section && $this->section->getName() == 'thead') ? 'th' : 'td');
                 }
             }
         }
@@ -95,8 +108,10 @@ class TTable extends TElement
     public static function fromData($array_data, $table_properties = null, $header_properties = null, $body_properties = null)
     {
         $table = new self;
-        if ($table_properties) {
-            foreach ($table_properties as $prop=>$value) {
+        if ($table_properties)
+        {
+            foreach ($table_properties as $prop=>$value)
+            {
                 $table->$prop = $value;
             }
         }
@@ -108,10 +123,13 @@ class TTable extends TElement
         
         $tr = new TTableRow;
         $thead->add($tr);
-        foreach ($header as $cell) {
+        foreach ($header as $cell)
+        {
             $td = $tr->addCell((string) $cell);
-            if ($header_properties) {
-                foreach ($header_properties as $prop=>$value) {
+            if ($header_properties)
+            {
+                foreach ($header_properties as $prop=>$value)
+                {
                     $td->$prop = $value;
                 }
             }
@@ -121,15 +139,19 @@ class TTable extends TElement
         $table->add($tbody);
         
         $i = 0;
-        foreach ($array_data as $row) {
+        foreach ($array_data as $row)
+        {
             $tr = new TTableRow;
             $tbody->add($tr);
             $tr->{'class'} = ($i %2==0) ? 'odd': 'even';
             
-            foreach ($row as $cell) {
+            foreach ($row as $cell)
+            {
                 $td = $tr->addCell((string) $cell);
-                if ($body_properties) {
-                    foreach ($body_properties as $prop=>$value) {
+                if ($body_properties)
+                {
+                    foreach ($body_properties as $prop=>$value)
+                    {
                         $td->$prop = $value;
                     }
                 }

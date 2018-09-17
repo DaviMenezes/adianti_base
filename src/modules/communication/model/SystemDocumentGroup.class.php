@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Database\TRecord;
  */
 class SystemDocumentGroup extends TRecord
 {
-    const TABLENAME = 'sys_document_group';
+    const TABLENAME = 'system_document_group';
     const PRIMARYKEY= 'id';
     const IDPOLICY =  'max'; // {max, serial}
     

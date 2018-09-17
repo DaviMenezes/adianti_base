@@ -1,13 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Container;
 
-use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TElement;
 
 /**
  * Expander Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage container
  * @author     Pablo Dall'Oglio
@@ -40,7 +40,6 @@ class TExpander extends TElement
         
         $this->container = new TElement('ul');
         $this->container->{'class'} = 'dropdown-menu texpander-container';
-        $this->container->{'style'} = 'z-index: inherit';
         
         $this->container->{'aria-labelledby'} = $this->button->{'id'};
         
@@ -100,14 +99,19 @@ class TExpander extends TElement
      */
     public function show()
     {
-        if ($this->caret_side == 'left') {
+        if ($this->caret_side == 'left')
+        {
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
             $this->button->add($this->label);
-        } elseif ($this->caret_side == 'right') {
+        }
+        else if ($this->caret_side == 'right')
+        {
             $this->button->add($this->label);
             $this->button->add('&nbsp');
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
-        } else {
+        }
+        else
+        {
             $this->button->add($this->label);
         }
         

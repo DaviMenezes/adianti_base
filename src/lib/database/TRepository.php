@@ -2,29 +2,36 @@
 namespace Adianti\Base\Lib\Database;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Exception;
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Database\TCriteria;
+use Adianti\Base\Lib\Database\TFilter;
+use Adianti\Base\Lib\Database\TSqlSelect;
+
+use Dvi\Adianti\Route;
 use PDO;
+use Exception;
 use ReflectionMethod;
+use ReflectionClass;
 
 /**
  * Implements the Repository Pattern to deal with collections of Active Records
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-final class TRepository
+class TRepository
 {
-    private $class; // Active Record class to be manipulated
-    private $criteria; // buffered criteria to use with fluent interfaces
-    private $setValues;
-
+    protected $class; // Active Record class to be manipulated
+    protected $criteria; // buffered criteria to use with fluent interfaces
+    protected $setValues;
+    protected $columns;
+    
     /**
      * Class Constructor
      * @param $class = Active Record class name
-     * @throws Exception
      */
     public function __construct($class)
     {
@@ -50,15 +57,40 @@ final class TRepository
     }
     
     /**
+     * Get attribute list from entity
+     */
+    protected function getAttributeList()
+    {
+        if (!empty($this->columns))
+        {
+            return implode(',', $this->columns);
+        }
+        else
+        {
+            $object = new $this->class;
+            return $object->getAttributeList();
+        }
+    }
+    
+    /**
+     * Define columns list
+     */
+    public function select($columns)
+    {
+        $this->columns = $columns;
+        return $this;
+    }
+    
+    /**
      * Add a run time criteria using fluent interfaces
-     *
+     * 
      * @param  $variable = variable
      * @param  $operator = comparison operator (>,<,=)
      * @param  $value    = value to be compared
      * @param  $logicOperator = logical operator (TExpression::AND_OPERATOR, TExpression::OR_OPERATOR)
      * @return A TRepository object
      */
-    public function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR):TRepository
+    public function where($variable, $operator, $value, $logicOperator = TExpression::AND_OPERATOR)
     {
         $this->criteria->add(new TFilter($variable, $operator, $value), $logicOperator);
         
@@ -67,14 +99,15 @@ final class TRepository
     
     /**
      * Assign values to the database columns
-     *
+     * 
      * @param  $column = column name
      * @param  $value  = column value
      * @return A TRepository object
      */
     public function set($column, $value)
     {
-        if (is_scalar($value) or is_null($value)) {
+        if (is_scalar($value) OR is_null($value))
+        {
             $this->setValues[$column] = $value;
         }
         
@@ -83,7 +116,7 @@ final class TRepository
     
     /**
      * Add a run time OR criteria using fluent interfaces
-     *
+     * 
      * @param  $variable = variable
      * @param  $operator = comparison operator (>,<,=)
      * @param  $value    = value to be compared
@@ -98,7 +131,7 @@ final class TRepository
     
     /**
      * Define the ordering for criteria using fluent interfaces
-     *
+     * 
      * @param  $order = Order column
      * @param  $direction = Order direction (asc, desc)
      * @return A TRepository object
@@ -113,7 +146,7 @@ final class TRepository
     
     /**
      * Define the LIMIT criteria using fluent interfaces
-     *
+     * 
      * @param  $limit = Limit
      * @return A TRepository object
      */
@@ -126,7 +159,7 @@ final class TRepository
     
     /**
      * Define the OFFSET criteria using fluent interfaces
-     *
+     * 
      * @param  $offset = Offset
      * @return A TRepository object
      */
@@ -143,27 +176,33 @@ final class TRepository
      * @param $callObjectLoad  If load() method from Active Records must be called to load object parts
      * @return                 An array containing the Active Records
      */
-    public function load(TCriteria $criteria = null, $callObjectLoad = true)
+    public function load(TCriteria $criteria = NULL, $callObjectLoad = TRUE)
     {
-        if (!$criteria) {
+        if (!$criteria)
+        {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
+        
         // creates a SELECT statement
         $sql = new TSqlSelect;
-        $sql->addColumn('*');
+        $sql->addColumn($this->getAttributeList());
         $sql->setEntity($this->getEntity());
         // assign the criteria to the SELECT statement
         $sql->setCriteria($criteria);
         
         // get the connection of the active transaction
-        if ($conn = TTransaction::get()) {
+        if ($conn = TTransaction::get())
+        {
             // register the operation in the LOG file
             TTransaction::log($sql->getInstruction());
             $dbinfo = TTransaction::getDatabaseInfo(); // get dbinfo
-            if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                $result = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $result-> execute($criteria->getPreparedVars());
-            } else {
+            if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+            {
+                $result = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $result-> execute ( $criteria->getPreparedVars() );
+            }
+            else
+            {
                 // execute the query
                 $result= $conn-> query($sql->getInstruction());
             }
@@ -175,26 +214,33 @@ final class TRepository
             // Discover if load() is overloaded
             $rm = new ReflectionMethod($class, $callback[1]);
             
-            if ($result) {
+            if ($result)
+            {
                 // iterate the results as objects
-                while ($raw = $result->fetchObject()) {
+                while ($raw = $result-> fetchObject())
+                {
                     $object = new $this->class;
-                    if (method_exists($object, 'onAfterLoadCollection')) {
+                    if (method_exists($object, 'onAfterLoadCollection'))
+                    {
                         $object->onAfterLoadCollection($raw);
                     }
-                    $object->fromArray((array) $raw);
+                    $object->fromArray( (array) $raw);
                     
-                    if ($callObjectLoad) {
+                    if ($callObjectLoad)
+                    {
                         // reload the object because its load() method may be overloaded
-                        if ($rm->getDeclaringClass()-> getName() !== 'Adianti\Database\TRecord') {
+                        if ($rm->getDeclaringClass()-> getName () !== 'Adianti\Database\TRecord')
+                        {
                             $object->reload();
                         }
                     }
                     
-                    if ($cache = $object->getCacheControl()) {
+                    if ( $cache = $object->getCacheControl() )
+                    {
                         $pk = $object->getPrimaryKey();
                         $record_key = $class . '['. $object->$pk . ']';
-                        if ($cache::setValue($record_key, $object->toArray())) {
+                        if ($cache::setValue( $record_key, $object->toArray() ))
+                        {
                             TTransaction::log($record_key . ' stored in cache');
                         }
                     }
@@ -203,32 +249,44 @@ final class TRepository
                 }
             }
             return $results;
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__ .' '. $this->getEntity());
         }
     }
     
     /**
+     * Load with no aggregates
+     */
+    public function loadStatic()
+    {
+        return $this->load(null, false);
+    }
+    
+    /**
      * Return a indexed array
      */
-    public function getIndexedArray($indexColumn, $valueColumn, $criteria = null)
+    public function getIndexedArray($indexColumn, $valueColumn, $criteria = NULL)
     {
         $criteria = (empty($criteria)) ? $this->criteria : $criteria;
-        $objects = $this->load($criteria, false);
+        $objects = $this->load($criteria, FALSE);
         
         $indexedArray = array();
-        if ($objects) {
-            foreach ($objects as $object) {
-                if (isset($object->$valueColumn)) {
-                    $indexedArray[ $object->$indexColumn ] = $object->$valueColumn;
-                } else {
-                    $indexedArray[ $object->$indexColumn ] = $object->render($valueColumn);
-                }
+        if ($objects)
+        {
+            foreach ($objects as $object)
+            {
+                $key = (isset($object->$indexColumn)) ? $object->$indexColumn : $object->render($indexColumn);
+                $val = (isset($object->$valueColumn)) ? $object->$valueColumn : $object->render($valueColumn);
+                
+                $indexedArray[ $key ] = $val;
             }
         }
         
-        if (empty($criteria) or ($criteria instanceof TCriteria and empty($criteria->getProperty('order')))) {
+        if (empty($criteria) or ( $criteria instanceof TCriteria and empty($criteria->getProperty('order')) ))
+        {
             asort($indexedArray);
         }
         return $indexedArray;
@@ -237,9 +295,10 @@ final class TRepository
     /**
      * Update values in the repository
      */
-    public function update($setValues = null, TCriteria $criteria = null)
+    public function update($setValues = NULL, TCriteria $criteria = NULL)
     {
-        if (!$criteria) {
+        if (!$criteria)
+        {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
         $setValues = isset($setValues) ? $setValues : $this->setValues;
@@ -247,13 +306,16 @@ final class TRepository
         $class = $this->class;
         
         // get the connection of the active transaction
-        if ($conn = TTransaction::get()) {
+        if ($conn = TTransaction::get())
+        {
             $dbinfo = TTransaction::getDatabaseInfo(); // get dbinfo
             
             // creates a UPDATE statement
             $sql = new TSqlUpdate;
-            if ($setValues) {
-                foreach ($setValues as $column => $value) {
+            if ($setValues)
+            {
+                foreach ($setValues as $column => $value)
+                {
                     $sql->setRowData($column, $value);
                 }
             }
@@ -261,10 +323,13 @@ final class TRepository
             // assign the criteria to the UPDATE statement
             $sql->setCriteria($criteria);
             
-            if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                $statement = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $result = $statement-> execute($sql->getPreparedVars());
-            } else {
+            if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+            {
+                $statement = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $result = $statement-> execute ( $sql->getPreparedVars() );
+            }
+            else
+            {
                 // execute the UPDATE statement
                 $result = $conn->exec($sql->getInstruction());
             }
@@ -274,31 +339,38 @@ final class TRepository
             
             // update cache
             $record = new $class;
-            if ($cache = $record->getCacheControl()) {
+            if ( $cache = $record->getCacheControl() )
+            {
                 $pk = $record->getPrimaryKey();
                 
                 // creates a SELECT statement
                 $sql = new TSqlSelect;
-                $sql->addColumn('*');
+                $sql->addColumn($this->getAttributeList());
                 $sql->setEntity($this->getEntity());
                 // assign the criteria to the SELECT statement
                 $sql->setCriteria($criteria);
                 
-                if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                    $subresult = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $subresult-> execute($criteria->getPreparedVars());
-                } else {
+                if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+                {
+                    $subresult = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                    $subresult-> execute ( $criteria->getPreparedVars() );
+                }
+                else
+                {
                     $subresult = $conn-> query($sql->getInstruction());
                 }
                 
-                if ($subresult) {
+                if ($subresult)
+                {
                     // iterate the results as objects
-                    while ($raw = $subresult-> fetchObject()) {
+                    while ($raw = $subresult-> fetchObject())
+                    {
                         $object = new $this->class;
-                        $object->fromArray((array) $raw);
+                        $object->fromArray( (array) $raw);
                     
                         $record_key = $class . '['. $raw->$pk . ']';
-                        if ($cache::setValue($record_key, $object->toArray())) {
+                        if ($cache::setValue( $record_key, $object->toArray() ))
+                        {
                             TTransaction::log($record_key . ' stored in cache');
                         }
                     }
@@ -306,7 +378,9 @@ final class TRepository
             }
             
             return $result;
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__ .' '. $this->getEntity());
         }
@@ -317,49 +391,60 @@ final class TRepository
      * @param $criteria  An TCriteria object, specifiyng the filters
      * @return           The affected rows
      */
-    public function delete(TCriteria $criteria = null, $callObjectLoad = false)
+    public function delete(TCriteria $criteria = NULL, $callObjectLoad = FALSE)
     {
-        if (!$criteria) {
+        if (!$criteria)
+        {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
         $class = $this->class;
         
         // get the connection of the active transaction
-        if ($conn = TTransaction::get()) {
+        if ($conn = TTransaction::get())
+        {
             $dbinfo = TTransaction::getDatabaseInfo(); // get dbinfo
             
             // first, clear cache
             $record = new $class;
-            if (($cache = $record->getCacheControl()) or $callObjectLoad) {
+            if ( ($cache = $record->getCacheControl()) OR $callObjectLoad )
+            {
                 $pk = $record->getPrimaryKey();
                 
                 // creates a SELECT statement
                 $sql = new TSqlSelect;
-                $sql->addColumn($pk);
+                $sql->addColumn( $pk );
                 $sql->setEntity($this->getEntity());
                 // assign the criteria to the SELECT statement
                 $sql->setCriteria($criteria);
                 
-                if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                    $result = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                    $result-> execute($criteria->getPreparedVars());
-                } else {
+                if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+                {
+                    $result = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                    $result-> execute ( $criteria->getPreparedVars() );
+                }
+                else
+                {
                     $result = $conn-> query($sql->getInstruction());
                 }
                 
-                if ($result) {
+                if ($result)
+                {
                     // iterate the results as objects
-                    while ($row = $result-> fetchObject()) {
-                        if ($cache) {
+                    while ($row = $result-> fetchObject())
+                    {
+                        if ($cache)
+                        {
                             $record_key = $class . '['. $row->$pk . ']';
-                            if ($cache::delValue($record_key)) {
+                            if ($cache::delValue( $record_key ))
+                            {
                                 TTransaction::log($record_key . ' deleted from cache');
                             }
                         }
                         
-                        if ($callObjectLoad) {
+                        if ($callObjectLoad)
+                        {
                             $object = new $this->class;
-                            $object->fromArray((array) $row);
+                            $object->fromArray( (array) $row);
                             $object->delete();
                         }
                     }
@@ -372,10 +457,13 @@ final class TRepository
             // assign the criteria to the DELETE statement
             $sql->setCriteria($criteria);
             
-            if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                $result = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $result-> execute($criteria->getPreparedVars());
-            } else {
+            if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+            {
+                $result = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $result-> execute ( $criteria->getPreparedVars() );
+            }
+            else
+            {
                 // execute the DELETE statement
                 $result = $conn->exec($sql->getInstruction());
             }
@@ -384,7 +472,9 @@ final class TRepository
             TTransaction::log($sql->getInstruction());
             
             return $result;
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__ .' '. $this->getEntity());
         }
@@ -395,9 +485,10 @@ final class TRepository
      * @param $criteria  An TCriteria object, specifiyng the filters
      * @return           An Integer containing the amount of objects that satisfy the criteria
      */
-    public function count(TCriteria $criteria = null)
+    public function count(TCriteria $criteria = NULL)
     {
-        if (!$criteria) {
+        if (!$criteria)
+        {
             $criteria = isset($this->criteria) ? $this->criteria : new TCriteria;
         }
         // creates a SELECT statement
@@ -408,32 +499,93 @@ final class TRepository
         $sql->setCriteria($criteria);
         
         // get the connection of the active transaction
-        if ($conn = TTransaction::get()) {
+        if ($conn = TTransaction::get())
+        {
             // register the operation in the LOG file
             TTransaction::log($sql->getInstruction());
             
             $dbinfo = TTransaction::getDatabaseInfo(); // get dbinfo
-            if (isset($dbinfo['prep']) and $dbinfo['prep'] == '1') { // prepared ON
-                $result = $conn-> prepare($sql->getInstruction(true), array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-                $result-> execute($criteria->getPreparedVars());
-            } else {
+            if (isset($dbinfo['prep']) AND $dbinfo['prep'] == '1') // prepared ON
+            {
+                $result = $conn-> prepare ( $sql->getInstruction( TRUE ) , array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $result-> execute ( $criteria->getPreparedVars() );
+            }
+            else
+            {
                 // executes the SELECT statement
                 $result= $conn-> query($sql->getInstruction());
             }
             
-            if ($result) {
+            if ($result)
+            {
                 $row = $result->fetch();
+                return $row[0];
             }
-            // returns the result
-            return $row[0];
-        } else {
+        }
+        else
+        {
             // if there's no active transaction opened
             throw new Exception(AdiantiCoreTranslator::translate('No active transactions') . ': ' . __METHOD__ .' '. $this->getEntity());
         }
     }
     
-    public function get(TCriteria $criteria = null, $callObjectLoad = true)
+    /**
+     * Alias for load()
+     */
+    public function get(TCriteria $criteria = NULL, $callObjectLoad = TRUE)
     {
         return $this->load($criteria, $callObjectLoad);
+    }
+    
+    /**
+     * Returns the first collection item
+     */
+    public function first($callObjectLoad = TRUE)
+    {
+        $collection = $this->take(1)->load(null, $callObjectLoad);
+        if (isset($collection[0]))
+        {
+            return $collection[0];
+        }
+    }
+    
+    /**
+     * Returns transformed collection
+     */
+    public function transform( Callable $callback, $callObjectLoad = TRUE)
+    {
+        $collection = $this->load(null, $callObjectLoad);
+        
+        if ($collection)
+        {
+            foreach ($collection as $object)
+            {
+                call_user_func($callback, $object);
+            }
+        }
+        
+        return $collection;
+    }
+    
+    /**
+     * Returns filtered collection
+     */
+    public function filter( Callable $callback, $callObjectLoad = TRUE)
+    {
+        $collection = $this->load(null, $callObjectLoad);
+        $newcollection = [];
+        
+        if ($collection)
+        {
+            foreach ($collection as $object)
+            {
+                if (call_user_func($callback, $object))
+                {
+                    $newcollection[] = $object;
+                }
+            }
+        }
+        
+        return $newcollection;
     }
 }

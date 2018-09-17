@@ -1,10 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Log;
 
+use Adianti\Base\Lib\Log\TLogger;
+
 /**
  * Register LOG in HTML files
  *
- * @version    5.0
+ * @version    5.5
  * @package    log
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -19,11 +21,6 @@ class TLoggerXML extends TLogger
     public function write($message)
     {
         $level = 'Debug';
-        $parts = explode(':', $message);
-        if (count($parts) == 2) {
-            $level   = $parts[0];
-            $message = $parts[1];
-        }
         
         $time = date("Y-m-d H:i:s");
         // define the LOG content

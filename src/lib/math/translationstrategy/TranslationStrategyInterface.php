@@ -1,6 +1,6 @@
 <?php
 
-namespace Adianti\Base\Lib\Math\TranslationStrategy;
+namespace Math\TranslationStrategy;
 
 /**
  * Translation strategy interface.

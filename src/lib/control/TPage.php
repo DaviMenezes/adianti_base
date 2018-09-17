@@ -20,9 +20,9 @@ class TPage extends TElement
 {
     private $body;
     private $constructed;
-    private static $loadedjs;
-    private static $loadedcss;
-    private static $registeredcss;
+    static private $loadedjs;
+    static private $loadedcss;
+    static private $registeredcss;
     
     /**
      * Class Constructor
@@ -30,7 +30,7 @@ class TPage extends TElement
     public function __construct()
     {
         parent::__construct('div');
-        $this->constructed = true;
+        $this->constructed = TRUE;
     }
     
     /**
@@ -59,16 +59,16 @@ class TPage extends TElement
      */
     public static function include_js($js)
     {
-        self::$loadedjs[$js] = true;
+        self::$loadedjs[$js] = TRUE;
     }
     
     /**
      * Include a specific Cascading Stylesheet to this page
-     * @param $css  Cascading Stylesheet
+     * @param $css  Cascading Stylesheet 
      */
     public static function include_css($css)
     {
-        self::$loadedcss[$css] = true;
+        self::$loadedcss[$css] = TRUE;
     }
     
     /**
@@ -100,15 +100,19 @@ class TPage extends TElement
         $csc = self::$registeredcss;
         $css_text = '';
         
-        if ($css) {
-            foreach ($css as $cssfile => $bool) {
+        if ($css)
+        {
+            foreach ($css as $cssfile => $bool)
+            {
                 $css_text .= "    <link rel='stylesheet' type='text/css' media='screen' href='$cssfile'/>\n";
             }
         }
         
-        if ($csc) {
+        if ($csc)
+        {
             $css_text .= "    <style type='text/css' media='screen'>\n";
-            foreach ($csc as $cssname => $csscode) {
+            foreach ($csc as $cssname => $csscode)
+            {
                 $css_text .= $csscode;
             }
             $css_text .= "    </style>\n";
@@ -125,10 +129,11 @@ class TPage extends TElement
     {
         $js = self::$loadedjs;
         $js_text = '';
-        if ($js) {
-            foreach ($js as $jsfile => $bool) {
-                $js_text .= "    <script language='JavaScript' src='$jsfile'></script>\n";
-                ;
+        if ($js)
+        {
+            foreach ($js as $jsfile => $bool)
+            {
+                $js_text .= "    <script language='JavaScript' src='$jsfile'></script>\n";;
             }
         }
         return $js_text;
@@ -139,18 +144,20 @@ class TPage extends TElement
      */
     public static function isMobile()
     {
-        $isMobile = false;
+        $isMobile = FALSE;
         
-        if (PHP_SAPI == 'cli') {
-            return false;
+        if (PHP_SAPI == 'cli')
+        {
+            return FALSE;
         }
         
-        if (isset($_SERVER['HTTP_X_WAP_PROFILE']) or isset($_SERVER['HTTP_PROFILE'])) {
-            $isMobile = true;
+        if (isset($_SERVER['HTTP_X_WAP_PROFILE']) or isset($_SERVER['HTTP_PROFILE']))
+        {
+            $isMobile = TRUE;
         }
         
         $mobiBrowsers = array('android',   'audiovox', 'blackberry', 'epoc',
-                              'ericsson', ' iemobile', 'ipaq',       'iphone', 'ipad',
+                              'ericsson', ' iemobile', 'ipaq',       'iphone', 'ipad', 
                               'ipod',      'j2me',     'midp',       'mmp',
                               'mobile',    'motorola', 'nitro',      'nokia',
                               'opera mini','palm',     'palmsource', 'panasonic',
@@ -160,9 +167,11 @@ class TPage extends TElement
                               'up.browser','up.link',  'wap',        'wap',
                               'windows ce','htc');
                               
-        foreach ($mobiBrowsers as $mb) {
-            if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), $mb) !== false) {
-                $isMobile = true;
+        foreach ($mobiBrowsers as $mb)
+        {
+            if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']),$mb) !== FALSE)
+            {
+             	$isMobile = TRUE;
             }
         }
         
@@ -186,13 +195,15 @@ class TPage extends TElement
     public function show()
     {
         // just execute run() from toplevel TPage's, not nested ones
-        if (!$this->getIsWrapped()) {
+        if (!$this->getIsWrapped())
+        {
             $this->run();
         }
         parent::show();
         
-        if (!$this->constructed) {
-            throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 constructor', __CLASS__));
+        if (!$this->constructed)
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 constructor', __CLASS__ ) );
         }
     }
 }

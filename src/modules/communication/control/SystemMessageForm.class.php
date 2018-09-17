@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TDBUniqueSearch;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
-use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Widget\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use Exception;
 

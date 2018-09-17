@@ -2,11 +2,13 @@
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Exception;
 
 /**
  * Represents an action inside a datagrid
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage datagrid
  * @author     Pablo Dall'Oglio
@@ -15,14 +17,74 @@ use Adianti\Base\Lib\Control\TAction;
  */
 class TDataGridAction extends TAction
 {
-    private $image;
-    private $label;
     private $field;
     private $fields;
-    private $displayCondition;
+    private $image;
+    private $label;
     private $buttonClass;
     private $useButton;
-
+    private $displayCondition;
+    
+    /**
+     * Define wich Active Record's property will be passed along with the action
+     * @param $field Active Record's property
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+        
+        $this->setParameter('key',  '{'.$field.'}');
+        $this->setParameter($field, '{'.$field.'}');
+    }
+    
+    /**
+     * Define wich Active Record's properties will be passed along with the action
+     * @param $field Active Record's property
+     */
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+        
+        if ($fields)
+        {
+            if (empty($this->field))
+            {
+                $this->setParameter('key', '{'.$fields[0].'}');
+            }
+            
+            foreach ($fields as $field)
+            {
+                $this->setParameter($field, '{'.$field.'}');
+            }
+        }
+    }
+    
+    /**
+     * Returns the Active Record's property that 
+     * will be passed along with the action
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+    
+    /**
+     * Returns the Active Record's properties that 
+     * will be passed along with the action
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+    
+    /**
+     * Return if there at least one field defined
+     */
+    public function fieldDefined()
+    {
+        return (!empty($this->field) or !empty($this->fields));
+    }
+    
     /**
      * Define an icon for the action
      * @param $image  The Image path
@@ -55,44 +117,6 @@ class TDataGridAction extends TAction
     public function getLabel()
     {
         return $this->label;
-    }
-    
-    /**
-     * Define wich Active Record's property
-     * will be passed along with the action
-     * @param $field Active Record's property
-     */
-    public function setField($field)
-    {
-        $this->field = $field;
-    }
-    
-    /**
-     * Define wich Active Record's properties
-     * will be passed along with the action
-     * @param $field Active Record's property
-     */
-    public function setFields($fields)
-    {
-        $this->fields = $fields;
-    }
-    
-    /**
-     * Returns the Active Record's property that
-     * will be passed along with the action
-     */
-    public function getField()
-    {
-        return $this->field;
-    }
-    
-    /**
-     * Returns the Active Record's properties that
-     * will be passed along with the action
-     */
-    public function getFields()
-    {
-        return $this->fields;
     }
     
     /**
@@ -133,7 +157,7 @@ class TDataGridAction extends TAction
      * Define a callback that must be valid to show the action
      * @param Callback $displayCondition Action display condition
      */
-    public function setDisplayCondition(/*Callable*/ $displayCondition)
+    public function setDisplayCondition( /*Callable*/ $displayCondition )
     {
         $this->displayCondition = $displayCondition;
     }
@@ -147,30 +171,70 @@ class TDataGridAction extends TAction
     }
     
     /**
+     * Prepare action for use over an object
+     * @param $object Data Object
+     */
+    public function prepare($object)
+    {
+        if ( !$this->fieldDefined() )
+        {
+            throw new Exception(AdiantiCoreTranslator::translate('Field for action ^1 not defined', parent::toString()) . '.<br>' . 
+                                AdiantiCoreTranslator::translate('Use the ^1 method', 'setField'.'()').'.');
+        }
+        
+        if ($field = $this->getField())
+        {
+            if ( !isset( $object->$field ) )
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
+            }
+        }
+        
+        if ($fields = $this->getFields())
+        {
+            $field = $fields[0];
+            
+            if ( !isset( $object->$field ) )
+            {
+                throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
+            }
+        }
+        
+        return parent::prepare($object);
+    }
+    
+    /**
      * Converts the action into an URL
      * @param  $format_action = format action with document or javascript (ajax=no)
      */
-    public function serialize($format_action = true)
+    public function serialize($format_action = TRUE)
     {
-        if (is_array($this->action) and is_object($this->action[0])) {
-            if (isset($_REQUEST['offset'])) {
-                $this->setParameter('offset', $_REQUEST['offset']);
+        if (is_array($this->action) AND is_object($this->action[0]))
+        {
+            if (isset( $_REQUEST['offset'] ))
+            {
+                $this->setParameter('offset',     $_REQUEST['offset'] );
             }
-            if (isset($_REQUEST['limit'])) {
-                $this->setParameter('limit', $_REQUEST['limit']);
+            if (isset( $_REQUEST['limit'] ))
+            {
+                $this->setParameter('limit',      $_REQUEST['limit'] );
             }
-            if (isset($_REQUEST['page'])) {
-                $this->setParameter('page', $_REQUEST['page']);
+            if (isset( $_REQUEST['page'] ))
+            {
+                $this->setParameter('page',       $_REQUEST['page'] );
             }
-            if (isset($_REQUEST['first_page'])) {
-                $this->setParameter('first_page', $_REQUEST['first_page']);
+            if (isset( $_REQUEST['first_page'] ))
+            {
+                $this->setParameter('first_page', $_REQUEST['first_page'] );
             }
-            if (isset($_REQUEST['order'])) {
-                $this->setParameter('order', $_REQUEST['order']);
+            if (isset( $_REQUEST['order'] ))
+            {
+                $this->setParameter('order',      $_REQUEST['order'] );
             }
         }
-        if (parent::isStatic()) {
-            $this->setParameter('static', '1');
+        if (parent::isStatic())
+        {
+            $this->setParameter('static',     '1' );
         }
         return parent::serialize($format_action);
     }

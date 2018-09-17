@@ -2,10 +2,12 @@
 namespace Adianti\Base\App\Lib\Reports;
 
 /**
- * TableRow
- * Copyright (c) 2006-2010 Pablo Dall'Oglio
- * @author  Pablo Dall'Oglio <pablo [at] adianti.com.br>
- * @version 2.0, 2007-08-01
+ * Table Row
+ *
+ * @version    5.5
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
  */
 class TAdiantiTableRow extends TAdiantiElement
 {
@@ -20,7 +22,7 @@ class TAdiantiTableRow extends TAdiantiElement
     /**
      * Add a new cell (TTableCell) to the Table Row
      * @param  $value Cell Content
-     * @return TAdiantiTableCell
+     * @return The created Table Cell
      */
     public function addCell($value)
     {
@@ -31,3 +33,4 @@ class TAdiantiTableRow extends TAdiantiElement
         return $cell;
     }
 }
+?>

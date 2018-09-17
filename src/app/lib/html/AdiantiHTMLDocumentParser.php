@@ -1,16 +1,15 @@
 <?php
 namespace Adianti\Base\App\Lib\Html;
 
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TRecord;
+use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use Exception;
-use pQuery;
 
 /**
  * HTML Document parser
  *
- * @version    5.0
+ * @version    5.5
  * @package    app
  * @subpackage lib
  * @author     Pablo Dall'Oglio
@@ -32,10 +31,16 @@ class AdiantiHTMLDocumentParser
      */
     public function __construct($file = null)
     {
-        if (file_exists($file)) {
+        if (file_exists($file))
+        {
             $this->file     = $file;
             $this->content  = file_get_contents($file);
         }
+        else
+        {
+            $this->content  = '';
+        }
+        
         $this->details  = [];
         $this->replaces = [];
         $this->totals   = [];
@@ -55,7 +60,7 @@ class AdiantiHTMLDocumentParser
      * Define the master object to be replaced
      * @param  $object Object
      */
-    public function setMaster($object)
+    public function setMaster(TRecord $object)
     {
         $this->masterObject = $object;
     }
@@ -87,15 +92,19 @@ class AdiantiHTMLDocumentParser
     public function fixSizes($dom)
     {
         $nodes = $dom->query('[width]');
-        foreach ($nodes as $node) {
-            if ((strstr($node->attr('width'), 'px') == false) and (strstr($node->attr('width'), '%') == false)) {
+        foreach ($nodes as $node)
+        {
+            if ((strstr($node->attr('width'), 'px') == FALSE) and (strstr($node->attr('width'), '%') == FALSE))
+            {
                 $node->attr('width', $node->attr('width') . 'px');
             }
         }
         
         $nodes = $dom->query('[height]');
-        foreach ($nodes as $node) {
-            if ((strstr($node->attr('height'), 'px') == false) and (strstr($node->attr('height'), '%') == false)) {
+        foreach ($nodes as $node)
+        {
+            if ((strstr($node->attr('height'), 'px') == FALSE) and (strstr($node->attr('height'), '%') == FALSE))
+            {
                 $node->attr('height', $node->attr('height') . 'px');
             }
         }
@@ -110,10 +119,13 @@ class AdiantiHTMLDocumentParser
         $this->fixSizes($dom);
         $details = $dom->query('table[data-detailmodel]');
 
-        if ($details) {
-            foreach ($details as $detail) {
+        if($details)
+        {
+            foreach ($details as $detail) 
+            {
                 $model = $detail->attr('data-detailmodel');
-                if ($model) {
+                if ($model)
+                {
                     $body     = $detail->query('tbody');
                     $row_tpl  = $body->html();
                     
@@ -122,8 +134,10 @@ class AdiantiHTMLDocumentParser
                     $matches = array_merge((array) $matches1, (array) $matches2);
                     $attributes = $matches[1];
                     
-                    if (isset($this->details[$model])) {
-                        foreach ($attributes as $attribute) {
+                    if (isset($this->details[$model]))
+                    {
+                        foreach ($attributes as $attribute)
+                        {
                             $this->totals[$model][$attribute]['count'] = 0;
                             $this->totals[$model][$attribute]['sum']   = 0;
                             $this->totals[$model][$attribute]['min']   = null;
@@ -131,33 +145,41 @@ class AdiantiHTMLDocumentParser
                         }
                         
                         $objects = $this->details[$model];
-                        if ($objects) {
+                        if ($objects)
+                        {
                             $new_rows = '';
-                            foreach ($objects as $object) {
+                            foreach ($objects as $object)
+                            {
                                 $new_row = $row_tpl;
-                                foreach ($attributes as $attribute) {
+                                foreach ($attributes as $attribute)
+                                {
                                     $new_row = str_replace('{{'.$attribute.'}}', $object->$attribute, $new_row);
-                                    $new_row = str_replace('{$'.$attribute.'}', $object->$attribute, $new_row);
+                                    $new_row = str_replace('{$'.$attribute.'}',  $object->$attribute, $new_row);
                                     
                                     $this->totals[$model][$attribute]['count'] ++;
-                                    $this->totals[$model][$attribute]['min'] = (!isset($this->totals[$model][$attribute]['min']) or $object->$attribute < $this->totals[$model][$attribute]['min']) ? $object->$attribute : $this->totals[$model][$attribute]['min'];
-                                    $this->totals[$model][$attribute]['max'] = (!isset($this->totals[$model][$attribute]['max']) or $object->$attribute > $this->totals[$model][$attribute]['max']) ? $object->$attribute : $this->totals[$model][$attribute]['max'];
+                                    $this->totals[$model][$attribute]['min'] = (!isset($this->totals[$model][$attribute]['min']) OR $object->$attribute < $this->totals[$model][$attribute]['min']) ? $object->$attribute : $this->totals[$model][$attribute]['min'];
+                                    $this->totals[$model][$attribute]['max'] = (!isset($this->totals[$model][$attribute]['max']) OR $object->$attribute > $this->totals[$model][$attribute]['max']) ? $object->$attribute : $this->totals[$model][$attribute]['max'];
                                     
-                                    if (is_numeric($object->$attribute)) {
+                                    if (is_numeric($object->$attribute))
+                                    {
                                         $this->totals[$model][$attribute]['sum'] += $object->$attribute;
                                     }
                                 }
                                 $new_rows .= $new_row;
                             }
                             $body->html($new_rows);
-                        } else {
+                        }
+                        else
+                        {
                             $body->html('');
                         }
                     }
                     
                     $footer  = $detail->query('tfoot');
-                    if ($footer->html()) {
-                        if (!empty($objects)) {
+                    if ($footer->html())
+                    {
+                        if (!empty($objects))
+                        {
                             $foot_tpl  = $footer->html();
                             $new_row = $foot_tpl;
                             preg_match_all('/{\$(.*?)}/', $foot_tpl, $matches1);
@@ -165,21 +187,24 @@ class AdiantiHTMLDocumentParser
                             $matches = array_merge((array) $matches1, (array) $matches2);
                             $attributes = $matches[1];
                             
-                            foreach ($attributes as $attribute) {
-                                $new_row = str_replace('sum({{'.$attribute.'}})', $this->totals[$model][$attribute]['sum'], $new_row);
-                                $new_row = str_replace('sum({$'.$attribute.'})', $this->totals[$model][$attribute]['sum'], $new_row);
+                            foreach ($attributes as $attribute)
+                            {
+                                $new_row = str_replace('sum({{'.$attribute.'}})',   $this->totals[$model][$attribute]['sum'], $new_row);
+                                $new_row = str_replace('sum({$'.$attribute.'})',    $this->totals[$model][$attribute]['sum'], $new_row);
                                 $new_row = str_replace('count({{'.$attribute.'}})', $this->totals[$model][$attribute]['count'], $new_row);
-                                $new_row = str_replace('count({$'.$attribute.'})', $this->totals[$model][$attribute]['count'], $new_row);
-                                $new_row = str_replace('min({{'.$attribute.'}})', $this->totals[$model][$attribute]['min'], $new_row);
-                                $new_row = str_replace('min({$'.$attribute.'})', $this->totals[$model][$attribute]['min'], $new_row);
-                                $new_row = str_replace('max({{'.$attribute.'}})', $this->totals[$model][$attribute]['max'], $new_row);
-                                $new_row = str_replace('max({$'.$attribute.'})', $this->totals[$model][$attribute]['max'], $new_row);
-                                $new_row = str_replace('avg({{'.$attribute.'}})', $this->totals[$model][$attribute]['sum'] / $this->totals[$model][$attribute]['count'], $new_row);
-                                $new_row = str_replace('avg({$'.$attribute.'})', $this->totals[$model][$attribute]['sum'] / $this->totals[$model][$attribute]['count'], $new_row);
+                                $new_row = str_replace('count({$'.$attribute.'})',  $this->totals[$model][$attribute]['count'], $new_row);
+                                $new_row = str_replace('min({{'.$attribute.'}})',   $this->totals[$model][$attribute]['min'], $new_row);
+                                $new_row = str_replace('min({$'.$attribute.'})',    $this->totals[$model][$attribute]['min'], $new_row);
+                                $new_row = str_replace('max({{'.$attribute.'}})',   $this->totals[$model][$attribute]['max'], $new_row);
+                                $new_row = str_replace('max({$'.$attribute.'})',    $this->totals[$model][$attribute]['max'], $new_row);
+                                $new_row = str_replace('avg({{'.$attribute.'}})',   $this->totals[$model][$attribute]['sum'] / $this->totals[$model][$attribute]['count'], $new_row);
+                                $new_row = str_replace('avg({$'.$attribute.'})',    $this->totals[$model][$attribute]['sum'] / $this->totals[$model][$attribute]['count'], $new_row);
                             }
                             
                             $footer->html($new_row);
-                        } else {
+                        }
+                        else
+                        {
                             $footer->html('');
                         }
                     }
@@ -189,8 +214,10 @@ class AdiantiHTMLDocumentParser
 
         $html = $dom->html();
         
-        if ($this->replaces) {
-            foreach ($this->replaces as $search => $replace) {
+        if ($this->replaces)
+        {
+            foreach ($this->replaces as $search => $replace)
+            {
                 $html = str_replace($search, $replace, $html);
             }
         }
@@ -199,10 +226,12 @@ class AdiantiHTMLDocumentParser
         preg_match_all('/{{(.*?)}}/', $html, $matches2);
         $matches = array_merge((array) $matches1, (array) $matches2);
         $attributes = $matches[1];
-        foreach ($attributes as $attribute) {
-            $html = str_replace('{$'.$attribute.'}', $this->masterObject->$attribute, $html);
+        foreach ($attributes as $attribute)
+        {
+            $html = str_replace('{$'.$attribute.'}',  $this->masterObject->$attribute, $html);
             $html = str_replace('{{'.$attribute.'}}', $this->masterObject->$attribute, $html);
         }
+        $html = THtmlRenderer::replaceFunctions($html);
         $this->content = $html;
         return $html;
     }
@@ -236,30 +265,36 @@ class AdiantiHTMLDocumentParser
      */
     public function parseImage($path, $width = '100%', $height = '100%')
     {
-        if (file_exists($path)) {
+        if (file_exists($path))
+        {
             $path_info = pathinfo($path);
             $content   = file_get_contents($path);
             
-            if ($this->replaces) {
-                foreach ($this->replaces as $search => $replace) {
+            if ($this->replaces)
+            {
+                foreach ($this->replaces as $search => $replace)
+                {
                     $content = str_replace($search, $replace, $content);
                 }
             }
             
-            preg_match_all('/{(.*?)}/', $content, $matches);
-            $raw_attributes = $matches[0];
-            foreach ($raw_attributes as $raw_attribute) {
-                $attribute = substr($raw_attribute, 2, -1);
-                if (isset($this->masterObject->$attribute)) {
-                    $content = str_replace($raw_attribute, $this->masterObject->$attribute, $content);
+            // fix -> object relations preparing for render method
+            if (preg_match_all('/\{(.*?)\}/', $content, $matches) )
+            {
+                foreach ($matches[0] as $match)
+                {
+                    $content = str_replace( $match, str_replace('-&gt;', '->', $match), $content);
                 }
             }
+            $content = $this->masterObject->render($content);
             
             $path = 'tmp/'.mt_rand(1000000000, 1999999999).'.' . $path_info['extension'];
             file_put_contents($path, $content);
             $this->content .= "<img src='{$path}' width='{$width}' height='{$height}'>";
-        } else {
-            throw new Exception(AdiantiCoreTranslator::translate('File not found') . ': ' . $path);
+        }
+        else
+        {
+            throw new Exception( AdiantiCoreTranslator::translate('File not found') . ': ' . $path );
         }
     }
     
@@ -301,14 +336,18 @@ class AdiantiHTMLDocumentParser
         
         $options = new Options();
         $options->set('dpi', '128');
+        $options->setIsRemoteEnabled(true);
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         
-        if (is_array($format)) {
-            $dompdf->setPaper([0, 0, $format[0], $format[1]], $orientation);
-        } else {
+        if (is_array($format))
+        {
+            $dompdf->setPaper( [0, 0, $format[0], $format[1]], $orientation );
+        }
+        else
+        {
             $dompdf->setPaper($format, $orientation);
         }
         

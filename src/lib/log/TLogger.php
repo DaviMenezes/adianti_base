@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Log;
 /**
  * Provides an abstract interface to register LOG files
  *
- * @version    5.0
+ * @version    5.5
  * @package    log
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -18,9 +18,10 @@ abstract class TLogger implements AdiantiLoggerInterface
      * Class Constructor
      * @param  $filename path for LOG file
      */
-    public function __construct($filename = null)
+    public function __construct($filename = NULL)
     {
-        if ($filename) {
+        if ($filename)
+        {
             $this->filename = $filename;
             // clear the file contents
             file_put_contents($filename, '');
@@ -31,5 +32,5 @@ abstract class TLogger implements AdiantiLoggerInterface
      * Write abstract method
      * Must be declared in child classes
      */
-    abstract public function write($message);
+    abstract function write($message);
 }

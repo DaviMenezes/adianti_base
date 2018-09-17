@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TStyle;
 /**
  * Label Widget
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -26,7 +26,7 @@ class TLabel extends TField implements AdiantiWidgetInterface
      * Class Constructor
      * @param  $value text label
      */
-    public function __construct($value, $color = null, $size = null, $decoration = null)
+    public function __construct($value, $color = null, $fontsize = null, $decoration = null, $size = null)
     {
         $this->id = mt_rand(1000000000, 1999999999);
         $stylename = 'tlabel_'.$this->id;
@@ -36,16 +36,24 @@ class TLabel extends TField implements AdiantiWidgetInterface
         
         $this->embedStyle = new TStyle($stylename);
         
-        if (!empty($color)) {
+        if (!empty($color))
+        {
             $this->setFontColor($color);
         }
         
-        if (!empty($size)) {
-            $this->setFontSize($size);
+        if (!empty($fontsize))
+        {
+            $this->setFontSize($fontsize);
         }
         
-        if (!empty($decoration)) {
+        if (!empty($decoration))
+        {
             $this->setFontStyle($decoration);
+        }
+        
+        if (!empty($size))
+        {
+            $this->setSize($size);
         }
         
         // create a new element
@@ -76,15 +84,18 @@ class TLabel extends TField implements AdiantiWidgetInterface
      */
     public function setFontStyle($decoration)
     {
-        if (strpos(strtolower($decoration), 'b') !== false) {
+        if (strpos(strtolower($decoration), 'b') !== FALSE)
+        {
             $this->embedStyle->{'font-weight'} = 'bold';
         }
         
-        if (strpos(strtolower($decoration), 'i') !== false) {
+        if (strpos(strtolower($decoration), 'i') !== FALSE)
+        {
             $this->embedStyle->{'font-style'} = 'italic';
         }
         
-        if (strpos(strtolower($decoration), 'u') !== false) {
+        if (strpos(strtolower($decoration), 'u') !== FALSE)
+        {
             $this->embedStyle->{'text-decoration'} = 'underline';
         }
     }
@@ -111,11 +122,12 @@ class TLabel extends TField implements AdiantiWidgetInterface
      * Add a content inside the label
      * @param $content
      */
-    public function add($content)
+    function add($content)
     {
         $this->tag->add($content);
         
-        if (is_string($content)) {
+        if (is_string($content))
+        {
             $this->value .= $content;
         }
     }
@@ -133,17 +145,22 @@ class TLabel extends TField implements AdiantiWidgetInterface
      */
     public function show()
     {
-        if ($this->size) {
-            if (strstr($this->size, '%') !== false) {
+        if ($this->size)
+        {
+            if (strstr($this->size, '%') !== FALSE)
+            {
                 $this->embedStyle->{'width'} = $this->size;
-            } else {
+            }
+            else
+            {
                 $this->embedStyle->{'width'} = $this->size . 'px';
             }
         }
         
         // if the embed style has any content
-        if ($this->embedStyle->hasContent()) {
-            $this->setProperty('style', $this->embedStyle->getInline() . $this->getProperty('style'), true);
+        if ($this->embedStyle->hasContent())
+        {
+            $this->setProperty('style', $this->embedStyle->getInline() . $this->getProperty('style'), TRUE);
         }
         
         // add content to the tag

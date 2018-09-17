@@ -1,10 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Database\TSqlStatement;
+
 /**
  * Provides an Interface to create DELETE statements
  *
- * @version    5.0
+ * @version    5.5
  * @package    database
  * @author     Pablo Dall'Oglio
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
@@ -19,15 +21,17 @@ final class TSqlDelete extends TSqlStatement
      * Returns a string containing the DELETE plain statement
      * @param $prepared Return a prepared Statement
      */
-    public function getInstruction($prepared = false)
+    public function getInstruction( $prepared = FALSE )
     {
         // creates the DELETE instruction
         $this->sql  = "DELETE FROM {$this->entity}";
         
         // concatenates with the criteria (WHERE)
-        if ($this->criteria) {
-            $expression = $this->criteria->dump($prepared);
-            if ($expression) {
+        if ($this->criteria)
+        {
+            $expression = $this->criteria->dump( $prepared );
+            if ($expression)
+            {
                 $this->sql .= ' WHERE ' . $expression;
             }
         }

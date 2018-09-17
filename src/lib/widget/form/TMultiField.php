@@ -13,7 +13,7 @@ use StdClass;
 /**
  * MultiField Widget: Takes a group of input fields and gives them the possibility to register many occurrences
  *
- * @version    5.0
+ * @version    5.5
  * @package    widget
  * @subpackage form
  * @author     Pablo Dall'Oglio
@@ -39,7 +39,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     public function __construct($name)
     {
         // define some default properties
-        self::setEditable(true);
+        self::setEditable(TRUE);
         self::setName($name);
         self::setId("tmultifield_" . mt_rand(1000000000, 1999999999));
         $this->orientation = 'vertical';
@@ -65,8 +65,10 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     {
         parent::setFormName($name);
         
-        if ($this->fields) {
-            foreach ($this->fields as $name => $field) {
+        if ($this->fields)
+        {
+            foreach($this->fields as $name => $field)
+            {
                 $obj = $field->{'field'};
                 $obj->setFormName($this->formName);
             }
@@ -81,7 +83,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      * @param $size      Widget's size
      * @param $mandatory Mandatory field
      */
-    public function addField($name, $text, TField $object, $size, $mandatory = false)
+    public function addField($name, $text, TField $object, $size, $mandatory = FALSE)
     {
         $obj = new StdClass;
         $obj-> name      = $name;
@@ -92,7 +94,8 @@ class TMultiField extends TField implements AdiantiWidgetInterface
         $this->width   += $size;
         $this->fields[$name] = $obj;
         
-        if ($object instanceof TComboCombined) {
+        if ($object instanceof TComboCombined)
+        {
             $this->width += 20;
         }
     }
@@ -127,19 +130,27 @@ class TMultiField extends TField implements AdiantiWidgetInterface
         // getters like get_virtual_property()
         // inside the transaction (when the attribute)
         // is set, and not after all (during the show())
-        if ($objects) {
-            foreach ($this->objects as $object) {
-                if ($this->fields) {
-                    foreach ($this->fields as $name => $obj) {
+        if ($objects)
+        {
+            foreach ($this->objects as $object)
+            {
+                if ($this->fields)
+                {
+                    foreach($this->fields as $name => $obj)
+                    {
                         $object->$name; // regular attribute
-                        if ($obj-> field instanceof TComboCombined) {
+                        if ($obj-> field instanceof TComboCombined)
+                        {
                             $attribute = $obj-> field->getTextName();
                             $object->$attribute; // auxiliar attribute
                         }
-                        if ($obj-> field instanceof TDBMultiSearch) {
-                            if (is_array($object->$name)) {
+                        if ($obj-> field instanceof TDBMultiSearch)
+                        {
+                            if (is_array($object->$name))
+                            {
                                 $content = array();
-                                foreach ($object->$name as $id => $value) {
+                                foreach ($object->$name as $id => $value)
+                                {
                                     $position = new StdClass;
                                     $position->{'id'} = $id;
                                     $position->{'text'} = $value;
@@ -159,24 +170,30 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name])) {
+        if (isset($_POST[$this->name]))
+        {
             $val = $_POST[$this->name];
             $className = $this->getClass() ? $this->getClass() : 'stdClass';
             $decoded   = JSON_decode(stripslashes($val));
             unset($items);
             unset($obj_item);
             $items = array();
-            if (is_array($decoded)) {
-                foreach ($decoded as $std_object) {
+            if (is_array($decoded))
+            {
+                foreach ($decoded as $std_object)
+                {
                     $obj_item = new $className;
-                    foreach ($std_object as $subkey => $value) {
+                    foreach ($std_object as $subkey => $value)
+                    {
                         // substitui pq o ttable gera com quebra de linha no multifield
-                        $obj_item->$subkey = utf8_encode(str_replace("\n", '', URLdecode($value)));
+                        $obj_item->$subkey = utf8_encode(str_replace("\n",'',URLdecode($value)));
                         // verifica se é um json
-                        if (is_array(json_decode($obj_item->$subkey))) {
+                        if (is_array(json_decode($obj_item->$subkey)))
+                        {
                             $content = json_decode($obj_item->$subkey);
                             $return = array();
-                            foreach ($content as $position) {
+                            foreach ($content as $position)
+                            {
                                 $return[ $position->{'id'} ] = $position->{'text'};
                             }
                             
@@ -187,7 +204,9 @@ class TMultiField extends TField implements AdiantiWidgetInterface
                 }
             }
             return $items;
-        } else {
+        }
+        else
+        {
             return '';
         }
     }
@@ -208,7 +227,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create(" tmultifield_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultifield_enable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -218,7 +237,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create(" tmultifield_disable_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultifield_disable_field('{$form_name}', '{$field}'); " );
     }
     
     /**
@@ -228,39 +247,43 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      */
     public static function clearField($form_name, $field)
     {
-        TScript::create(" tmultifield_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create( " tmultifield_clear_field('{$form_name}', '{$field}'); " );
     }
-
+    
     /**
      * Show the widget at the screen
-     * @throws \Exception
      */
     public function show()
     {
         $wrapper = new TElement('div');
         $wrapper->{'mtf_name'} = $this->getName();
         // include the needed libraries and styles
-        if ($this->fields) {
+        if ($this->fields)
+        {
             $table = new TTable;
             
             $mandatories = array(); // mandatory
             $fields = array();
             $i=0;
             
-            if ($this->orientation == 'horizontal') {
+            if ($this->orientation == 'horizontal')
+            {
                 $row_label = $table->addRow();
                 $row_field = $table->addRow();
             }
             
-            foreach ($this->fields as $name => $obj) {
-                if ($this->orientation == 'vertical') {
+            foreach($this->fields as $name => $obj)
+            {
+                if ($this->orientation == 'vertical')
+                {
                     $row = $table->addRow();
                     $row_label = $row;
                     $row_field = $row;
                 }
                 
                 $label = new TLabel($obj-> text);
-                if ($obj-> mandatory) {
+                if ($obj-> mandatory)
+                {
                     $label->setFontColor('red');
                 }
                 
@@ -273,7 +296,8 @@ class TMultiField extends TField implements AdiantiWidgetInterface
                 $sizes[$name] = $obj-> size;
                 
                 $obj-> field->setName($this->name.'_'.$name);
-                if (in_array(get_class($obj-> field), array('TComboCombined', 'Adianti\Widget\Form\TComboCombined'))) {
+                if (in_array(get_class($obj-> field), array('TComboCombined', 'Adianti\Base\Lib\Widget\Form\TComboCombined')))
+                {
                     $aux_name = $obj-> field->getTextName();
                     $aux_full_name = $this->name.'_'.$aux_name;
                     
@@ -293,7 +317,8 @@ class TMultiField extends TField implements AdiantiWidgetInterface
             $wrapper->add($table);
         }
         // check whether the widget is non-editable
-        if (parent::getEditable()) {
+        if (parent::getEditable())
+        {
             // create three buttons to control the MultiField
             $add = new TButton("{$this->id}btnStore");
             $add->setLabel(AdiantiCoreTranslator::translate('Register'));
@@ -334,10 +359,13 @@ class TMultiField extends TField implements AdiantiWidgetInterface
         $head->add($row);
         
         // fill the MultiField DataGrid
-        if ($this->fields) {
-            foreach ($this->fields as $obj) {
+        if ($this->fields)
+        {
+            foreach ($this->fields as $obj)
+            {
                 $c = $obj-> text;
-                if (in_array(get_class($obj-> field), array('TComboCombined', 'Adianti\Widget\Form\TComboCombined'))) {
+                if (in_array(get_class($obj-> field), array('TComboCombined', 'Adianti\Base\Lib\Widget\Form\TComboCombined')))
+                {
                     $cell=$row->addCell('ID');
                     $cell->{'width'} = '20px';
                     $cell->{'class'} = 'multifield_header';
@@ -353,37 +381,49 @@ class TMultiField extends TField implements AdiantiWidgetInterface
         $body->{'class'} = 'tmultifield_scrolling';
         $table->add($body);
         
-        if ($this->objects) {
-            foreach ($this->objects as $obj) {
-                if (isset($obj-> id)) {
+        if ($this->objects)
+        {
+            foreach($this->objects as $obj)
+            {
+                if (isset($obj-> id))
+                {
                     $row = new TTableRow;
                     $row-> dbId=$obj-> id;
                     $body->add($row);
-                } else {
+                }
+                else
+                {
                     $row = new TTableRow;
                     $body->add($row);
                 }
-                if ($fields) {
-                    foreach ($fields as $name) {
+                if ($fields)
+                {
+                    foreach($fields as $name)
+                    {
                         $cellValue = is_null($obj->$name) ? '' : $obj->$name;
                         $original = $cellValue;
-                        if (is_array(json_decode($cellValue))) { // se json
+                        if (is_array(json_decode($cellValue))) // se json
+                        {
                             $content = json_decode($cellValue);
                             
                             $rows = array();
-                            foreach ($content as $_row) {
+                            foreach ($content as $_row)
+                            {
                                 $rows[] = implode(':', array_values(get_object_vars($_row)));
                             }
                             $cellValue = implode(',', $rows);
                             $cell = $row->addCell($cellValue);
                             $cell->{'data'} = htmlspecialchars($original);
-                        } else {
+                        }
+                        else
+                        {
                             $cell = $row->addCell($cellValue);
                             $cell->{'data'} = $cellValue;
                         }
 
                         
-                        if (isset($sizes[$name])) {
+                        if (isset($sizes[$name]))
+                        {
                             $cell-> style='width:'.$sizes[$name].'px;';
                         }
                     }

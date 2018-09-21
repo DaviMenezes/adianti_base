@@ -1,11 +1,14 @@
 <?php
 namespace Adianti\Database;
 
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Database\TSqlDelete;
-use Adianti\Base\Lib\Database\TSqlInsert;
-use Adianti\Base\Lib\Database\TSqlSelect;
-use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Core\AdiantiCoreTranslator;
+use Adianti\Database\TTransaction;
+use Adianti\Database\TCriteria;
+use Adianti\Database\TSqlSelect;
+use Adianti\Database\TSqlInsert;
+use Adianti\Database\TSqlUpdate;
+use Adianti\Database\TSqlDelete;
+
 use PDO;
 use Exception;
 use SplFileObject;

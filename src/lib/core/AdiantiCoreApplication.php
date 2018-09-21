@@ -32,7 +32,7 @@ class AdiantiCoreApplication
         $class = Route::getPath($class);
 
         $content = '';
-        set_error_handler(array('AdiantiCoreApplication', 'errorHandler'));
+        set_error_handler(array(AdiantiCoreApplication::class, 'errorHandler'));
         
         if (in_array(strtolower($class), array_map('strtolower', AdiantiClassMap::getInternalClasses()) ))
         {

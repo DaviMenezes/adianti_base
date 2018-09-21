@@ -106,3 +106,4 @@ class TAdiantiStyle
         return $style;
     }
 }
+?>

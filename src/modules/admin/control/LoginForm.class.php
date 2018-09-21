@@ -6,27 +6,18 @@ use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Core\TApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Validator\TEmailValidator;
-use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Widget\Dialog\TAlert;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Adianti\Base\Lib\Widget\Form\TEntry;
-use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
-use Adianti\Base\Modules\Admin\Model\SystemPreference;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Adianti\Base\Modules\Log\Model\SystemAccessLog;
-use App\Control\Pessoa\ResetPassword;
-use App\Model\Pessoa\EntityQuery;
-use Dvi\Adianti\Database\DTransaction;
-use Dvi\Adianti\Helpers\DviMail;
+use App\TApplication;
 use Exception;
 
 /**

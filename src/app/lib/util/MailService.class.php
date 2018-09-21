@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\App\Lib\Util;
 
-use Adianti\Base\Lib\Database\TTransaction;
-use Adianti\Base\Modules\Admin\Model\SystemPreference;
-
 /**
  * Mail Service
  *

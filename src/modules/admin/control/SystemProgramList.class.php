@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Base\TStandardList;
 use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
+use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -13,13 +14,18 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGridAction;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridActionGroup;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
+use Adianti\Base\Lib\Widget\Dialog\TInputDialog;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TCombo;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
+use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
 use Adianti\Base\Widget\Menu\TMenuParser;
+use Exception;
 
 /**
  * SystemProgramList
@@ -47,7 +53,7 @@ class SystemProgramList extends TStandardList
     {
         parent::__construct();
         
-        parent::setDatabase('permission');            // defines the database
+        parent::setDatabase('default');            // defines the database
         parent::setActiveRecord(SystemProgram::class);   // defines the active record
         parent::setDefaultOrder('id', 'asc');         // defines the default order
         // parent::setCriteria($criteria) // define a standard filter

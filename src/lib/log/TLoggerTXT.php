@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Log;
 
+use Adianti\Base\Lib\Log\TLogger;
+
 /**
  * Register LOG in TXT files
  *

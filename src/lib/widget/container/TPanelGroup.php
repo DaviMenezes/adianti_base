@@ -2,7 +2,7 @@
 namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 
 /**
  * Bootstrap native panel for Adianti Framework

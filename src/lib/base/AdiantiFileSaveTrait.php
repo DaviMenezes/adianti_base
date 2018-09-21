@@ -2,7 +2,7 @@
 namespace Adianti\Base\Lib\Base;
 
 use Exception;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Core\AdiantiCoreTranslator;
 
 /**
  * File Save Trait

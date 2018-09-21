@@ -18,11 +18,9 @@ use Adianti\Base\Lib\Widget\Wrapper\TDBCheckGroup;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Model\SystemProgram;
+use App\Config\MyRoutes;
 use Exception;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use stdClass;
-use TApplication;
 
 /**
  * SystemProgramForm
@@ -127,43 +125,15 @@ class SystemProgramForm extends TStandardForm
      */
     public function getPrograms( $just_new_programs = false )
     {
-        try
-        {
-            TTransaction::open('permission');
-            $registered_programs = SystemProgram::getIndexedArray('id', 'controller');
-            TTransaction::close();
-            
-            $entries = array();
-            foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator('app/control'),
-                                                             RecursiveIteratorIterator::CHILD_FIRST) as $arquivo)
-            {
-                if (substr($arquivo, -4) == '.php')
-                {
-                    $name = $arquivo->getFileName();
-                    $pieces = explode('.', $name);
-                    $class = (string) $pieces[0];
-                    
-                    if ($just_new_programs)
-                    {
-                        if (!in_array($class, $registered_programs) AND !in_array($class, array_keys(TApplication::getDefaultPermissions())) AND substr($class,0,6) !== 'System')
-                        {
-                            $entries[$class] = $class;
-                        } 
-                    }
-                    else
-                    {
-                        $entries[$class] = $class;
-                    }
-                }
-            }
-            
-            ksort($entries);
-            return $entries;
+        $entries = array();
+
+        $controllers = MyRoutes::getRoutes();
+        foreach ($controllers as $key => $file) {
+            $entries[$key] = $key;
         }
-        catch (Exception $e)
-        {
-            new TMessage('error', $e->getMessage());
-        }
+
+        ksort($entries);
+        return $entries;
     }
     
     /**

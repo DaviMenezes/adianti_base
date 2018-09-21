@@ -1,6 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
+use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Widget\Form\TField;
+
 /**
  * CheckButton widget
  *

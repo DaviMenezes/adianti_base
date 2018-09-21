@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Validator;
 
+use Adianti\Base\Lib\Validator\TFieldValidator;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Exception;
 

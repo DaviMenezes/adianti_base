@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Widget\Form\AdiantiFormInterface;
 use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Wrapper\AdiantiFormBuilder;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 
 /**

@@ -2,10 +2,8 @@
 namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Base\TElement;
-use Exception;
 
 /**
  * JQuery dialog container

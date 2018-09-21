@@ -1,6 +1,9 @@
 <?php
 namespace Adianti\Base\Lib\Database;
 
+use Adianti\Base\Lib\Database\TExpression;
+use Adianti\Base\Lib\Database\TSqlStatement;
+
 /**
  * Provides an interface to define filters to be used inside a criteria
  *

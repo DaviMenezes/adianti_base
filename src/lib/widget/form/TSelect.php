@@ -309,10 +309,9 @@ class TSelect extends TField implements AdiantiWidgetInterface
         // define the tag properties
         $this->tag->{'name'}  = $this->name.'[]';    // tag name
         $this->tag->{'id'}    = $this->id;
-        
-        $this->setProperty('style', (strstr($this->size, '%') !== FALSE)   ? "width:{$this->size}"    : "width:{$this->size}px",   false); //aggregate style info
-        $this->setProperty('style', (strstr($this->height, '%') !== FALSE) ? "height:{$this->height}" : "height:{$this->height}px", false); //aggregate style info
-        
+
+        $this->setStyle();
+
         // verify whether the widget is editable
         if (parent::getEditable())
         {
@@ -345,5 +344,11 @@ class TSelect extends TField implements AdiantiWidgetInterface
         // shows the widget
         $this->renderItems();
         $this->tag->show();
+    }
+
+    protected function setStyle()
+    {
+        $this->setProperty('style', (strstr($this->size, '%') !== FALSE) ? "width:{$this->size}" : "width:{$this->size}px", false); //aggregate style info
+        $this->setProperty('style', (strstr($this->height, '%') !== FALSE) ? "height:{$this->height}" : "height:{$this->height}px", false); //aggregate style info
     }
 }

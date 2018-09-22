@@ -1,4 +1,20 @@
 <?php
+namespace Adianti\Base\Modules\Admin\Control;
+
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Database\TTransaction;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TLabel;
+use Adianti\Base\Lib\Widget\Form\TPassword;
+use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Adianti\Base\Modules\Admin\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Exception;
+
 /**
  * SystemRegistrationForm
  *

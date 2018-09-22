@@ -11,9 +11,10 @@ use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TFile;
 use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
-use Adianti\Base\Lib\Widget\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Exception;
 

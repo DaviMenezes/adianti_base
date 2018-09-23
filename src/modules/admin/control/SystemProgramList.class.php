@@ -18,6 +18,7 @@ use Adianti\Base\Lib\Widget\Dialog\TInputDialog;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TCombo;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TIcon;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;

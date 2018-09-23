@@ -200,7 +200,7 @@ class AdiantiCoreApplication
     public static function buildHttpQuery($class, $method = NULL, $parameters = NULL)
     {
         $url = array();
-        $url['class']  = $class;
+        $url['class']  = Route::getClassName($class);
         if ($method)
         {
             $url['method'] = $method;

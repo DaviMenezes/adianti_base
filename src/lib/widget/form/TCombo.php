@@ -392,14 +392,17 @@ class TCombo extends TField implements AdiantiWidgetInterface
         // shows the combobox
         $this->renderItems();
         $this->tag->show();
-        
-        if ($this->searchable)
-        {
+
+        $this->setSearchable();
+    }
+
+    protected function setSearchable()
+    {
+        if ($this->searchable) {
             $select = AdiantiCoreTranslator::translate('Select');
             TScript::create("tcombo_enable_search('#{$this->id}', '{$select}')");
-            
-            if (!parent::getEditable())
-            {
+
+            if (!parent::getEditable()) {
                 TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
             }
         }

@@ -1,6 +1,7 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
+use Adianti\Base\App\Lib\Util\ApplicationTranslator;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
@@ -97,7 +98,7 @@ class AdiantiCoreApplication
         }
         echo TPage::getLoadedJS();
         
-        echo $content;
+        echo ApplicationTranslator::translateTemplate($content);
     }
     
     /**

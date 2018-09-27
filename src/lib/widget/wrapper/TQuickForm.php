@@ -121,7 +121,7 @@ class TQuickForm extends TForm
             $this->table->{'width'} = '100%';
         }
         
-        if (method_exists('TForm', '__set'))
+        if (method_exists(TForm::class, '__set'))
         {
             parent::__set($name, $value);
         }

@@ -3,7 +3,7 @@ namespace Adianti\Base\Lib\Control;
 
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use Exception;
 use ReflectionMethod;
 

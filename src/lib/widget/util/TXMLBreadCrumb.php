@@ -3,7 +3,7 @@ namespace Adianti\Base\Lib\Widget\Util;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Widget\Menu\TMenuParser;
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use Exception;
 
 /**

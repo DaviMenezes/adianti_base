@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TSqlSelect;
 
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use PDO;
 use Exception;
 use ReflectionMethod;

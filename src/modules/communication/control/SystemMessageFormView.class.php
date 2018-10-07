@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Container\THBox;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;

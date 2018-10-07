@@ -275,7 +275,12 @@ class TDBMultiSearch extends TMultiSearch
         {
             $criteria = str_replace(array('+', '/'), array('-', '_'), base64_encode(serialize($this->criteria)));
         }
-        
+
+        #region[CUSTOM UPDATED-Dvi-Davi.Menezes]
+        //prepare model full name to valid url parameter
+        $this->model = str_replace('\\', '-', $this->model);
+        #endregion
+
         $hash = md5("{$this->seed}{$this->database}{$this->key}{$this->column}{$this->model}");
         $length = $this->minLength;
         

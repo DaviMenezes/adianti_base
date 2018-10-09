@@ -13,7 +13,8 @@ use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TDBUniqueSearch;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
-use Adianti\Base\Lib\Widget\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Modules\Admin\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use Exception;
 
@@ -47,7 +48,7 @@ class SystemMessageForm extends TWindow
         $this->form->style = 'display: table;width:100%'; // change style
         
         // create the form fields
-        $system_user_to_id = new TDBUniqueSearch('system_user_to_id', 'permission', 'SystemUser', 'id', 'name');
+        $system_user_to_id = new TDBUniqueSearch('system_user_to_id', 'permission', SystemUser::class, 'id', 'name');
         $subject = new TEntry('subject');
         $message = new TText('message');
         $system_user_to_id->setMinLength(2);

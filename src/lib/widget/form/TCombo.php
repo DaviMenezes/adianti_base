@@ -395,7 +395,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
         
         if ($this->searchable)
         {
-            $select = AdiantiCoreTranslator::translate('Select');
+            $select = $this->getTextPlaceholder();
             TScript::create("tcombo_enable_search('#{$this->id}', '{$select}')");
             
             if (!parent::getEditable())
@@ -403,5 +403,11 @@ class TCombo extends TField implements AdiantiWidgetInterface
                 TScript::create(" tmultisearch_disable_field( '{$this->formName}', '{$this->name}'); ");
             }
         }
+    }
+
+    protected function getTextPlaceholder()
+    {
+        $select = AdiantiCoreTranslator::translate('Select');
+        return $select;
     }
 }

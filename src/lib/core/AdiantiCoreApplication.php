@@ -1,11 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
+use Adianti\Base\App\Lib\Util\ApplicationTranslator;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Util\TExceptionView;
-use Dvi\Adianti\Route;
+use Dvi\AdiantiExtension\Route;
 use ErrorException;
 use Exception;
 use ReflectionMethod;
@@ -97,7 +98,7 @@ class AdiantiCoreApplication
         }
         echo TPage::getLoadedJS();
         
-        echo $content;
+        echo ApplicationTranslator::translateTemplate($content);
     }
     
     /**

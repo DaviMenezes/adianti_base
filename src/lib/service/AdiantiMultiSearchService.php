@@ -31,7 +31,7 @@ class AdiantiMultiSearchService
         $seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $hash = md5("{$seed}{$param['database']}{$param['key']}{$param['column']}{$param['model']}");
         $mask = $param['mask'];
-        
+
         if ($hash == $param['hash'])
         {
             try
@@ -40,7 +40,12 @@ class AdiantiMultiSearchService
                 $info = TTransaction::getDatabaseInfo();
                 $default_op = $info['type'] == 'pgsql' ? 'ilike' : 'like';
                 $operator   = !empty($param['operator']) ? $param['operator'] : $default_op;
-                
+
+                #region[CUSTOM UPDATED-Dvi-Davi.Menezes]
+                //prepare model full name
+                $param['model'] = str_replace('-', '\\', $param['model']);
+                #endregion
+
                 $repository = new TRepository($param['model']);
                 $criteria = new TCriteria;
                 if ($param['criteria'])

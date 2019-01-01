@@ -8,6 +8,8 @@ use Adianti\Base\Lib\Widget\Container\TTable;
 use Adianti\Base\Lib\Widget\Util\TDropDown;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use App\Http\Request;
+use App\Http\Router;
 use Exception;
 
 /**
@@ -110,8 +112,9 @@ class TDataGrid extends TTable
     
     /**
      * Returns true if has custom width
+     * updated to protected by Dvi.DaviMenezes(davimenezes.dev@gmail.com)
      */
-    private function hasCustomWidth()
+    protected function hasCustomWidth()
     {
         return ( (strpos($this->getProperty('style'), 'width') !== false) OR !empty($this->getProperty('width')));
     }
@@ -263,6 +266,8 @@ class TDataGrid extends TTable
      */
     public function createModel( $create_header = true )
     {
+        $request = Request::instance();
+
         if (!$this->columns)
         {
             return;
@@ -315,11 +320,11 @@ class TDataGrid extends TTable
                     $width = $column->getWidth();
                     $props = $column->getProperties();
                     
-                    if (isset($_GET['order']))
+                    if ($request->get('order'))
                     {
-                        if ($_GET['order'] == $name)
+                        if ($request->get('order') == $name)
                         {
-                            if (isset($_GET['direction']) AND $_GET['direction'] == 'asc')
+                            if ($request->get('direction') == 'asc')
                             {
                                 $label .= '<span class="glyphicon glyphicon-chevron-down blue" aria-hidden="true"></span>';
                             }
@@ -354,7 +359,7 @@ class TDataGrid extends TTable
                     if ($column->getAction())
                     {
                         $action = $column->getAction();
-                        if (isset($_GET['direction']) AND $_GET['direction'] == 'asc' AND isset($_GET['order']) AND ($_GET['order'] == $name))
+                        if ($request->get('direction') == 'asc' AND $request->get('order') == $name)
                         {
                             $action->setParameter('direction', 'desc');
                         }
@@ -576,7 +581,7 @@ class TDataGrid extends TTable
                             $label  = $action->getLabel();
                             $image  = $action->getImage();
                             $condition = $action->getDisplayCondition();
-                            
+
                             if (empty($condition) OR call_user_func($condition, $object))
                             {
                                 $url       = $action->serialize();
@@ -760,8 +765,9 @@ class TDataGrid extends TTable
     
     /**
      * Process column totals
+     * updated to protected by Dvi.DaviMenezes (davimenezes.dev@gmail.com)
      */
-    private function processTotals()
+    protected function processTotals()
     {
         if (count($this->objects) == 0)
         {

@@ -1,9 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -13,6 +11,8 @@ use Adianti\Base\Lib\Widget\Form\THidden;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
+use Dvi\Adianti\Helpers\Redirect;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 use stdClass;
 
@@ -45,7 +45,7 @@ class SystemDocumentUploadForm extends TPage
         // create the form fields
         $id = new THidden('id');
         $filename = new TFile('filename');
-        $filename->setService('SystemDocumentUploaderService');
+        $filename->setService(urlRoute('/admin/system/service/document/upload'));
 
         $row = $this->form->addFields([new TLabel('ID')], [$id]);
         $row->style = 'display:none';
@@ -53,13 +53,13 @@ class SystemDocumentUploadForm extends TPage
         $filename->setSize('80%');
         $filename->addValidation(_t('File'), new TRequiredValidator);
         
-        $btn = $this->form->addAction(_t('Next'), new TAction(array($this, 'onNext')), 'fa:arrow-circle-o-right');
+        $btn = $this->form->addAction(_t('Next'), new Action(route('/admin/system/document/upload/next'), 'POST'), 'fa:arrow-circle-o-right');
         $btn->class = 'btn btn-sm btn-primary';
         
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/document/upload'));
         $container->add($this->form);
         
         parent::add($container);
@@ -92,10 +92,10 @@ class SystemDocumentUploadForm extends TPage
             if ($data->id) {
                 $param['key'] = $param['id'];
                 $param['hasfile'] = '1';
-                AdiantiCoreApplication::loadPage('SystemDocumentForm', 'onEdit', $param);
+                Redirect::ajaxLoadPage('/admin/system/document/form/edit', $param);
             } else {
                 $param['hasfile'] = '1';
-                AdiantiCoreApplication::loadPage('SystemDocumentForm');
+                Redirect::ajaxLoadPage('/admin/system/document/form');
             }
         } catch (Exception $e) { // in case of exception
             new TMessage('error', $e->getMessage()); // shows the exception error message

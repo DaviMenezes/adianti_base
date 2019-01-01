@@ -24,7 +24,7 @@ class AdiantiTemplateParser
     {
         $ini       = AdiantiApplicationConfig::get();
         $theme     = $ini['general']['theme'];
-        $libraries = file_get_contents("app/templates/{$theme}/libraries.html");
+        $libraries = file_get_contents("app/templates/{$theme}/libraries.phtml");
         $class     = isset($_REQUEST['class']) ? $_REQUEST['class'] : '';
         
         if ((TSession::getValue('login') == 'admin') && !empty($ini['general']['token']))

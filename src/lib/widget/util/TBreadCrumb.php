@@ -2,6 +2,7 @@
 namespace Adianti\Base\Lib\Widget\Util;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
+use App\Http\Request;
 
 /**
  * BreadCrumb
@@ -16,7 +17,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  */
 class TBreadCrumb extends TElement
 {
-    protected static $homeController;
+    protected static $home_route;
     protected $container;
     protected $items;
     
@@ -62,13 +63,13 @@ class TBreadCrumb extends TElement
         $a->{'class'} = 'bread';
         $a->generator = 'adianti';
         
-        if (self::$homeController)
+        if (self::$home_route)
         {
-            $a->{'href'} = 'engine.php?class='.self::$homeController;
+            $a->{'href'} = self::$home_route.'/&static=1';
         }
         else
         {
-            $a->{'href'} = 'engine.php';
+            $a->{'href'} = urlRoute(Request::instance()->attr('route_base'));
         }
         
         $a->{'title'} = 'Home';
@@ -127,11 +128,11 @@ class TBreadCrumb extends TElement
     }
     
     /**
-     * Define the home controller
-     * @param $class Home controller class
+     * Define the home route
+     * @param string $class Home controller class
      */
-    public static function setHomeController($className)
+    public static function setHomeRoute($className)
     {
-        self::$homeController = $className;
+        self::$home_route = $className;
     }
 }

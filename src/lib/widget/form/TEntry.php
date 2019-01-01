@@ -63,7 +63,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
     }
-    
+
+    public function getMask()
+    {
+        return $this->mask;
+    }
+
     /**
      * Define the field's numeric mask (available just in web)
      * @param $decimals Sets the number of decimal points.

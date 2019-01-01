@@ -3,7 +3,6 @@ namespace Adianti\Base\Lib\Widget\Util;
 
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Widget\Menu\TMenuParser;
-use Dvi\AdiantiExtension\Route;
 use Exception;
 
 /**
@@ -29,7 +28,7 @@ class TXMLBreadCrumb extends TBreadCrumb
         parent::__construct();
         
         $this->parser = new TMenuParser($xml_file);
-        $paths = $this->parser->getPath(Route::getClassName($controller));
+        $paths = $this->parser->getPath($controller);
 
         if (!empty($paths)) {
             parent::addHome();

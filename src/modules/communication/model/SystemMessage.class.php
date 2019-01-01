@@ -3,7 +3,7 @@ namespace Adianti\Base\Modules\Communication\Model;
 
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 
 /**
  * SystemMessage
@@ -19,7 +19,7 @@ class SystemMessage extends TRecord
 {
     const TABLENAME = 'system_message';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const IDPOLICY =  'serial'; // {max, serial}
     
     
     /**
@@ -38,7 +38,7 @@ class SystemMessage extends TRecord
     
     public function get_user_from()
     {
-        return SystemUser::findInTransaction('permission', $this->system_user_id);
+        return \Adianti\Base\Modules\Admin\User\Model\SystemUser::findInTransaction('permission', $this->system_user_id);
     }
     
     public function get_user_to()

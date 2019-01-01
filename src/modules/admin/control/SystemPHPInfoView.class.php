@@ -74,7 +74,7 @@ class SystemPHPInfoView extends TPage
         
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/php/info'));
         $container->add($panel);
         
         parent::add($container);

@@ -2,7 +2,6 @@
 namespace Adianti\Base\Modules\Log\Control;
 
 use Adianti\Base\Lib\Base\TStandardList;
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
@@ -15,6 +14,7 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Log\Model\SystemChangeLog;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * SystemChangeLogView
@@ -44,7 +44,7 @@ class SystemChangeLogView extends TStandardList
     public function __construct()
     {
         parent::__construct();
-        
+
         parent::setDatabase('log');
         parent::setActiveRecord(SystemChangeLog::class);
         parent::addFilterField('tablename');
@@ -64,7 +64,7 @@ class SystemChangeLogView extends TStandardList
         $tablename->setSize('80%');
         $login->setSize('80%');
         
-        $btn = $this->form->addAction(_t('Search'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Search'), new Action(route('/admin/system/log/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
         
         $this->formgrid = new TForm;
@@ -101,11 +101,11 @@ class SystemChangeLogView extends TStandardList
             return $value;
         });
         
-        $order1= new TAction(array($this, 'onReload'));
-        $order2= new TAction(array($this, 'onReload'));
-        $order3= new TAction(array($this, 'onReload'));
-        $order4= new TAction(array($this, 'onReload'));
-        $order5= new TAction(array($this, 'onReload'));
+        $order1= new Action(urlRoute('/admin/system/log'));
+        $order2= new Action(urlRoute('/admin/system/log'));
+        $order3= new Action(urlRoute('/admin/system/log'));
+        $order4= new Action(urlRoute('/admin/system/log'));
+        $order5= new Action(urlRoute('/admin/system/log'));
         
         $order1->setParameter('order', 'pkvalue');
         $order2->setParameter('order', 'logdate');
@@ -135,7 +135,7 @@ class SystemChangeLogView extends TStandardList
         // cria o paginador
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/log/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -144,10 +144,22 @@ class SystemChangeLogView extends TStandardList
         
         $container = new TVBox;
         $container->style = 'width: 97%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/log/change'));
         $container->add($this->form);
         $container->add($panel);
         
         parent::add($container);
+    }
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = urlRoute('/route');
+     * </code>
+     */
+    public function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/log/change');
     }
 }

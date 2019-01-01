@@ -1,7 +1,6 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TTransaction;
@@ -20,10 +19,11 @@ use Adianti\Base\Lib\Widget\Wrapper\TDBCheckGroup;
 use Adianti\Base\Lib\Widget\Wrapper\TDBCombo;
 use Adianti\Base\Lib\Widget\Wrapper\TDBMultiSearch;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
-use Adianti\Base\Modules\Admin\Model\SystemGroup;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -96,14 +96,14 @@ class SystemDocumentForm extends TPage
         $user_ids->setSize('70%', 70);
         
         // create the form actions
-        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction(_t('Save'), new Action(route('/admin/system/document/form/save'), 'POST'), 'fa:floppy-o');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addAction(_t('Clear'), new TAction(array($this, 'onClear')), 'fa:eraser red');
+        $this->form->addAction(_t('Clear'), new Action(route('/admin/system/document/form/clear'), 'POST'), 'fa:eraser red');
         
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', 'SystemDocumentUploadForm'));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/document/upload'));
         $container->add($this->form);
         
         parent::add($container);
@@ -173,7 +173,6 @@ class SystemDocumentForm extends TPage
             $this->form->setData($data); // fill form data
             TTransaction::close(); // close the transaction
             
-            //$action = new TAction;
             new TMessage('info', AdiantiCoreTranslator::translate('Record saved'));
         }
         catch (Exception $e) // in case of exception

@@ -1,7 +1,6 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Control\TWindow;
 use Adianti\Base\Lib\Database\TCriteria;
@@ -25,6 +24,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -75,9 +75,9 @@ class SystemSharedDocumentList extends TPage
         $this->form->setData(TSession::getValue('SystemDocument_filter_data'));
         
         // add the search form actions
-        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new Action(route('/admin/system/document/shared/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addAction(_t('New'), new TAction(array('SystemDocumentUploadForm', 'onNew')), 'bs:plus-sign green');
+        $this->form->addAction(_t('New'), new Action(route('/admin/system/document/upload/new'), 'POST'), 'bs:plus-sign green');
         
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -104,20 +104,20 @@ class SystemSharedDocumentList extends TPage
         }
         
         // creates the datagrid column actions
-        $order_id = new TAction(array($this, 'onReload'));
+        $order_id = new Action(urlRoute('/admin/system/document/shared/reload'));
         $order_id->setParameter('order', 'id');
         $column_id->setAction($order_id);
         
-        $order_title = new TAction(array($this, 'onReload'));
+        $order_title = new Action(urlRoute('/admin/system/document/shared/reload'));
         $order_title->setParameter('order', 'title');
         $column_title->setAction($order_title);
         
-        $order_category_id = new TAction(array($this, 'onReload'));
+        $order_category_id = new Action(urlRoute('/admin/system/document/shared/reload'));
         $order_category_id->setParameter('order', 'category_id');
         $column_category_id->setAction($order_category_id);
         
         // create DOWNLOAD action
-        $action_download = new TDataGridAction(array($this, 'onDownload'));
+        $action_download = new TDataGridAction(urlRoute('/admin/system/document/shared/download'));
         //$action_edit->setUseButton(TRUE);
         $action_download->setButtonClass('btn btn-default');
         $action_download->setLabel(_t('Download'));
@@ -130,7 +130,7 @@ class SystemSharedDocumentList extends TPage
         
         // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/document/shared/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -140,7 +140,7 @@ class SystemSharedDocumentList extends TPage
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/document/shared'));
         $container->add($this->form);
         $container->add($panel);
         
@@ -165,7 +165,7 @@ class SystemSharedDocumentList extends TPage
                         $win->add(file_get_contents("files/documents/{$id}/".$object->filename));
                         $win->show();
                     } else {
-                        TPage::openFile("files/documents/{$id}/".$object->filename);
+                        TPage::openFile(urlRoute("download.php?file=files/documents/{$id}/".$object->filename));
                     }
                 } else {
                     new TMessage('error', _t('Permission denied'));

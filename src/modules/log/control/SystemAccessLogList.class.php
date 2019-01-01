@@ -2,7 +2,6 @@
 namespace Adianti\Base\Modules\Log\Control;
 
 use Adianti\Base\Lib\Base\TStandardList;
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -38,7 +37,9 @@ class SystemAccessLogList extends TStandardList
     public function __construct()
     {
         parent::__construct();
-        
+
+        $this->setRoute();
+
         parent::setDatabase('log');            // defines the database
         parent::setActiveRecord(SystemAccessLog::class);   // defines the active record
         parent::setDefaultOrder('id', 'asc');         // defines the default order
@@ -60,7 +61,7 @@ class SystemAccessLogList extends TStandardList
         $this->form->setData(TSession::getValue('SystemAccessLog_filter_data'));
         
         // add the search form actions
-        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new Action(route('/admin/system/log/access/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
         
         // creates a DataGrid
@@ -71,6 +72,7 @@ class SystemAccessLogList extends TStandardList
         
 
         // creates the datagrid columns
+        //Todo variaveis nao usadas
         $id = $this->datagrid->addQuickColumn('id', 'id', 'left');
         $sessionid = $this->datagrid->addQuickColumn('sessionid', 'sessionid', 'left');
         $login = $this->datagrid->addQuickColumn(_t('Login'), 'login', 'left');
@@ -84,7 +86,7 @@ class SystemAccessLogList extends TStandardList
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/log/access/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -93,10 +95,22 @@ class SystemAccessLogList extends TStandardList
         
         $container = new TVBox;
         $container->style = 'width: 97%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/log/access'));
         $container->add($this->form);
         $container->add($panel);
         
         parent::add($container);
+    }
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = '/admin/route';
+     * </code>
+     */
+    public function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/log/access');
     }
 }

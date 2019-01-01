@@ -1,4 +1,14 @@
 <?php
+namespace Adianti\Base\Modules\Admin\Control;
+
+use Adianti\Base\Lib\Control\TPage;
+use Adianti\Base\Lib\Registry\TSession;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use Adianti\Base\Widget\Menu\TMenuParser;
+use Exception;
+
 /**
  * SystemMenuUpdate
  *
@@ -37,7 +47,7 @@ class SystemMenuUpdate extends TPage
                 throw new Exception(_t('File not found') . ':<br> menu-dist.xml');
             }
             
-            $action = new TAction(array($this, 'onUpdateMenu'));
+            $action = new Action(route('/admin/system/menu/update'));
             new TQuestion(_t('Update menu overwriting existing file?'), $action);
         }
         catch (Exception $e)

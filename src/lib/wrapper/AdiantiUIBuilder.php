@@ -824,9 +824,10 @@ class AdiantiUIBuilder extends TPanel
         {
             foreach ($properties->{'actions'} as $Action)
             {
-                //if (is_callable(array($this->controller, (string) $Action->{'method'})))
+                if (is_callable(array($this->controller, (string) $Action->{'method'})))
                 {
-                    $dgaction = new TDataGridAction(array($this->controller, (string) $Action->{'method'}));
+//                    $dgaction = new TDataGridAction(array($this->controller, (string) $Action->{'method'}));
+                    $dgaction = new TDataGridAction(urlRoute($this->controller));
                     $dgaction->setLabel((string) $Action->{'label'});
                     $dgaction->setImage((string) $Action->{'image'});
                     $dgaction->setField((string) $Action->{'field'});

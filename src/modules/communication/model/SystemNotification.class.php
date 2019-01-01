@@ -20,7 +20,7 @@ class SystemNotification extends TRecord
 {
     const TABLENAME = 'system_notification';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const IDPOLICY =  'serial'; // {max, serial}
     
     
     /**

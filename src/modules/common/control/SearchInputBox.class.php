@@ -1,17 +1,17 @@
 <?php
 namespace Adianti\Base\Modules\Common\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
-use App\TApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TForm;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Widget\Menu\TMenuParser;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Dvi\Adianti\Helpers\Redirect;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 use stdClass;
 
@@ -41,7 +41,7 @@ class SearchInputBox extends TPage
         $input->placeholder = 'Search...';
         $input->style = 'height:initial';
         $input->setSize(null);
-        $input->setExitAction(new TAction(array('SearchInputBox', 'loadProgram')));
+        $input->setExitAction(new Action(route('/search/input/box/loadprogram')));
         $wa = new TEntry('wa');
         $wa->style='display:none';
         $this->form->add($input);
@@ -86,7 +86,7 @@ class SearchInputBox extends TPage
         $controller = array_search($program, $programs);
         
         if ($controller) {
-            TApplication::loadPage($controller);
+            Redirect::ajaxLoadPage($controller);
         }
         
         $data = new stdClass;

@@ -1,7 +1,6 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Control\TWindow;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
@@ -26,6 +25,8 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
+use App\Http\Request;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -54,7 +55,8 @@ class SystemDocumentList extends TPage
     public function __construct()
     {
         parent::__construct();
-        
+
+
         // creates the form
         $this->form = new BootstrapFormBuilder('form_search_SystemDocument');
         $this->form->setFormTitle(_t('Documents'));
@@ -76,9 +78,9 @@ class SystemDocumentList extends TPage
         $this->form->setData(TSession::getValue('SystemDocument_filter_data'));
         
         // add the search form actions
-        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new Action(route('/admin/system/document/list/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addAction(_t('New'), new TAction(array('SystemDocumentUploadForm', 'onNew')), 'bs:plus-sign green');
+        $this->form->addAction(_t('New'), new Action(route('/admin/system/document/upload/new')), 'bs:plus-sign green');
         
         // creates a Datagrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -112,24 +114,24 @@ class SystemDocumentList extends TPage
         }
         
         // creates the datagrid column actions
-        $order_id = new TAction(array($this, 'onReload'));
+        $order_id = new Action(urlRoute('/admin/system/document/list/reload'));
         $order_id->setParameter('order', 'id');
         $column_id->setAction($order_id);
         
-        $order_title = new TAction(array($this, 'onReload'));
+        $order_title = new Action(urlRoute('/admin/system/document/list/reload'));
         $order_title->setParameter('order', 'title');
         $column_title->setAction($order_title);
         
-        $order_category_id = new TAction(array($this, 'onReload'));
+        $order_category_id = new Action(urlRoute('/admin/system/document/list/reload'));
         $order_category_id->setParameter('order', 'category_id');
         $column_category_id->setAction($order_category_id);
         
-        $order_submission = new TAction(array($this, 'onReload'));
+        $order_submission = new Action(urlRoute('/admin/system/document/list/reload'));
         $order_submission->setParameter('order', 'submission_date');
         $column_submission_date->setAction($order_submission);
         
         // create DOWNLOAD action
-        $action_download = new TDataGridAction(array($this, 'onDownload'));
+        $action_download = new TDataGridAction(urlRoute('/admin/system/document/list/download'));
         //$action_edit->setUseButton(TRUE);
         $action_download->setButtonClass('btn btn-default');
         $action_download->setLabel(_t('Download'));
@@ -138,7 +140,7 @@ class SystemDocumentList extends TPage
         $this->datagrid->addAction($action_download);
 
         // create UPLOAD action
-        $action_upload = new TDataGridAction(array('SystemDocumentUploadForm', 'onEdit'));
+        $action_upload = new TDataGridAction(urlRoute('/admin/system/document/upload/edit'));
         //$action_edit->setUseButton(TRUE);
         $action_upload->setButtonClass('btn btn-default');
         $action_upload->setLabel(_t('Upload'));
@@ -147,7 +149,7 @@ class SystemDocumentList extends TPage
         $this->datagrid->addAction($action_upload);
         
         // create EDIT action
-        $action_edit = new TDataGridAction(array('SystemDocumentForm', 'onEdit'));
+        $action_edit = new TDataGridAction(urlRoute('/admin/system/document/form/edit'));
         //$action_edit->setUseButton(TRUE);
         $action_edit->setButtonClass('btn btn-default');
         $action_edit->setLabel(_t('Edit'));
@@ -156,7 +158,7 @@ class SystemDocumentList extends TPage
         $this->datagrid->addAction($action_edit);
         
         // create DELETE action
-        $action_del = new TDataGridAction(array($this, 'onDelete'));
+        $action_del = new TDataGridAction(urlRoute('/admin/system/document/list/delete'));
         //$action_del->setUseButton(TRUE);
         $action_del->setButtonClass('btn btn-default');
         $action_del->setLabel(_t('Delete'));
@@ -170,7 +172,7 @@ class SystemDocumentList extends TPage
         // creates the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/document/list/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -180,7 +182,7 @@ class SystemDocumentList extends TPage
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/document'));
         $container->add($this->form);
         $container->add($panel);
         
@@ -192,40 +194,28 @@ class SystemDocumentList extends TPage
      */
     public function onDownload($param)
     {
-        try
-        {
-            if (isset($param['id']))
-            {
+        try {
+            if (isset($param['id'])) {
                 $id = $param['id'];  // get the parameter $key
                 TTransaction::open('communication'); // open a transaction
                 $object = new SystemDocument($id); // instantiates the Active Record
                 
-                if ($object->system_user_id == TSession::getValue('userid') OR TSession::getValue('login') === 'admin')
-                {
-                    if (strtolower(substr($object->filename, -4)) == 'html')
-                    {
-                        $win = TWindow::create( $object->filename, 0.8, 0.8 );
-                        $win->add( file_get_contents( "files/documents/{$id}/".$object->filename ) );
+                if ($object->system_user_id == TSession::getValue('userid') or TSession::getValue('login') === 'admin') {
+                    if (strtolower(substr($object->filename, -4)) == 'html') {
+                        $win = TWindow::create($object->filename, 0.8, 0.8);
+                        $win->add(file_get_contents("files/documents/{$id}/".$object->filename));
                         $win->show();
+                    } else {
+                        TPage::openFile(urlRoute("download.php?file=files/documents/{$id}/".$object->filename));
                     }
-                    else
-                    {
-                        TPage::openFile("files/documents/{$id}/".$object->filename);
-                    }
-                }
-                else
-                {
+                } else {
                     new TMessage('error', _t('Permission denied'));
                 }
                 TTransaction::close(); // close the transaction
-            }
-            else
-            {
+            } else {
                 $this->form->clear();
             }
-        }
-        catch (Exception $e) // in case of exception
-        {
+        } catch (Exception $e) { // in case of exception
             new TMessage('error', $e->getMessage()); // shows the exception error message
             TTransaction::rollback(); // undo all pending operations
         }
@@ -355,7 +345,7 @@ class SystemDocumentList extends TPage
     public function onDelete($param)
     {
         // define the delete action
-        $action = new TAction(array($this, 'Delete'));
+        $action = new Action(urlRoute('/admin/system/document/list/delete/confirm'));
         $action->setParameters($param); // pass the key parameter ahead
         
         // shows a dialog to the user

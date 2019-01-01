@@ -19,7 +19,7 @@ class TDataGridColumn
     private $label;
     private $align;
     private $width;
-    private $action;
+    protected $action;
     private $editaction;
     private $transformer;
     private $properties;

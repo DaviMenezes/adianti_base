@@ -10,11 +10,12 @@ use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\THidden;
 use Adianti\Base\Lib\Widget\Form\TLabel;
-use Adianti\Base\Lib\Widget\Menu\TMenuParser;
 use Adianti\Base\Lib\Widget\Util\TSourceCode;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
-use Adianti\Base\Modules\Admin\Model\SystemGroup;
-use Adianti\Base\Modules\Admin\Model\SystemProgram;
+use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\Program\Model\SystemProgram;
+use Adianti\Base\Widget\Menu\TMenuParser;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 use stdClass;
 use Adianti\Base\App\Service\SystemPageService;
@@ -92,7 +93,7 @@ class SystemPageUpdate extends TWindow
         $this->form->addFields( [$on_menu] );
         $this->form->addFields( [$module] );
         
-        $this->form->addAction(_t('Save'), new TAction([$this, 'onSave']), 'fa:save')->addStyleClass('btn-primary');
+        $this->form->addAction(_t('Save'), new Action(route('/admin/system/pageupdate/save')), 'fa:save')->addStyleClass('btn-primary');
         
         parent::add($this->form);
     }
@@ -179,7 +180,7 @@ class SystemPageUpdate extends TWindow
                 
                 $pos_action = null;
                 if (!empty($param['index'])) {
-                    $pos_action = new TAction(['SystemPageUpdate', 'onEdit']);
+                    $pos_action = new Action(route('/admin/system/pageupdate/edit'));
                     $pos_action->setParameter('controller', $class_name);
                     $pos_action->setParameter('index', $param['index']);
                 } else {

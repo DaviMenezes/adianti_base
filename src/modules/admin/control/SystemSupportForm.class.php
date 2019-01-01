@@ -14,6 +14,7 @@ use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Admin\Model\SystemPreference;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -62,9 +63,9 @@ class SystemSupportForm extends TWindow
         }
         
         // create the form actions
-        $btn = $this->form->addQuickAction(_t('Send'), new TAction(array($this, 'onSend')), 'fa:envelope-o');
+        $btn = $this->form->addQuickAction(_t('Send'), new Action(route('/admin/system/support/send'), 'POST'), 'fa:envelope-o');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addQuickAction(_t('Clear form'), new TAction(array($this, 'onClear')), 'fa:eraser red');
+        $this->form->addQuickAction(_t('Clear form'), new Action(route('/admin/system/support/clear'), 'POST'), 'fa:eraser red');
         
         // vertical box container
         $container = new TVBox;

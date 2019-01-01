@@ -83,11 +83,12 @@ class TMenuItem extends TElement
             {
                 if ($router = AdiantiCoreApplication::getRouter())
                 {
-                    $this->link->{'href'} = $router("class={$action}", true);
+                    $this->link->{'href'} = $router(urlRoute($action), true);
                 }
                 else
                 {
-                    $this->link->{'href'} = "index.php?class={$action}";
+                    //Dvi custom (action to route)
+                    $this->link->{'href'} = urlRoute($action);
                 }
                 $this->link->{'generator'} = 'adianti';
             }

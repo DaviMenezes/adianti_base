@@ -2,7 +2,6 @@
 namespace Adianti\Base\Modules\Communication\Control;
 
 use Adianti\Base\Lib\Control\TPage;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TScript;
@@ -12,8 +11,9 @@ use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
+use Dvi\Adianti\Helpers\Redirect;
 use Exception;
 
 /**
@@ -82,7 +82,7 @@ class SystemMessageFormView extends TPage
             TTransaction::close();
             
             $folders = new THtmlRenderer('app/resources/system_message_folders.html');
-            $folders->enableSection('main', []);
+            $folders->enableSection('main', ['URLBASE' => URLBASE]);
             $folders->enableTranslation();
             
             $hbox = new THBox;
@@ -119,7 +119,7 @@ class SystemMessageFormView extends TPage
                 }
             }
             TTransaction::close();
-            AdiantiCoreApplication::loadPage('SystemMessageList', 'filterInbox');
+            Redirect::ajaxLoadPage('/admin/system/message/list/filter/inbox');
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -143,7 +143,7 @@ class SystemMessageFormView extends TPage
                 }
             }
             TTransaction::close();
-            AdiantiCoreApplication::loadPage('SystemMessageList', 'filterInbox');
+            Redirect::ajaxLoadPage('/admin/system/message/list/filter/inbox');
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }

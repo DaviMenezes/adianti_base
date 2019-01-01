@@ -164,7 +164,7 @@ class SystemModulesCheckView extends TPage
             $container->style = 'width: 90%';
             if (TSession::getValue('login'))
             {
-                $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+                $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/modules/check'));
             }
             $container->add($panel1);
             $container->add($panel2);

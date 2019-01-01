@@ -1,13 +1,13 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -21,8 +21,12 @@ use Exception;
  */
 trait AdiantiStandardFormListTrait
 {
+    protected $route;
+
     use AdiantiStandardControlTrait;
-    
+
+    abstract protected function setRoute(string $route);
+
     /**
      * method setLimit()
      * Define the record limit
@@ -186,7 +190,7 @@ trait AdiantiStandardFormListTrait
     public function onDelete($param)
     {
         // define the delete action
-        $action = new TAction(array($this, 'Delete'));
+        $action = new Action($this->route.'/delete/confirm');
         $action->setParameters($param); // pass the key parameter ahead
         
         // shows a dialog to the user
@@ -294,6 +298,6 @@ trait AdiantiStandardFormListTrait
         {
             $this->onReload( func_get_arg(0) );
         }
-        parent::show();
+        return parent::show();
     }
 }

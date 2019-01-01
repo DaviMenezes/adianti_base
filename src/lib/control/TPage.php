@@ -39,7 +39,7 @@ class TPage extends TElement
     public function run()
     {
         if ($_GET) {
-            $class  = isset($_GET['class'])  ? Route::getPath($_GET['class'])  : null;
+            $class  = isset($_GET['class'])  ? $_GET['class']  : null;
             $method = isset($_GET['method']) ? $_GET['method'] : null;
 
             if ($class) {

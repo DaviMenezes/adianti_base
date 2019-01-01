@@ -1,21 +1,21 @@
 <?php
 namespace Adianti\Base\Modules\Common\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
-use App\TApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TMultiSearch;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Widget\Menu\TMenuParser;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Dvi\Adianti\Helpers\Redirect;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
  * SearchBox
- *
+ * edited by Dvi project
  * @version    1.0
  * @package    control
  * @author     Pablo Dall'Oglio
@@ -39,7 +39,7 @@ class SearchBox extends TPage
         $input->addItems($this->getPrograms());
         $input->setMinLength(1);
         $input->setMaxSize(1);
-        $input->setChangeAction(new TAction(array('SearchBox', 'loadProgram')));
+        $input->setChangeAction(new Action(route('/admin/searchbox/loadprogram'), 'POST'));
         
         $this->form->add($input);
         $this->form->setFields(array($input));
@@ -55,19 +55,21 @@ class SearchBox extends TPage
         try {
             TTransaction::open('permission');
             $user = SystemUser::newFromLogin(TSession::getValue('login'));
+
             $programs = $user->getProgramsList();
             
             $menu = new TMenuParser('menu.xml');
             $menu_programs = $menu->getIndexedPrograms();
-            
-            foreach ($programs as $program => $label) {
-                if (!isset($menu_programs[$program])) {
+
+            foreach ($programs as $program => $route) {
+                if (!isset($menu_programs[$route])) {
                     unset($programs[$program]);
                 }
             }
             
             TTransaction::close();
-            return $programs;
+
+            return collect($programs)->flip()->all();
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
@@ -79,9 +81,9 @@ class SearchBox extends TPage
     public static function loadProgram($param)
     {
         if (isset($param['input'])) {
-            $program = $param['input'][0];
-            if ($program) {
-                TApplication::loadPage($program);
+            $route = $param['input'][0];
+            if ($route) {
+                Redirect::ajaxLoadPage($route);
             }
         }
     }

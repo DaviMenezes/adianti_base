@@ -66,7 +66,7 @@ class TDBEntry extends TEntry
         $this->operator = null;
         $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
-        $this->service = 'AdiantiAutocompleteService';
+        $this->service = urlRoute('/adianti/service/autocomplete');
     }
     
     /**
@@ -117,8 +117,9 @@ class TDBEntry extends TEntry
         $class = $this->service;
         $callback = array($class, 'onSearch');
         $method = $callback[1];
-        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&hash={$hash}";
-        
+//      //Todo remover apos teste  $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&hash={$hash}";
+        $url = route($class)."/onsearch/database/$this->database/column/$this->column/model/$this->model/orderColumn/$orderColumn/criteria/$criteria/operator/$this->operator/hash/$hash";
+
         TScript::create(" tdbentry_start( '{$this->name}', '{$url}', '{$min}' );");
     }
 }

@@ -3,7 +3,7 @@ namespace Adianti\Base\Lib\Control;
 
 use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Dvi\AdiantiExtension\Route;
+use Dvi\Adianti\Helpers\Reflection;
 use Exception;
 use ReflectionMethod;
 
@@ -29,10 +29,6 @@ class TAction
      */
     public function __construct($action, $parameters = null)
     {
-        if (!is_object($action[0])) {
-            $action[0] = Route::getPath($action[0]);
-        }
-
         $this->action = $action;
         if (!is_callable($this->action))
         {
@@ -88,6 +84,7 @@ class TAction
     public function setParameters($parameters)
     {
         // does not override the action
+        //Todo - dvi (estes parametros ainda sao usados em algum lugar)?
         unset($parameters['class']);
         unset($parameters['method']);
         $this->param = $parameters;
@@ -189,7 +186,7 @@ class TAction
         if (is_array($this->action)) {
             $class = $this->action[0];
             // get the class name
-            $url['class'] = is_object($class) ? Route::getClassName(get_class($class)) : Route::getClassName($this->action[0]);
+            $url['class'] = is_object($class) ? Reflection::shortName(get_class($class)) : Reflection::shortName($this->action[0]);
             // get the method name
             $url['method'] = $this->action[1];
         }

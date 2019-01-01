@@ -2,7 +2,6 @@
 namespace Adianti\Base\Modules\Log\Control;
 
 use Adianti\Base\Lib\Base\TStandardList;
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -14,6 +13,7 @@ use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Log\Model\SystemSqlLog;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * SystemSqlLogList
@@ -38,7 +38,9 @@ class SystemSqlLogList extends TStandardList
     public function __construct()
     {
         parent::__construct();
-        
+
+        $this->setRoute();
+
         parent::setDatabase('log');            // defines the database
         parent::setActiveRecord(SystemSqlLog::class);   // defines the active record
         parent::setDefaultOrder('id', 'asc');         // defines the default order
@@ -70,7 +72,7 @@ class SystemSqlLogList extends TStandardList
         $this->form->setData(TSession::getValue('SystemSqlLog_filter_data'));
         
         // add the search form actions
-        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new Action(route('/admin/system/log/sql/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
         
         // creates a DataGrid
@@ -80,11 +82,11 @@ class SystemSqlLogList extends TStandardList
         $this->datagrid->datatable = 'true';
         
         // creates the datagrid columns
-        $id = $this->datagrid->addQuickColumn('ID', 'id', 'center', 50, new TAction(array($this, 'onReload')), array('order', 'id'));
-        $logdate = $this->datagrid->addQuickColumn(_t('Date'), 'logdate', 'center', null, new TAction(array($this, 'onReload')), array('order', 'logdate'));
-        $login = $this->datagrid->addQuickColumn(_t('Login'), 'login', 'center', null, new TAction(array($this, 'onReload')), array('order', 'login'));
-        $database = $this->datagrid->addQuickColumn(_t('Database'), 'database_name', 'left', null, new TAction(array($this, 'onReload')), array('order', 'database'));
-        $sql = $this->datagrid->addQuickColumn('SQL', 'sql_command', 'left', null);
+        $this->datagrid->addQuickColumn('ID', 'id', 'center', 50, new Action(urlRoute('/admin/system/log/sql')), array('order', 'id'));
+        $this->datagrid->addQuickColumn(_t('Date'), 'logdate', 'center', null, new Action(urlRoute('/admin/system/log/sql')), array('order', 'logdate'));
+        $this->datagrid->addQuickColumn(_t('Login'), 'login', 'center', null, new Action(urlRoute('/admin/system/log/sql')), array('order', 'login'));
+        $this->datagrid->addQuickColumn(_t('Database'), 'database_name', 'left', null, new Action(urlRoute('/admin/system/log/sql')), array('order', 'database_name'));
+        $this->datagrid->addQuickColumn('SQL', 'sql_command', 'left', null);
         
         // create the datagrid model
         $this->datagrid->createModel();
@@ -92,7 +94,7 @@ class SystemSqlLogList extends TStandardList
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/log/sql/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -101,10 +103,22 @@ class SystemSqlLogList extends TStandardList
         
         $container = new TVBox;
         $container->style = 'width: 97%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/log/sql'));
         $container->add($this->form);
         $container->add($panel);
         
         parent::add($container);
+    }
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = '/admin/route';
+     * </code>
+     */
+    public function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/log/sql');
     }
 }

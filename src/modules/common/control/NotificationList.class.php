@@ -56,7 +56,7 @@ class NotificationList extends TElement
                     $a   = new TElement('a');
                     $div = new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemNotificationFormView&method=onView&id='.$system_notification->id;
+                    $a->href = urlRoute('/admin/system/notification/form/view/'.$system_notification->id);
                     $a->generator = 'adianti';
                     $li->add($a);
                     $a->add($div);
@@ -72,7 +72,7 @@ class NotificationList extends TElement
                 $a = new TElement('a');
                 $li->add($a);
                 $a->class='text-center';
-                $a->href = 'index.php?class=SystemNotificationList';
+                $a->href = urlRoute('/admin/system/notification/list');
                 $a->generator = 'adianti';
                 $a->add(TElement::tag('strong', 'See alerts'));
                 parent::add($li);
@@ -106,7 +106,7 @@ class NotificationList extends TElement
                     $a   = new TElement('a');
                     $div = new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemNotificationFormView&method=onView&id='.$system_notification->id;
+                    $a->href = urlRoute('/admin/system/notification/form/view/'.$system_notification->id);
                     $a->generator = 'adianti';
                     $li->add($a);
                     
@@ -151,7 +151,7 @@ class NotificationList extends TElement
                     $div = new TElement('div');
                     $div2= new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemNotificationFormView&method=onView&id='.$system_notification->id;
+                    $a->href = urlRoute('/admin/system/notification/form/view/'.$system_notification->id);
                     $a->class = 'waves-effect waves-block';
                     $a->generator = 'adianti';
                     $li->add($a);
@@ -177,7 +177,7 @@ class NotificationList extends TElement
                     $ul_wrapper->add($li);
                 }
                 
-                parent::add(TElement::tag('li', TElement::tag('a', _t('View all'), array('href'=>'index.php?class=SystemNotificationList', 'generator'=>'adianti')), array('class'=>'footer')));
+                parent::add(TElement::tag('li', TElement::tag('a', _t('View all'), array('href'=>urlRoute('/admin/system/notification'), 'generator'=>'adianti')), array('class'=>'footer')));
             }
             
             TTransaction::close();

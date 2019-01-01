@@ -1,7 +1,6 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TWindow;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
@@ -10,12 +9,15 @@ use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
+use Adianti\Base\Lib\Widget\Form\TMultiSearch;
 use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TDBUniqueSearch;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
+use Dvi\Adianti\Database\Transaction;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -48,7 +50,13 @@ class SystemMessageForm extends TWindow
         $this->form->style = 'display: table;width:100%'; // change style
         
         // create the form fields
-        $system_user_to_id = new TDBUniqueSearch('system_user_to_id', 'permission', SystemUser::class, 'id', 'name');
+//        $system_user_to_id = new TDBUniqueSearch('system_user_to_id', 'permission', SystemUser::class, 'id', 'name');
+        $system_user_to_id = new TMultiSearch('system_user_to_id');
+        $system_user_to_id->setSize(240, 38);
+
+        Transaction::open();
+        $system_user_to_id->addItems(SystemUser::getIndexedArray('id', 'name'));
+        Transaction::close();
         $subject = new TEntry('subject');
         $message = new TText('message');
         $system_user_to_id->setMinLength(2);
@@ -60,9 +68,9 @@ class SystemMessageForm extends TWindow
         $message->setSize('90%', '100');
         
         // create the form actions
-        $btn = $this->form->addQuickAction(_t('Send'), new TAction(array($this, 'onSend')), 'fa:envelope-o');
+        $btn = $this->form->addQuickAction(_t('Send'), new Action(route('/admin/system/message/form/send'), 'POST'), 'fa:envelope-o');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addQuickAction(_t('Clear form'), new TAction(array($this, 'onClear')), 'fa:eraser red');
+        $this->form->addQuickAction(_t('Clear form'), new Action(route('/admin/system/message/form/clear')), 'fa:eraser red');
         
         // vertical box container
         $container = new TVBox;

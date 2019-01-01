@@ -21,6 +21,8 @@ use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
+use Dvi\Adianti\Widget\Form\Button;
+use Dvi\Adianti\Widget\Util\Action;
 
 /**
  * SystemMessageList
@@ -48,7 +50,9 @@ class SystemMessageList extends TStandardList
     public function __construct($param)
     {
         parent::__construct();
-        
+
+        $this->setRoute();
+
         parent::setDatabase('communication');            // defines the database
         parent::setActiveRecord(SystemMessage::class);   // defines the active record
         parent::setDefaultOrder('id', 'desc');         // defines the default order
@@ -64,8 +68,13 @@ class SystemMessageList extends TStandardList
         // create the form fields
         $subject = new TEntry('subject');
         $message = new TEntry('message');
-        $button  = TButton::create('search', array($this, 'onSearch'), _t('Find'), 'fa:search');
-        
+//        $button  = Button::create('search', route('/admin/system/message/list/search'), 'fa:search', _t('Find'));
+        $button  = new TButton('search');
+        $button->setAction(new Action(route('/admin/system/message/list/search')));
+        $button->setLabel(_t('Find'));
+        $button->setImage('fa:search');
+//        $button  = TButton::create('search', array($this, 'onSearch'), _t('Find'), 'fa:search');
+
         $subject->placeholder = _t('Subject');
         $message->placeholder = _t('Message');
         
@@ -82,15 +91,15 @@ class SystemMessageList extends TStandardList
         $this->form->setFields([$subject, $message, $button]);
         // keep the form filled during navigation with session data
         $this->form->setData(TSession::getValue('SystemMessage_filter_data'));
-        
-        
+
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->style = 'width: 100%';
 
         // creates the datagrid columns
-        $column_from    = new TDataGridColumn('user_mixed->name', _t('User'), 'center', '20%');
-        $column_message = new TDataGridColumn('message', _t('Message'), 'left', '60%');
+        $column_from    = new TDataGridColumn('user_mixed->name', _t('User'), 'center', '5%');
+        $column_subject    = new TDataGridColumn('subject', _t('Subject'), 'center', '35%');
+        $column_message = new TDataGridColumn('message', _t('Message'), 'left', '40%');
         $column_date    = new TDataGridColumn('dt_message', _t('Date'), 'center', '20%');
         
         $column_from->setTransformer(function ($value, $object, $row) {
@@ -108,17 +117,18 @@ class SystemMessageList extends TStandardList
             return '<i class="fa fa-calendar red"/> '.substr($value, 0, 10);
         });
         
-        $action = new TDataGridAction(array('SystemMessageFormView', 'onView'));
+        $action = new TDataGridAction(urlRoute('/admin/system/message/form/view'));
         $action->setField('id');
         $action->setImage('fa:folder-open-o');
         $this->datagrid->addAction($action);
         
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_from);
+        $this->datagrid->addColumn($column_subject);
         $this->datagrid->addColumn($column_message);
         $this->datagrid->addColumn($column_date);
 
-        $order = new TAction(array($this, 'onReload'));
+        $order = new Action(urlRoute('/admin/system/message/list/reload'));
         $order->setParameter('order', 'dt_message');
         $column_message->setAction($order);
         
@@ -129,7 +139,7 @@ class SystemMessageList extends TStandardList
         
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/message/list/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup($this->form);
@@ -209,5 +219,17 @@ class SystemMessageList extends TStandardList
                                                'class_archived' => '']);
         
         $this->onReload($param);
+    }
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = '/admin/route';
+     * </code>
+     */
+    public function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/program/list');
     }
 }

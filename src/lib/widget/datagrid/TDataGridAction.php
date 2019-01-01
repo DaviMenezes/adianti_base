@@ -1,8 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use App\Http\RouteInfo;
+use App\Http\Router;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -15,7 +17,7 @@ use Exception;
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class TDataGridAction extends TAction
+class TDataGridAction extends Action //Action is a DviLibrary custom class
 {
     private $field;
     private $fields;
@@ -209,7 +211,7 @@ class TDataGridAction extends TAction
      */
     public function serialize($format_action = TRUE)
     {
-        if (is_array($this->action) AND is_object($this->action[0]))
+        /*if (is_array($this->action) AND is_object($this->action[0]))
         {
             if (isset( $_REQUEST['offset'] ))
             {
@@ -235,7 +237,7 @@ class TDataGridAction extends TAction
         if (parent::isStatic())
         {
             $this->setParameter('static',     '1' );
-        }
+        }*/
         return parent::serialize($format_action);
     }
 }

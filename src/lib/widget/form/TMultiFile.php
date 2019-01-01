@@ -38,7 +38,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
-        $this->uploaderClass = 'AdiantiUploaderService';
+        $this->uploaderClass = urlRoute('/admin/system/service/document/upload');
         $this->fileHandling = FALSE;
         
         $ini = AdiantiApplicationConfig::get();
@@ -213,12 +213,14 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         
         if (empty($this->extensions))
         {
-            $action = "engine.php?class={$this->uploaderClass}";
+//          //Todo remover apos teste  $action = "engine.php?class={$this->uploaderClass}";
+            $action = route($this->uploaderClass).'&static=1';
         }
         else
         {
             $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
-            $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
+//          //Todo remover apos testes  $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
+            $action = route($this->uploaderClass)."/name/$this->name/hash/$hash/extensions/".base64_encode(serialize($this->extensions));
         }
         
         $fileHandling = $this->fileHandling ? '1' : '0';

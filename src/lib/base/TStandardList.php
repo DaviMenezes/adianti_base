@@ -12,7 +12,7 @@ use Adianti\Base\Lib\Control\TPage;
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class TStandardList extends TPage
+abstract class TStandardList extends TPage
 {
     protected $form;
     protected $datagrid;

@@ -1,7 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Base;
 
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TFilter;
@@ -11,6 +10,8 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
+use App\Http\Request;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -35,9 +36,19 @@ trait AdiantiStandardListTrait
     protected $criteria;
     protected $transformCallback;
     protected $totalRow;
-    
+    protected $route;
+
     use AdiantiStandardControlTrait;
-    
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = '/admin/route';
+     * </code>
+    */
+    abstract public function setRoute();
+
     /**
      * method setLimit()
      * Define the record limit
@@ -178,6 +189,7 @@ trait AdiantiStandardListTrait
             {
                 $operator       = isset($this->operators[$filterKey]) ? $this->operators[$filterKey] : 'like';
                 $filterField    = isset($this->filterFields[$filterKey]) ? $this->filterFields[$filterKey] : $formFilter;
+                /**@var callable $filterFunction*/
                 $filterFunction = isset($this->filterTransformers[$filterKey]) ? $this->filterTransformers[$filterKey] : null;
                 
                 // check if the user has filled the form
@@ -334,15 +346,17 @@ trait AdiantiStandardListTrait
             TTransaction::rollback();
         }
     }
-    
+
     /**
      * Ask before deletion
+     * @param Request $request
+     * @throws Exception
      */
-    public function onDelete($param)
+    public function onDelete(Request $request)
     {
         // define the delete action
-        $action = new TAction(array($this, 'Delete'));
-        $action->setParameters($param); // pass the key parameter ahead
+        $action = new Action($this->route.'/delete/confirm');
+        $action->setParameters($request->getParameters()); // pass the key parameter ahead
         
         // shows a dialog to the user
         new TQuestion(AdiantiCoreTranslator::translate('Do you really want to delete ?'), $action);
@@ -412,7 +426,7 @@ trait AdiantiStandardListTrait
                 $param['selected'] = json_encode($selected);
                 
                 // define the delete action
-                $action = new TAction(array($this, 'deleteCollection'));
+                $action = new Action($this->route.'/delete/collection');
                 $action->setParameters($param); // pass the key parameter ahead
                 
                 // shows a dialog to the user
@@ -442,7 +456,7 @@ trait AdiantiStandardListTrait
                     $object = new $class;
                     $object->delete( $id );
                 }
-                $posAction = new TAction(array($this, 'onReload'));
+                $posAction = new Action(array($this->route.'/reload'));
                 $posAction->setParameters( $param );
                 new TMessage('info', AdiantiCoreTranslator::translate('Records deleted'), $posAction);
             }
@@ -473,6 +487,6 @@ trait AdiantiStandardListTrait
                 $this->onReload();
             }
         }
-        parent::show();
+        return parent::show();
     }
 }

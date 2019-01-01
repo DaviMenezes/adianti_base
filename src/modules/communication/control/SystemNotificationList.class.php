@@ -2,7 +2,6 @@
 namespace Adianti\Base\Modules\Communication\Control;
 
 use Adianti\Base\Lib\Base\TStandardList;
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TTransaction;
@@ -15,14 +14,16 @@ use Adianti\Base\Lib\Widget\Datagrid\TDataGrid;
 use Adianti\Base\Lib\Widget\Datagrid\TDataGridColumn;
 use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
+use Adianti\Base\Lib\Widget\Form\TDate;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemNotification;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -50,9 +51,11 @@ class SystemNotificationList extends TStandardList
     public function __construct()
     {
         parent::__construct();
-        
+
+        $this->setRoute();
+
         parent::setDatabase('communication');            // defines the database
-        parent::setActiveRecord('SystemNotification');   // defines the active record
+        parent::setActiveRecord(SystemNotification::class);   // defines the active record
         parent::setDefaultOrder('id', 'desc');         // defines the default order
         
         $criteria = new TCriteria;
@@ -82,7 +85,7 @@ class SystemNotificationList extends TStandardList
         $this->form->setData(TSession::getValue('SystemNotification_filter_data'));
         
         // add the search form actions
-        $btn = $this->form->addAction(_t('Find'), new TAction(array($this, 'onSearch')), 'fa:search');
+        $btn = $this->form->addAction(_t('Find'), new Action(route('/admin/system/notification/search'), 'POST'), 'fa:search');
         $btn->class = 'btn btn-sm btn-primary';
         
         // creates a DataGrid
@@ -90,10 +93,13 @@ class SystemNotificationList extends TStandardList
         $this->datagrid->style = 'width: 100%';
 
         // creates the datagrid columns
-        $column_checked = new TDataGridColumn('action', _t('Action'), 'center');
-        $column_message = new TDataGridColumn('message', _t('Message'), 'left');
+        $column_checked = new TDataGridColumn('action', _t('Action'), 'center', '50%');
+        $column_message = new TDataGridColumn('message', _t('Message'), 'left', '50%');
         
-        $column_message->setTransformer(function ($value, $object, $row) {
+        $column_message->setTransformer(function ($message, $object, $row) {
+            if ($object->checked == 'Y') {
+                $row->style = "color:gray";
+            }
             try {
                 TTransaction::open('permission');
                 $user = SystemUser::find($object->system_user_id);
@@ -102,24 +108,17 @@ class SystemNotificationList extends TStandardList
             } catch (Exception $e) {
                 new TMessage('error', $e->getMessage());
             }
-            
-            if ($object->checked == 'Y') {
-                $row->style = "color:gray";
-            }
-            $wrapper = new TElement('div');
-            $wrapper->style = 'padding: 10px';
-            $wrapper->add('<b>'.$name . '</b>' .
-                           '<div style="float:right"><i class="fa fa-calendar red"/> '.substr($object->dt_message, 0, 10) . '</div><br>' .
-                           '<b>'.$object->subject . '</b> <br>' .
-                           $object->message);
-            return $wrapper;
+            $str_message = '<i class="fa fa-calendar red"></i> '.TDate::date2br($object->dt_message);
+            $str_message .=' '.$name . ' » '. $object->subject. '-'. $object->message;
+
+            return $str_message;
         });
         
         // add the columns to the DataGrid
         $this->datagrid->addColumn($column_checked);
         $this->datagrid->addColumn($column_message);
 
-        $order = new TAction(array($this, 'onReload'));
+        $order = new Action(urlRoute('/admin/system/notification/reload'));
         $order->setParameter('order', 'dt_message');
         $column_message->setAction($order);
         
@@ -130,7 +129,7 @@ class SystemNotificationList extends TStandardList
         
         // create the page navigation
         $this->pageNavigation = new TPageNavigation();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/notification/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -160,11 +159,12 @@ class SystemNotificationList extends TStandardList
             //$button->style="width:160px";
             
             if ($object->checked == 'Y') {
-                $button->href = 'index.php?class=SystemNotificationList&method=onUnCheck&id='.$object->id;
+                $button->href = urlRoute('/admin/system/notification/list/uncheck/'.$object->id);
                 $button->add(new TImage('fa:archive gray'));
                 $button->add(TElement::tag('span', _t('Check as unread'), array('style' =>'color:gray' )));
             } else {
-                $button->href = 'index.php?class=SystemNotificationFormView&method=onExecuteAction&id='.$object->id;
+                $button->href = urlRoute('/admin/system/notification/form/exec/'.$object->id);
+
                 $button->add(new TImage('fa:' . substr($object->icon, 6)));
                 $button->add(TElement::tag('span', $object->action_label));
             }
@@ -223,5 +223,17 @@ class SystemNotificationList extends TStandardList
         } catch (Exception $e) {
             new TMessage('error', $e->getMessage());
         }
+    }
+
+    /**
+     * Dvi setRoute
+     * set a route base used in actions
+     * <code>
+     * $this->route = '/admin/route';
+     * </code>
+     */
+    public function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/notification');
     }
 }

@@ -19,7 +19,7 @@ class SystemAccessLog extends TRecord
 {
     const TABLENAME = 'system_access_log';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const IDPOLICY =  'serial'; // {max, serial}
     
     
     /**

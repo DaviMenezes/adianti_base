@@ -3,7 +3,7 @@ namespace Adianti\Base\Lib\Core;
 
 /**
  * Class map
- *
+ * Dvi info (2018): Deprecated
  * @version    5.5
  * @package    core
  * @author     Pablo Dall'Oglio

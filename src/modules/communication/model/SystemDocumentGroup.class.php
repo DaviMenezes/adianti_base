@@ -17,7 +17,7 @@ class SystemDocumentGroup extends TRecord
 {
     const TABLENAME = 'system_document_group';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const IDPOLICY =  'serial'; // {max, serial}
     
     
     /**

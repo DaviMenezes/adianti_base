@@ -93,7 +93,7 @@ class TDBMultiSearch extends TMultiSearch
         $this->orderColumn = isset($orderColumn) ? $orderColumn : NULL;
         $this->criteria = $criteria;
         $this->mask = '{'.$value.'}';
-        $this->service = 'AdiantiMultiSearchService';
+        $this->service = '/adianti/service/multisearch';
         $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
         $this->tag->{'widget'} = 'tdbmultisearch';
         $this->idSearch = true;
@@ -289,7 +289,8 @@ class TDBMultiSearch extends TMultiSearch
         $method = $callback[1];
         $id_search_string = $this->idSearch ? '1' : '0';
         $search_word = AdiantiCoreTranslator::translate('Search');
-        $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}&idsearch={$id_search_string}";
+//      Todo remover apos teste  $url = "engine.php?class={$class}&method={$method}&static=1&database={$this->database}&key={$this->key}&column={$this->column}&model={$this->model}&orderColumn={$orderColumn}&criteria={$criteria}&operator={$this->operator}&mask={$this->mask}&idsearch={$id_search_string}";
+        $url = route($class)."/database/$this->database/key/$this->key/column/$this->column/model/$this->model/orderColumn/$orderColumn/criteria/$criteria/operator/$this->operator/mask/$this->mask/idsearch/$id_search_string/&static=1";
         $change_action = 'function() {}';
         
         if (isset($this->changeAction))

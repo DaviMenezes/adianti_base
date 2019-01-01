@@ -64,7 +64,9 @@ class SystemDocumentUploaderService
                     $response['type'] = 'error';
                     $response['msg'] = "Permission denied: {$path}";
                 }
-                echo json_encode($response);
+                $result = json_encode($response);
+                echo $result;
+                return $result;
             }
         }
     }

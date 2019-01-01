@@ -5,7 +5,7 @@ use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use DateTime;
 use Exception;
@@ -54,10 +54,11 @@ class MessageList extends TElement
                     $a   = new TElement('a');
                     $div = new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemMessageFormView&method=onView&id='.$system_message->id;
-                    $a->generator = 'adianti';
+                    $a->href = urlRoute('/admin/system/message/form/view/key/'.$system_message->id.'/id/'.$system_message->id);
+                    $a->{'generator'} = 'adianti';
                     $li->add($a);
                     $a->add($div);
+
                     $div->add(TElement::tag('strong', $name));
                     $div->add(TElement::tag('span', TElement::tag('em', $date), array('class' => 'pull-right text-muted')));
                     
@@ -74,8 +75,8 @@ class MessageList extends TElement
                 $a = new TElement('a');
                 $li->add($a);
                 $a->class='text-center';
-                $a->href = 'index.php?class=SystemMessageList&method=filterInbox';
-                $a->generator = 'adianti';
+                $a->href = urlRoute('/admin/system/message/list/filter/inbox');
+                $a->{'generator'} = 'adianti';
                 $a->add(TElement::tag('strong', 'Read messages'));
                 $a->add($i = TElement::tag('i', '', array('class'=>'fa fa-inbox')));
                 parent::add($li);
@@ -86,8 +87,8 @@ class MessageList extends TElement
                 $a = new TElement('a');
                 $li->add($a);
                 $a->class='text-center';
-                $a->href = 'index.php?class=SystemMessageForm';
-                $a->generator = 'adianti';
+                $a->href = urlRoute('/admin/system/message/form');
+                $a->{'generator'} = 'adianti';
                 $a->add(TElement::tag('strong', 'Send message'));
                 $a->add($i = TElement::tag('i', '', array('class'=>'fa fa-envelope-o')));
                 parent::add($li);
@@ -121,8 +122,8 @@ class MessageList extends TElement
                     $a   = new TElement('a');
                     $div = new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemMessageFormView&method=onView&id='.$system_message->id;
-                    $a->generator = 'adianti';
+                    $a->href = urlRoute('/admin/system/message/form/view/key/'.$system_message->id.'/id/'.$system_message->id);
+//                    $a->setProperty('generator', 'adianti');
                     $li->add($a);
                     
                     $div->{'class'} = 'pull-left';
@@ -141,8 +142,8 @@ class MessageList extends TElement
                 
                 TTransaction::close();
                 
-                parent::add(TElement::tag('li', TElement::tag('a', 'Read messages', array('href'=>'index.php?class=SystemMessageList&method=filterInbox', 'generator'=>'adianti')), array('class'=>'footer')));
-                parent::add(TElement::tag('li', TElement::tag('a', 'Send messages', array('href'=>'index.php?class=SystemMessageForm', 'generator'=>'adianti')), array('class'=>'footer')));
+                parent::add(TElement::tag('li', TElement::tag('a', 'Read messages', array('href'=> urlRoute('/admin/system/message/list/filter/inbox'), 'generator' => 'adianti', ['class'=>'footer']))));
+                parent::add(TElement::tag('li', TElement::tag('a', 'Send messages', array('href'=> urlRoute('/admin/system/message/form'), 'generator' => 'adianti'), array('class'=>'footer'))));
             } elseif ($param['theme'] == 'theme4') {
                 $this->class = 'dropdown-menu';
                 
@@ -176,7 +177,7 @@ class MessageList extends TElement
                     $div = new TElement('div');
                     $div2= new TElement('div');
                     
-                    $a->href = 'index.php?class=SystemMessageFormView&method=onView&id='.$system_message->id;
+                    $a->href = urlRoute('/admin/system/message/form/view/key/'.$system_message->id.'/id/'.$system_message->id);
                     $a->class = 'waves-effect waves-block';
                     $a->generator = 'adianti';
                     $li->add($a);
@@ -203,9 +204,10 @@ class MessageList extends TElement
                 }
                 
                 TTransaction::close();
-                
-                parent::add(TElement::tag('li', TElement::tag('a', _t('Read messages'), array('href'=>'index.php?class=SystemMessageList&method=filterInbox', 'generator'=>'adianti')), array('class'=>'footer')));
-                parent::add(TElement::tag('li', TElement::tag('a', _t('Send message'), array('href'=>'index.php?class=SystemMessageForm', 'generator'=>'adianti')), array('class'=>'footer')));
+
+                $route = urlRoute('/admin/system/message/list/filter/inbox/?generator=adianti');
+                parent::add(TElement::tag('li', TElement::tag('a', _t('Read messages'), array('href'=> $route, array('class'=>'footer')))));
+                parent::add(TElement::tag('li', TElement::tag('a', _t('Send message'), array('href'=> urlRoute('/admin/system/message/form/?generator=adianti'), array('class'=>'footer')))));
             }
             
             TTransaction::close();

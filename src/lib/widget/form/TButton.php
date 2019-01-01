@@ -166,16 +166,16 @@ class TButton extends TField implements AdiantiWidgetInterface
             }
             
             // get the action as URL
-            $url = $this->action->serialize(FALSE);
-            if ($this->action->isStatic())
+            $route = $this->action->serialize(FALSE);
+            if ($this->action->isStatic($route))
             {
-                $url .= '&static=1';
+                $route .= '&static=1';
             }
             $wait_message = AdiantiCoreTranslator::translate('Loading');
             // define the button's action (ajax post)
             $action = "Adianti.waitMessage = '$wait_message';";
             $action.= "{$this->functions}";
-            $action.= "__adianti_post_data('{$this->formName}', '{$url}');";
+            $action.= "__adianti_post_data('{$this->formName}', '{$route}');";
             $action.= "return false;";
                         
             $button = new TElement( !empty($this->tagName)? $this->tagName : 'button' );

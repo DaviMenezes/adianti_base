@@ -3,6 +3,7 @@ namespace Adianti\Base\Widget\Menu;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
 
+use App\Http\Router;
 use SimpleXMLElement;
 
 /**
@@ -99,7 +100,9 @@ class TMenu extends TElement
                     // check permission
                     $parts = explode('#', $action);
                     $className = $parts[0];
-                    if (call_user_func($permission_callback, $className))
+                    $shot_name = Router::getShortClassNameByRoute($action);
+                    $shot_name = $shot_name ?? $className;
+                    if (call_user_func($permission_callback, $shot_name))
                     {
                         $this->addMenuItem($menuItem);
                     }

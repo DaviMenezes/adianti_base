@@ -136,7 +136,7 @@ class SystemPHPErrorLogView extends TPage
         
         $container = new TVBox;
         $container->style = 'width: 100%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/log/php/error'));
         $container->add($panel);
         
         parent::add($container);

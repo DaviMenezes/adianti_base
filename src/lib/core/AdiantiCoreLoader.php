@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
-use Adianti\Core\AdiantiApplicationLoader;
-use Adianti\Core\AdiantiClassMap;
-
 /**
  * Framework class autoloader
  *

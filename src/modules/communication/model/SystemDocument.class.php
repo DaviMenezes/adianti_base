@@ -6,8 +6,8 @@ use Adianti\Base\Lib\Database\TFilter;
 use Adianti\Base\Lib\Database\TRecord;
 use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
-use Adianti\Base\Modules\Admin\Model\SystemGroup;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 
 /**
  * SystemDocument
@@ -23,7 +23,7 @@ class SystemDocument extends TRecord
 {
     const TABLENAME = 'system_document';
     const PRIMARYKEY= 'id';
-    const IDPOLICY =  'max'; // {max, serial}
+    const IDPOLICY =  'serial'; // {max, serial}
     
     
     /**
@@ -89,17 +89,23 @@ class SystemDocument extends TRecord
         // delete the related System_groupSystem_program objects
         $id = isset($id) ? $id : $this->id;
         
+        $file_path = 'files/documents/' . $id . '/' . $this->filename;
+
         $criteria = new TCriteria;
         $criteria->add(new TFilter('document_id', '=', $id));
-        
+
         $repository = new TRepository(SystemDocumentUser::class);
         $repository->delete($criteria);
-        
+
         $repository = new TRepository(SystemDocumentGroup::class);
         $repository->delete($criteria);
-        
+
         // delete the object itself
         parent::delete($id);
+
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
     }
     
     /**

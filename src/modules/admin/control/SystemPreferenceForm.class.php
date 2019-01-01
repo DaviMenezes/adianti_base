@@ -1,7 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Admin\Control;
 
-use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Base\TStandardForm;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemPreference;
-use Adianti\Base\Lib\Base\TStandardForm;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 
 /**
@@ -79,12 +79,12 @@ class SystemPreferenceForm extends TStandardForm
         $smtp_pass->setSize('70%');
         $mail_support->setSize('70%');
         
-        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction(_t('Save'), new Action(route('/admin/system/preference/save'), 'POST'), 'fa:floppy-o');
         $btn->class = 'btn btn-sm btn-primary';
         
         $container = new TVBox;
         $container->{'style'} = 'width: 90%;';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/preference/edit'));
         $container->add($this->form);
         parent::add($container);
     }

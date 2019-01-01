@@ -2,16 +2,15 @@
 namespace Adianti\Base\Modules\Communication\Control;
 
 use Adianti\Base\Lib\Control\TPage;
-use Adianti\Base\Lib\Core\AdiantiCoreApplication;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Registry\TSession;
-use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Container\TVBox;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
-use Adianti\Base\Modules\Admin\Model\SystemUser;
+use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemNotification;
+use Dvi\Adianti\Helpers\Redirect;
 use Exception;
 
 /**
@@ -97,15 +96,10 @@ class SystemNotificationFormView extends TPage
                 if ($notification->system_user_to_id == TSession::getValue('userid')) {
                     $notification->checked = 'Y';
                     $notification->store();
-            
-                    $query_string = $notification->action_url;
-                    parse_str($query_string, $query_params);
-                    $class  = $query_params['class'];
-                    $method = isset($query_params['method']) ? $query_params['method'] : null;
-                    unset($query_params['class']);
-                    unset($query_params['method']);
-                    AdiantiCoreApplication::loadPage($class, $method, $query_params);
-                    TScript::create('update_notifications_menu()');
+
+                    //Todo esta $notification->action_url agora deve ser uma rota, verificar como esta sendo salvo no bco
+                    Redirect::redirectToRoute($notification->action_url);
+
                 } else {
                     throw new Exception(_t('Permission denied'));
                 }

@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Util\TImage;
+use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 use ReflectionClass;
 
@@ -21,15 +22,16 @@ use ReflectionClass;
  */
 class TSeekButton extends TEntry implements AdiantiWidgetInterface
 {
-    private $action;
+    protected $action;
     private $useOutEvent;
-    private $button;
+    protected $button;
     private $extra_size;
     protected $auxiliar;
     protected $id;
     protected $formName;
     protected $name;
-    
+    protected $route_prefix;
+
     /**
      * Class Constructor
      * @param  $name name of the field
@@ -42,7 +44,12 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         $this->extra_size = 24;
         $this->button = self::createButton($this->name, $icon);
     }
-    
+
+    public function setRoutePrefix($prefix)
+    {
+        $this->route_prefix = $prefix;
+    }
+
     /**
      * Create seek button object
      */
@@ -196,7 +203,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                     if ($this->useOutEvent)
                     {
                         $inst       = new $classname;
-                        $ajaxAction = new TAction(array($inst, 'onSelect'));
+                        $ajaxAction = new Action($inst.'/onselect');
                         
                         if (in_array($classname, array('TStandardSeek')))
                         {
@@ -229,11 +236,11 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
                 }
                 $this->action->setParameter('field_name', $this->name);
                 $this->action->setParameter('form_name',  $this->formName);
-                $serialized_action = $this->action->serialize(FALSE);
+                $serialized_action = $this->serialized();
             }
-            
-            $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());__adianti_append_page('engine.php?{$serialized_action}&'+serialform)";
-                  
+
+            $this->createOnClick($serialized_action);
+
             $wrapper = new TElement('div');
             $wrapper->{'class'} = 'tseek-group';
             $wrapper->open();
@@ -250,5 +257,19 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         {
             parent::show();
         }
+    }
+
+    protected function serialized()
+    {
+        $serialized_action = $this->action->serialize(FALSE);
+        return $serialized_action;
+    }
+
+    /**
+     * @param string $serialized_action
+     */
+    protected function createOnClick(string $serialized_action): void
+    {
+        $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());__dvi_adianti_append_page('{$serialized_action}/'+ serialform)";
     }
 }

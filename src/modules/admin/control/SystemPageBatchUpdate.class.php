@@ -46,7 +46,7 @@ class SystemPageBatchUpdate extends TPage
         $this->datagrid->addQuickColumn(_t('Controller'), 'controller', 'left');
         $this->datagrid->addQuickColumn(_t('Module'), 'module', 'left');
         
-        $action1 = new TDataGridAction(array('SystemPageUpdate', 'onEdit'));
+        $action1 = new TDataGridAction(urlRoute('/admin/system/pageupdate/edit'));
         $this->datagrid->addQuickAction('Download', $action1, 'controller', 'fa:download green');
         $action1->setUseButton(true);
         $action1->setButtonClass('btn btn-default');

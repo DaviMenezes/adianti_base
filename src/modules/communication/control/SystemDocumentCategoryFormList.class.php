@@ -1,9 +1,7 @@
 <?php
 namespace Adianti\Base\Modules\Communication\Control;
 
-use function Adianti\Base\App\Lib\Util\_t;
 use Adianti\Base\Lib\Base\AdiantiStandardFormListTrait;
-use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Widget\Container\TPanelGroup;
 use Adianti\Base\Lib\Widget\Container\TVBox;
@@ -17,6 +15,8 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
+use Dvi\Adianti\Widget\Util\Action;
+use function Adianti\Base\App\Lib\Util\_t;
 
 /**
  * SystemDocumentCategoryFormList
@@ -33,7 +33,7 @@ class SystemDocumentCategoryFormList extends TPage
     protected $form; // form
     protected $datagrid; // datagrid
     protected $pageNavigation;
-    
+
     use AdiantiStandardFormListTrait; // standard form/list methods
     
     /**
@@ -43,7 +43,9 @@ class SystemDocumentCategoryFormList extends TPage
     public function __construct()
     {
         parent::__construct();
-        
+
+        $this->setRoute();
+
         $this->setDatabase('communication');            // defines the database
         $this->setActiveRecord(SystemDocumentCategory::class);   // defines the active record
         $this->setDefaultOrder('id', 'asc');         // defines the default order
@@ -65,9 +67,9 @@ class SystemDocumentCategoryFormList extends TPage
         $name->setSize('70%');
         
         // create the form actions
-        $btn = $this->form->addAction(_t('Save'), new TAction(array($this, 'onSave')), 'fa:floppy-o');
+        $btn = $this->form->addAction(_t('Save'), new Action(route('/admin/system/document/category/save'), 'POST'), 'fa:floppy-o');
         $btn->class = 'btn btn-sm btn-primary';
-        $this->form->addAction(_t('Clear form'), new TAction(array($this, 'onEdit')), 'fa:eraser red');
+        $this->form->addAction(_t('Clear form'), new Action(route('/admin/system/document/category/clear'), 'POST'), 'fa:eraser red');
         
         // creates a DataGrid
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
@@ -86,14 +88,14 @@ class SystemDocumentCategoryFormList extends TPage
 
         
         // creates two datagrid actions
-        $action1 = new TDataGridAction(array($this, 'onEdit'));
+        $action1 = new TDataGridAction(urlRoute('/admin/system/document/category/edit'));
         //$action1->setUseButton(TRUE);
         $action1->setButtonClass('btn btn-default');
         $action1->setLabel(_t('Edit'));
         $action1->setImage('fa:pencil-square-o blue fa-lg');
         $action1->setField('id');
         
-        $action2 = new TDataGridAction(array($this, 'onDelete'));
+        $action2 = new TDataGridAction(urlRoute('/admin/system/document/category/delete'));
         //$action2->setUseButton(TRUE);
         $action2->setButtonClass('btn btn-default');
         $action2->setLabel(_t('Delete'));
@@ -110,7 +112,7 @@ class SystemDocumentCategoryFormList extends TPage
         // create the page navigation
         $this->pageNavigation = new TPageNavigation;
         $this->pageNavigation->enableCounters();
-        $this->pageNavigation->setAction(new TAction(array($this, 'onReload')));
+        $this->pageNavigation->setAction(new Action(urlRoute('/admin/system/document/category/reload')));
         $this->pageNavigation->setWidth($this->datagrid->getWidth());
         
         $panel = new TPanelGroup;
@@ -120,10 +122,15 @@ class SystemDocumentCategoryFormList extends TPage
         // vertical box container
         $container = new TVBox;
         $container->style = 'width: 90%';
-        $container->add(new TXMLBreadCrumb('menu.xml', __CLASS__));
+        $container->add(new TXMLBreadCrumb('menu.xml', '/admin/system/document/category'));
         $container->add($this->form);
         $container->add($panel);
         
         parent::add($container);
+    }
+
+    protected function setRoute()
+    {
+        $this->route = urlRoute('/admin/system/document/category');
     }
 }

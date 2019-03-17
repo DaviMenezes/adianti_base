@@ -5,6 +5,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 
 use DateTime;
+use Dvi\Adianti\Widget\Form\Field\Varchar;
 
 /**
  * DatePicker Widget
@@ -16,7 +17,7 @@ use DateTime;
  * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
  * @license    http://www.adianti.com.br/framework-license
  */
-class TDate extends TEntry implements AdiantiWidgetInterface
+class TDate extends Varchar implements AdiantiWidgetInterface
 {
     private $mask;
     private $dbmask;

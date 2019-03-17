@@ -308,12 +308,12 @@ class SystemUser extends TRecord
         
         foreach ($this->getSystemUserGroups() as $group) {
             foreach ($group->getSystemPrograms() as $prog) {
-                $programs[$prog->controller] = true;
+                $programs[] = $prog->controller;
             }
         }
                 
         foreach ($this->getSystemUserPrograms() as $prog) {
-            $programs[$prog->controller] = true;
+            $programs[] = $prog->controller;
         }
         
         return $programs;

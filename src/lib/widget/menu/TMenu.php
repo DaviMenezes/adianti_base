@@ -100,9 +100,9 @@ class TMenu extends TElement
                     // check permission
                     $parts = explode('#', $action);
                     $className = $parts[0];
-                    $shot_name = Router::getShortClassNameByRoute($action);
-                    $shot_name = $shot_name ?? $className;
-                    if (call_user_func($permission_callback, $shot_name))
+                    $short_name = Router::getClassByRoute($action);
+                    $short_name = $short_name ?? $className;
+                    if (call_user_func($permission_callback, $short_name))
                     {
                         $this->addMenuItem($menuItem);
                     }

@@ -359,13 +359,9 @@ class TDataGrid extends TTable
                     if ($column->getAction())
                     {
                         $action = $column->getAction();
-                        if ($request->get('direction') == 'asc' AND $request->get('order') == $name)
-                        {
-                            $action->setParameter('direction', 'desc');
-                        }
-                        else
-                        {
-                            $action->setParameter('direction', 'asc');
+                        if ($request->has('order') and $request->get('order') == $name) {
+                            $array = ['asc' => 'desc', 'desc' => 'asc'];
+                            $action->setParameter('direction', $array[$request->get('direction')]);
                         }
                         $url    = $action->serialize();
                         $cell->{'href'}        = $url;

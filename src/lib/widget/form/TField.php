@@ -280,7 +280,9 @@ abstract class TField
      */
     public function setSize($width, $height = NULL)
     {
-        $this->size = $width;
+        //Todo Dvi-custom
+        $sufix = strstr($width, '%') === false ? 'px' : '';
+        $this->size = "{$width}$sufix;";
     }
     
     /**

@@ -202,8 +202,9 @@ class SystemProgramForm extends TStandardForm
             $this->form->validate();
 
             $object->route = Router::routes()->first(function (RouteInfo $routeInfo, $key) use ($data) {
-                return Reflection::shortName($routeInfo->class()) == $data->controller;
+                return $routeInfo->class() == $data->controller;
             })->fullRoute()->str();
+            
             $object->store();
             $data->id = $object->id;
             $this->form->setData($data);

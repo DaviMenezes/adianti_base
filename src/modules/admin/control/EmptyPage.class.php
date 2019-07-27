@@ -9,6 +9,6 @@ class EmptyPage extends TPage
     public function __construct()
     {
         parent::__construct();
-        parent::add(new TLabel('<h3>Faça mais com DviAdianti</h3>'));
+        parent::add(new TLabel('<h3>Dvi</h3>'));
     }
 }

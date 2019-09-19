@@ -253,7 +253,7 @@ class SystemProgramList extends TStandardList
         try {
             /**@var RouteInfo $route_info*/
             $route_info = Router::routes()->first(function ($route_info, $route) use ($param) {
-                return Reflection::shortName($route_info->class()) == $param['controller'] and empty($route_info->method());
+                return (new \ReflectionClass($route_info->class()))->getShortName() == $param['controller'] and empty($route_info->method());
             });
             if (!$route_info) {
                 throw new Exception('Rota não encontrada');

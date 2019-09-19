@@ -146,7 +146,7 @@ class SystemGroupForm extends TPage
         $window = new TStandardSeek();
         $pagination_route = route('/admin/system/group/form/standard/seek/reload');
         $selection_route = route('/admin/system/group/form/standard/seek/select');
-        $self_class = Reflection::shortName(self::class);
+        $self_class = (new \ReflectionClass(self::class))->getShortName();
         $window->setCalledClass($self_class);
         $window->setReloadRoute($pagination_route);
         $window->setSelectRoute($selection_route);

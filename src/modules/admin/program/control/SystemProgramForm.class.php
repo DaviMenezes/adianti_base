@@ -136,7 +136,7 @@ class SystemProgramForm extends TStandardForm
         $controllers = [];
         Router::routes()->map(function ($route_info, $key) use (&$controllers) {
             /**@var RouteInfo $route_info*/
-            $shortName = Reflection::shortName($route_info->class());
+            $shortName = (new \ReflectionClass($route_info->class()))->getShortName();
             $controllers[$route_info->class()] = $shortName;
         })->all();
 

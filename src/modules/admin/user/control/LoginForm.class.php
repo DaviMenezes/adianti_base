@@ -219,7 +219,7 @@ class LoginForm extends TPage
                     $program = $frontpage->controller;
                     $route = Router::routes()->map(function ($route_info, $route) use ($program) {
                         /**@var RouteInfo $route_info */
-                        $program_short_name = Reflection::shortName($route_info->class());
+                        $program_short_name = (new \ReflectionClass($route_info->class()))->getShortName();
                         $method = $route_info->method();
                         if ($program_short_name == $program and empty($method)) {
                             return $route_info->route();

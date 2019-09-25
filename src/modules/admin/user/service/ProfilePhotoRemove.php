@@ -6,7 +6,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
-use App\Http\Request;
+use Dvi\Support\Http\Request;
 use Dvi\Adianti\Database\Transaction;
 use Dvi\Adianti\Helpers\Redirect;
 

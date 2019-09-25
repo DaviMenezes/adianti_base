@@ -1,12 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
-use Adianti\Base\App\Lib\Util\ApplicationTranslator;
 use Adianti\Base\Lib\Control\TPage;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Util\TExceptionView;
-use App\Http\Request;
 use Dvi\Adianti\Helpers\Reflection;
 use Dvi\AdiantiExtension\Route;
 use ErrorException;

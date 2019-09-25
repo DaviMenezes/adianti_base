@@ -8,7 +8,7 @@ use Adianti\Base\Lib\Widget\Container\TTable;
 use Adianti\Base\Lib\Widget\Util\TDropDown;
 use Adianti\Base\Lib\Widget\Util\TImage;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use App\Http\Request;
+use Dvi\Support\Http\Request;
 use App\Http\Router;
 use Exception;
 

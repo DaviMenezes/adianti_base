@@ -2,7 +2,7 @@
 namespace Adianti\Base\Lib\Widget\Util;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
-use App\Http\Request;
+use Dvi\Support\Http\Request;
 
 /**
  * BreadCrumb

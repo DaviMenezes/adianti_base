@@ -10,7 +10,7 @@ use Adianti\Base\Lib\Registry\TSession;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
-use App\Http\Request;
+use Dvi\Support\Http\Request;
 use Dvi\Adianti\Widget\Util\Action;
 use Exception;
 

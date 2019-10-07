@@ -20,7 +20,7 @@ use App\Http\RouteInfo;
 use App\Http\Router;
 use Dvi\Adianti\Helpers\Redirect;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

@@ -7,7 +7,7 @@ use Adianti\Base\Lib\Database\TRepository;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Dialog\TQuestion;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

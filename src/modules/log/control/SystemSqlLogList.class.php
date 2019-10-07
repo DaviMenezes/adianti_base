@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Wrapper\TQuickGrid;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Log\Model\SystemSqlLog;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 
 /**
  * SystemSqlLogList

@@ -9,7 +9,7 @@ use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TTransaction;
 use Adianti\Base\Lib\Control\TAction;
 
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

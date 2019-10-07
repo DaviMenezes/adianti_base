@@ -16,8 +16,8 @@ use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Dvi\Support\Http\Request;
-use Dvi\Adianti\Widget\Container\VBox;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Container\VBox;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Program\Model\SystemProgram;
 use Adianti\Base\Widget\Menu\TMenuParser;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use stdClass;
 use Adianti\Base\App\Service\SystemPageService;

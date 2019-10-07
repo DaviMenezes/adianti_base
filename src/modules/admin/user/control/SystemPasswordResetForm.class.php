@@ -12,7 +12,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Control\Exception;
 use Adianti\Base\Modules\Admin\Control\stdClass;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use \Firebase\JWT\JWT;
 
 /**

@@ -4,7 +4,7 @@ namespace Adianti\Base\Lib\Widget\Datagrid;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use App\Http\RouteInfo;
 use App\Http\Router;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

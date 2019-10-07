@@ -15,7 +15,7 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use function Adianti\Base\App\Lib\Util\_t;
 
 /**

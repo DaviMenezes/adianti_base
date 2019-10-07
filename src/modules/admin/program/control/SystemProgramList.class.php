@@ -30,7 +30,7 @@ use App\Http\Router;
 use Dvi\Support\Service\Database\Transaction;
 use Dvi\Support\Http\Redirect;
 use Reflection;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

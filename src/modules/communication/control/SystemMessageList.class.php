@@ -21,8 +21,8 @@ use Adianti\Base\Lib\Widget\Template\THtmlRenderer;
 use Adianti\Base\Lib\Widget\Util\TBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
-use Dvi\Adianti\Widget\Form\Button;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Form\Button;
+use Dvi\Component\Widget\Util\Action;
 
 /**
  * SystemMessageList

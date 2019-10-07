@@ -24,7 +24,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

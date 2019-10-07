@@ -16,7 +16,7 @@ use Adianti\Base\Lib\Widget\Datagrid\TPageNavigation;
 use Adianti\Base\Lib\Widget\Dialog\TMessage;
 use Adianti\Base\Lib\Widget\Form\TEntry;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

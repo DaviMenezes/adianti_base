@@ -24,9 +24,9 @@ use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Program\Model\SystemProgram;
 use Dvi\Adianti\Helpers\Redirect;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Form\Button;
-use Dvi\Adianti\Widget\Util\Action;
-use Dvi\Adianti\Widget\Wrapper\DBSeekButton;
+use Dvi\Component\Widget\Form\Button;
+use Dvi\Component\Widget\Util\Action;
+use Dvi\Component\Widget\Wrapper\DBSeekButton;
 use Exception;
 use stdClass;
 

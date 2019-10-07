@@ -20,7 +20,7 @@ use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\Program\Model\SystemProgram;
 use App\Http\RouteInfo;
 use App\Http\Router;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use stdClass;
 

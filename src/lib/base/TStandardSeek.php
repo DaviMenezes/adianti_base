@@ -22,7 +22,7 @@ use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Dvi\Adianti\Helpers\Reflection;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use StdClass;
 

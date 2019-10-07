@@ -14,7 +14,7 @@ use Adianti\Base\Lib\Widget\Form\TText;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
 use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Admin\Model\SystemPreference;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

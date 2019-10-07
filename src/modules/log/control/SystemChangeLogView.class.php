@@ -14,7 +14,7 @@ use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Log\Model\SystemChangeLog;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 
 /**
  * SystemChangeLogView

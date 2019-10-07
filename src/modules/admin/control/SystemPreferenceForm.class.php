@@ -13,7 +13,7 @@ use Adianti\Base\Lib\Widget\Form\TPassword;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Model\SystemPreference;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

@@ -12,7 +12,7 @@ use Adianti\Base\Lib\Widget\Form\TLabel;
 use Adianti\Base\Lib\Widget\Util\TXMLBreadCrumb;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Dvi\Adianti\Helpers\Redirect;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use stdClass;
 

@@ -11,7 +11,7 @@ use Adianti\Base\Lib\Widget\Form\TForm;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Widget\Menu\TMenuParser;
 use Dvi\Adianti\Helpers\Redirect;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use stdClass;
 

@@ -23,7 +23,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemNotification;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

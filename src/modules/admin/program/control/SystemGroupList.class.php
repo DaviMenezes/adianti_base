@@ -16,7 +16,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
 use Dvi\Support\Http\Request;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 
 /**
  * SystemGroupList

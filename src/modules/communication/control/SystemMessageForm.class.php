@@ -17,7 +17,7 @@ use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemMessage;
 use Dvi\Adianti\Database\Transaction;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

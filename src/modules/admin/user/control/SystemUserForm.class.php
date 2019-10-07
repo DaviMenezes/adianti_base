@@ -33,7 +33,7 @@ use Adianti\Base\Modules\Admin\Program\Model\SystemProgram;
 use Adianti\Base\Modules\Admin\Unit\Model\SystemUnit;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Dvi\Adianti\Helpers\Redirect;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 use stdClass;
 

@@ -23,7 +23,7 @@ use Adianti\Base\Modules\Admin\Program\Model\SystemGroup;
 use Adianti\Base\Modules\Admin\User\Model\SystemUser;
 use Adianti\Base\Modules\Communication\Model\SystemDocument;
 use Adianti\Base\Modules\Communication\Model\SystemDocumentCategory;
-use Dvi\Adianti\Widget\Util\Action;
+use Dvi\Component\Widget\Util\Action;
 use Exception;
 
 /**

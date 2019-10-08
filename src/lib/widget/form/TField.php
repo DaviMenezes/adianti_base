@@ -282,7 +282,7 @@ abstract class TField
     {
         //Todo Dvi-custom
         $sufix = strstr($width, '%') === false ? 'px' : '';
-        $this->size = "{$width}$sufix;";
+        $this->size = "{$width}$sufix";
     }
     
     /**

@@ -23,8 +23,8 @@ class TCombo extends TField implements AdiantiWidgetInterface
     protected $items; // array containing the combobox options
     protected $formName;
     protected   $searchable;//changed by Dvi
-    private   $changeAction;
-    private   $defaultOption;
+    protected   $changeAction;
+    protected   $defaultOption;
     protected $changeFunction;
     protected $is_boolean;
 

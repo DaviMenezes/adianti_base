@@ -39,7 +39,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
 {
     private $id;
     private $decorated;
-    private $tabcontent;
+    private $tabcontent = [];
     private $tabcurrent;
     private $current_page;
     private $properties;

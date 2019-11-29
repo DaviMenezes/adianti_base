@@ -171,7 +171,7 @@ class TAction
         if (is_array($this->action)) {
             $class = $this->action[0];
             // get the class name
-            $url['class'] = is_object($class) ? (new \ReflectionClass(get_class($class)))->getShortName() : (new \ReflectionClass($this->action[0]))->getShortName();
+            $url['class'] = is_object($class) ? (new \ReflectionClass(get_class($class)))->getName() : (new \ReflectionClass($this->action[0]))->getName();
             // get the method name
             $url['method'] = $this->action[1];
         }

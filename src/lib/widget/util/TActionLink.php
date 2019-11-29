@@ -16,6 +16,11 @@ use Adianti\Base\Lib\Control\TAction;
 class TActionLink extends TTextDisplay
 {
     /**
+     * @var TAction
+     */
+    protected $action;
+
+    /**
      * Class Constructor
      * @param  $value  text content
      * @param  $action TAction Object
@@ -32,8 +37,7 @@ class TActionLink extends TTextDisplay
         
         parent::__construct($value, $color, $size, $decoration);
         parent::setName('a');
-        
-        $this->{'href'} = $action->serialize();
+        $this->action = $action;
         $this->{'generator'} = 'adianti';
     }
     
@@ -43,5 +47,16 @@ class TActionLink extends TTextDisplay
     public function addStyleClass($class)
     {
         $this->{'class'} .= " {$class}";
+    }
+
+    public function getAction():TAction
+    {
+        return $this->action;
+    }
+
+    public function show()
+    {
+        $this->{'href'} = $this->action->serialize();
+        parent::show();
     }
 }

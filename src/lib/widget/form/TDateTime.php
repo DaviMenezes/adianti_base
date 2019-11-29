@@ -17,8 +17,8 @@ use DateTime;
  */
 class TDateTime extends TEntry implements AdiantiWidgetInterface
 {
-    private $mask;
-    private $dbmask;
+    protected $mask;
+    protected $dbmask;
     protected $id;
     protected $size;
     protected $value;

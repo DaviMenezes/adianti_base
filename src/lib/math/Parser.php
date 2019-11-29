@@ -1,6 +1,6 @@
 <?php
 
-namespace Math;
+namespace Adianti\Base\Lib\Math;
 
 /**
  * Evaluate mathematical expression.

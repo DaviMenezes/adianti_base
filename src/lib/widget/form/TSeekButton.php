@@ -1,12 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
+use Adianti\Base\Lib\Base\TStandardSeek;
 use Adianti\Base\Lib\Control\TAction;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Util\TImage;
-use Dvi\Component\Widget\Util\Action;
+use Adianti\Widget\Form\TField;
 use Exception;
 use ReflectionClass;
 
@@ -22,32 +22,27 @@ use ReflectionClass;
  */
 class TSeekButton extends TEntry implements AdiantiWidgetInterface
 {
-    protected $action;
+    private $action;
     private $useOutEvent;
-    protected $button;
+    private $button;
     private $extra_size;
     protected $auxiliar;
     protected $id;
     protected $formName;
     protected $name;
-    protected $route_prefix;
 
     /**
      * Class Constructor
-     * @param  $name name of the field
+     * @param string $name name of the field
+     * @param string|null $icon
      */
-    public function __construct($name, $icon = NULL)
+    public function __construct($name, $icon = null)
     {
         parent::__construct($name);
-        $this->useOutEvent = TRUE;
-        $this->setProperty('class', 'tfield tseekentry', TRUE);   // classe CSS
+        $this->useOutEvent = true;
+        $this->setProperty('class', 'tfield tseekentry', true);   // classe CSS
         $this->extra_size = 24;
         $this->button = self::createButton($this->name, $icon);
-    }
-
-    public function setRoutePrefix($prefix)
-    {
-        $this->route_prefix = $prefix;
     }
 
     /**
@@ -55,7 +50,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      */
     public static function createButton($name, $icon)
     {
-        $image = new TImage( $icon ? $icon : 'fa:search');
+        $image = new TImage($icon ? $icon : 'fa:search');
         $button = new TElement('span');
         $button->{'class'} = 'btn btn-default tseekbutton';
         $button->{'type'} = 'button';
@@ -64,26 +59,24 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
         $button->{'for'} = $name;
         $button->{'onmouseout'}  = "style.cursor = 'default'";
         $button->add($image);
-        
+
         return $button;
     }
-    
+
     /**
      * Returns a property value
-     * @param $name     Property Name
+     * @param string $name Property Name
+     * @return TElement|mixed
      */
     public function __get($name)
     {
-        if ($name == 'button')
-        {
+        if ($name == 'button') {
             return $this->button;
-        }
-        else
-        {
+        } else {
             return parent::__get($name);
         }
     }
-    
+
     /**
      * Define it the out event will be fired
      */
@@ -91,7 +84,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         $this->useOutEvent = $bool;
     }
-    
+
     /**
      * Define the action for the SeekButton
      * @param $action Action taken when the user
@@ -101,7 +94,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         $this->action = $action;
     }
-    
+
     /**
      * Return the action
      */
@@ -109,25 +102,23 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         return $this->action;
     }
-    
+
     /**
      * Define an auxiliar field
      * @param $object any TField object
      */
     public function setAuxiliar($object)
     {
-        if (method_exists($object, 'show'))
-        {
+        if (method_exists($object, 'show')) {
             $this->auxiliar = $object;
             $this->extra_size *= 2;
-            
-            if ($object instanceof TField)
-            {
+
+            if ($object instanceof TField) {
                 $this->action->setParameter('receive_field', $object->getName());
             }
         }
     }
-    
+
     /**
      * Returns if has auxiliar field
      */
@@ -135,7 +126,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         return !empty($this->auxiliar);
     }
-    
+
     /**
      * Set extra size
      */
@@ -143,7 +134,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         $this->extra_size = $extra_size;
     }
-    
+
     /**
      * Returns extra size
      */
@@ -151,125 +142,97 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     {
         return $this->extra_size;
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field Field name
      */
     public static function enableField($form_name, $field)
     {
-        TScript::create( " tseekbutton_enable_field('{$form_name}', '{$field}'); " );
+        \Adianti\Widget\Base\TScript::create(" tseekbutton_enable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field Field name
      */
     public static function disableField($form_name, $field)
     {
-        TScript::create( " tseekbutton_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tseekbutton_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Show the widget
+     * @throws \ReflectionException
      */
     public function show()
     {
         // check if it's not editable
-        if (parent::getEditable())
-        {
-            if (!TForm::getFormByName($this->formName) instanceof TForm)
-            {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if (parent::getEditable()) {
+            if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                throw new Exception(\Adianti\Core\AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
             }
-            
+
             $serialized_action = '';
-            if ($this->action)
-            {
+            if ($this->action) {
                 // get the action class name
-                if (is_array($callback = $this->action->getAction()))
-                {
-                    if (is_object($callback[0]))
-                    {
+                if (is_array($callback = $this->action->getAction())) {
+                    if (is_object($callback[0])) {
                         $rc = new ReflectionClass($callback[0]);
-                        $classname = $rc->name;
-                        //                        $classname = $rc->getShortName();
+                        $classname = $rc->getName();
                     } else {
                         $classname  = $callback[0];
                     }
-                    
-                    if ($this->useOutEvent)
-                    {
+
+                    if ($this->useOutEvent) {
                         $inst       = new $classname;
-                        $ajaxAction = new Action($inst.'/onselect');
-                        
-                        if (in_array($classname, array('TStandardSeek')))
-                        {
-                            $ajaxAction->setParameter('parent',  $this->action->getParameter('parent'));
-                            $ajaxAction->setParameter('database',$this->action->getParameter('database'));
-                            $ajaxAction->setParameter('model',   $this->action->getParameter('model'));
+                        $ajaxAction = new TAction(array($inst, 'onSelect'));
+
+                        if (in_array($classname, array(TStandardSeek::class))) {
+                            $ajaxAction->setParameter('parent', $this->action->getParameter('parent'));
+                            $ajaxAction->setParameter('database', $this->action->getParameter('database'));
+                            $ajaxAction->setParameter('model', $this->action->getParameter('model'));
                             $ajaxAction->setParameter('display_field', $this->action->getParameter('display_field'));
-                            $ajaxAction->setParameter('receive_key',   $this->action->getParameter('receive_key'));
+                            $ajaxAction->setParameter('receive_key', $this->action->getParameter('receive_key'));
                             $ajaxAction->setParameter('receive_field', $this->action->getParameter('receive_field'));
-                            $ajaxAction->setParameter('criteria',      $this->action->getParameter('criteria'));
-                            $ajaxAction->setParameter('mask',          $this->action->getParameter('mask'));
-                            $ajaxAction->setParameter('operator',      $this->action->getParameter('operator') ? $this->action->getParameter('operator') : 'like');
-                        }
-                        else
-                        {
-                            if ($actionParameters = $this->action->getParameters())
-                            {
-                                foreach ($actionParameters as $key => $value) 
-                                {
+                            $ajaxAction->setParameter('criteria', $this->action->getParameter('criteria'));
+                            $ajaxAction->setParameter('mask', $this->action->getParameter('mask'));
+                            $ajaxAction->setParameter('operator', $this->action->getParameter('operator') ? $this->action->getParameter('operator') : 'like');
+                        } else {
+                            if ($actionParameters = $this->action->getParameters()) {
+                                foreach ($actionParameters as $key => $value) {
                                     $ajaxAction->setParameter($key, $value);
-                                }                    		
-                            }                    	                    
+                                }
+                            }
                         }
-                        $ajaxAction->setParameter('form_name',  $this->formName);
-                        
-                        $string_action = $ajaxAction->serialize(FALSE);
+                        $ajaxAction->setParameter('form_name', $this->formName);
+
+                        $string_action = $ajaxAction->serialize(false);
                         $this->setProperty('seekaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
-                        $this->setProperty('onBlur', $this->getProperty('seekaction'), FALSE);
+                        $this->setProperty('onBlur', $this->getProperty('seekaction'), false);
                     }
                 }
                 $this->action->setParameter('field_name', $this->name);
-                $this->action->setParameter('form_name',  $this->formName);
-                $serialized_action = $this->serialized();
+                $this->action->setParameter('form_name', $this->formName);
+                $serialized_action = $this->action->serialize(false);
             }
 
-            $this->createOnClick($serialized_action);
+            $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());__adianti_append_page('engine.php?{$serialized_action}&'+serialform)";
 
             $wrapper = new TElement('div');
             $wrapper->{'class'} = 'tseek-group';
             $wrapper->open();
             parent::show();
             $this->button->show();
-            
-            if ($this->auxiliar)
-            {
+
+            if ($this->auxiliar) {
                 $this->auxiliar->show();
             }
             $wrapper->close();
-        }
-        else
-        {
+        } else {
             parent::show();
         }
-    }
-
-    protected function serialized()
-    {
-        $serialized_action = $this->action->serialize(FALSE);
-        return $serialized_action;
-    }
-
-    /**
-     * @param string $serialized_action
-     */
-    protected function createOnClick(string $serialized_action): void
-    {
-        $this->button->{'onclick'} = "javascript:serialform=(\$('#{$this->formName}').serialize());__dvi_adianti_append_page('{$serialized_action}/'+ serialform)";
     }
 }

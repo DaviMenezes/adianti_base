@@ -1,15 +1,12 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Wrapper;
 
-use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use Adianti\Base\Lib\Widget\Form\TSeekButton;
 use Adianti\Base\Lib\Base\TStandardSeek;
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TTransaction;
-use Adianti\Base\Lib\Control\TAction;
-
-use Dvi\Component\Widget\Util\Action;
+use Adianti\Base\Lib\Widget\Form\TSeekButton;
 use Exception;
 
 /**
@@ -26,36 +23,39 @@ class TDBSeekButton extends TSeekButton
 {
     /**
      * Class Constructor
-     * @param  $name name of the form field
-     * @param  $database name of the database connection
-     * @param  $form name of the parent form
-     * @param  $model name of the Active Record to be searched
-     * @param  $display_field name of the field to be searched and shown
-     * @param  $receive_key name of the form field to receive the primary key
-     * @param  $receive_display_field name of the form field to receive the "display field"
+     * @param string $name name of the form field
+     * @param string $database name of the database connection
+     * @param string $form name of the parent form
+     * @param string $model name of the Active Record to be searched
+     * @param string $display_field name of the field to be searched and shown
+     * @param string $receive_key name of the form field to receive the primary key
+     * @param string $receive_display_field name of the form field to receive the "display field"
+     * @param TCriteria|null $criteria
+     * @param string $operator
+     * @throws Exception
      */
     public function __construct($name, $database, $form, $model, $display_field, $receive_key = null, $receive_display_field = null, TCriteria $criteria = null, $operator = 'like')
     {
         parent::__construct($name);
-        
+
         if (empty($database)) {
-            throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
+            throw new Exception(\Adianti\Core\AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'database', __CLASS__));
         }
-        
+
         if (empty($model)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'model', __CLASS__));
         }
-        
+
         if (empty($display_field)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 is required', 'display_field', __CLASS__));
         }
-        $model = str_replace('\\', '|', $model);
+
         $obj  = new TStandardSeek;
-        $ini  = AdiantiApplicationConfig::get();
+        $ini  = \Adianti\Core\AdiantiApplicationConfig::get();
         $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
 
         // define the action parameters
-        $action = new Action(route('/standard/seek/setup'));
+        $action = new TAction(array($obj, 'onSetup'));
         $action->setParameter('hash', md5("{$seed}{$database}{$model}{$display_field}"));
         $action->setParameter('database', $database);
         $action->setParameter('parent', $form);
@@ -69,7 +69,7 @@ class TDBSeekButton extends TSeekButton
         $action->setParameter('label', AdiantiCoreTranslator::translate('Description'));
         parent::setAction($action);
     }
-    
+
     /**
      * Set search criteria
      */
@@ -77,7 +77,7 @@ class TDBSeekButton extends TSeekButton
     {
         $this->getAction()->setParameter('criteria', base64_encode(serialize($criteria)));
     }
-    
+
     /**
      * Set operator
      */
@@ -85,7 +85,7 @@ class TDBSeekButton extends TSeekButton
     {
         $this->getAction()->setParameter('operator', ($operator == 'ilike') ? 'ilike' : 'like');
     }
-    
+
     /**
      * Set display mask
      * @param $mask Display mask
@@ -94,7 +94,7 @@ class TDBSeekButton extends TSeekButton
     {
         $this->getAction()->setParameter('mask', $mask);
     }
-    
+
     /**
      * Set display label
      * @param $mask Display label
@@ -103,7 +103,7 @@ class TDBSeekButton extends TSeekButton
     {
         $this->getAction()->setParameter('label', $label);
     }
-    
+
     /**
      * Define the field's value
      * @param $value Current value
@@ -111,23 +111,24 @@ class TDBSeekButton extends TSeekButton
     public function setValue($value)
     {
         parent::setValue($value);
-        
+
         if (!empty($this->auxiliar)) {
             $database = $this->getAction()->getParameter('database');
             $model    = $this->getAction()->getParameter('model');
             $mask     = $this->getAction()->getParameter('mask');
             $display_field = $this->getAction()->getParameter('display_field');
-            
-            TTransaction::open($database);
-            $activeRecord = new $model($value);
-            
-            if (!empty($mask)) {
-                $this->auxiliar->setValue($activeRecord->render($mask));
-            } elseif (isset($activeRecord->$display_field)) {
-                $this->auxiliar->setValue($activeRecord->$display_field);
+
+            if (!empty($value)) {
+//                \Adianti\Database\TTransaction::open($database);
+                $activeRecord = new $model($value);
+
+                if (!empty($mask)) {
+                    $this->auxiliar->setValue($activeRecord->render($mask));
+                } elseif (isset($activeRecord->$display_field)) {
+                    $this->auxiliar->setValue($activeRecord->$display_field);
+                }
+//                TTransaction::close();
             }
-            
-            TTransaction::close();
         }
     }
 }

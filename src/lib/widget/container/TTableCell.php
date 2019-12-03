@@ -17,7 +17,8 @@ class TTableCell extends TElement
 {
     /**
      * Class Constructor
-     * @param $value  TableCell content
+     *@param mixed $value TableCell content
+     *@param string $tag
      */
     public function __construct($value, $tag = 'td')
     {

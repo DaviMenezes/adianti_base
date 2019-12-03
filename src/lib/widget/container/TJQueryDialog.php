@@ -29,18 +29,15 @@ class TJQueryDialog extends TElement
     private $resizable;
     private $useOKButton;
     private $stackOrder;
+    /**@var TAction*/
     private $closeAction;
     
-    /**
-     * Class Constructor
-     * @param $name Name of the widget
-     */
     public function __construct()
     {
         parent::__construct('div');
-        $this->useOKButton = TRUE;
-        $this->top = NULL;
-        $this->left = NULL;
+        $this->useOKButton = true;
+        $this->top = null;
+        $this->left = null;
         $this->modal = 'true';
         $this->draggable = 'true';
         $this->resizable = 'true';
@@ -56,20 +53,23 @@ class TJQueryDialog extends TElement
     {
         $this->{'style'} = "overflow: hidden";
     }
-    
+
     /**
      * Set close action
+     * @param TAction $action
+     * @throws Exception
      */
     public function setCloseAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->closeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
-            throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
+            throw new Exception(AdiantiCoreTranslator::translate(
+                'Action (^1) must be static to be used in ^2',
+                $string_action,
+                __METHOD__
+            ));
         }
     }
     
@@ -84,16 +84,16 @@ class TJQueryDialog extends TElement
     
     /**
      * Define the dialog title
-     * @param $title title
+     * @param string $title
      */
     public function setTitle($title)
     {
         $this->{'title'} = $title;
     }
-    
+
     /**
      * Turn on/off modal
-     * @param $modal Boolean
+     * @param bool $bool
      */
     public function setModal($bool)
     {
@@ -125,52 +125,49 @@ class TJQueryDialog extends TElement
     {
         return $this->{'id'};
     }
-    
+
     /**
      * Define the dialog size
-     * @param $width width
-     * @param $height height
+     * @param string $width
+     * @param string $height
      */
-    public function setSize($width, $height)
+    public function setSize(string $width, string $height)
     {
         $this->width  = $width  < 1 ? "\$(window).width() * $width" : $width;
         
-        if (is_null($height))
-        {
+        if (is_null($height)) {
             $this->height = "'auto'";
-        }
-        else
-        {
+        } else {
             $this->height = $height < 1 ? "\$(window).height() * $height" : $height;
         }
     }
-    
+
     /**
      * Define the dialog position
-     * @param $left left
-     * @param $top top
+     * @param string $left left
+     * @param string $top top
      */
-    public function setPosition($left, $top)
+    public function setPosition(string $left, string $top)
     {
         $this->left = $left;
         $this->top  = $top;
     }
-    
+
     /**
      * Add a JS button to the dialog
-     * @param $label button label
-     * @param $action JS action
+     * @param string $label button label
+     * @param mixed $action JS action
      */
-    public function addAction($label, $action)
+    public function addAction(string $label, $action)
     {
         $this->actions[] = array($label, $action);
     }
-    
+
     /**
      * Define the stack order (zIndex)
-     * @param $order Stack order
+     * @param string $order Stack order
      */
-    public function setStackOrder($order)
+    public function setStackOrder(string $order)
     {
         $this->stackOrder = $order;
     }
@@ -181,10 +178,8 @@ class TJQueryDialog extends TElement
     public function show()
     {
         $action_code = '';
-        if ($this->actions)
-        {
-            foreach ($this->actions as $action_array)
-            {
+        if ($this->actions) {
+            foreach ($this->actions as $action_array) {
                 $label  = $action_array[0];
                 $action = $action_array[1];
                 $action_code .= "\"{$label}\": function() {  $action },";
@@ -192,26 +187,23 @@ class TJQueryDialog extends TElement
         }
         
         $ok_button = '';
-        if ($this->useOKButton)
-        {
+        if ($this->useOKButton) {
             $ok_button = '  OK: function() { $( this ).remove(); }';
         }
         
         $left = $this->left ? $this->left : 0;
         $top  = $this->top  ? $this->top  : 0;
         
-        $pos_string = '';
         $id = $this->{'id'};
         
         $close_action = ''; // cannot be function, because it is tested inside tjquerydialog.js
         
-        if (isset($this->closeAction))
-        {
-            $string_action = $this->closeAction->serialize(FALSE);
+        if (isset($this->closeAction)) {
+            $string_action = $this->closeAction->serialize(false);
             $close_action = "function() { __adianti_ajax_exec('{$string_action}') }";
         }
         
-        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action ); ", FALSE));
+        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action ); ", false));
         parent::show();
     }
     
@@ -222,9 +214,10 @@ class TJQueryDialog extends TElement
     {
         parent::add(TScript::create('$( "#' . $this->{'id'} . '" ).remove();', false));
     }
-    
+
     /**
      * Close window by id
+     * @param $id
      */
     public static function closeById($id)
     {
@@ -236,10 +229,9 @@ class TJQueryDialog extends TElement
      */
     public static function closeAll()
     {
-        if (!isset($_REQUEST['ajax_lookup']) OR $_REQUEST['ajax_lookup'] !== '1')
-        {
+        if (!isset($_REQUEST['ajax_lookup']) or $_REQUEST['ajax_lookup'] !== '1') {
             // it has to be inline (not external function call)
-            TScript::create( ' $(\'[widget="TWindow"]\').remove(); ' );
+            TScript::create(' $(\'[widget="TWindow"]\').remove(); ');
         }
     }
 }

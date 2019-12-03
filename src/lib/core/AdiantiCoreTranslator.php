@@ -15,7 +15,8 @@ class AdiantiCoreTranslator
 {
     private static $instance; // singleton instance
     private $lang;            // target language
-    
+    protected $messages;
+
     /**
      * Class Constructor
      */
@@ -245,8 +246,7 @@ class AdiantiCoreTranslator
     public static function getInstance()
     {
         // if there's no instance
-        if (empty(self::$instance))
-        {
+        if (empty(self::$instance)) {
             // creates a new object
             self::$instance = new AdiantiCoreTranslator;
         }
@@ -256,7 +256,7 @@ class AdiantiCoreTranslator
     
     /**
      * Define the target language
-     * @param $lang Target language index
+     * @param string $lang Target language index
      */
     public static function setLanguage($lang)
     {
@@ -272,43 +272,41 @@ class AdiantiCoreTranslator
         $instance = self::getInstance();
         return $instance->lang;
     }
-    
+
     /**
      * Translate a word to the target language
-     * @param $word     Word to be translated
+     * @param string $word Word to be translated
+     * @param null $param1
+     * @param null $param2
+     * @param null $param3
+     * @param null $param4
+     * @return string|string[]
      */
-    public static function translate($word, $param1 = NULL, $param2 = NULL, $param3 = NULL, $param4 = NULL)
+    public static function translate($word, $param1 = null, $param2 = null, $param3 = null, $param4 = null)
     {
         // get the AdiantiCoreTranslator unique instance
         $instance = self::getInstance();
         // search by the numeric index of the word
         $key = array_search($word, $instance->messages['en']);
-        if ($key !== FALSE)
-        {
+        if ($key !== false) {
             // get the target language
             $language = self::getLanguage();
             // returns the translated word
             $message = $instance->messages[$language][$key];
-            if (isset($param1))
-            {
+            if (isset($param1)) {
                 $message = str_replace('^1', $param1, $message);
             }
-            if (isset($param2))
-            {
+            if (isset($param2)) {
                 $message = str_replace('^2', $param2, $message);
             }
-            if (isset($param3))
-            {
+            if (isset($param3)) {
                 $message = str_replace('^3', $param3, $message);
             }
-            if (isset($param4))
-            {
+            if (isset($param4)) {
                 $message = str_replace('^4', $param4, $message);
             }
             return $message;
-        }
-        else
-        {
+        } else {
             return 'Message not found: '. $word;
         }
     }

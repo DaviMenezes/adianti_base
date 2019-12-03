@@ -22,7 +22,7 @@ class TFrame extends TElement
     
     /**
      * Class Constructor
-     * @param  $value text label
+     * @param string $value text label
      */
     public function __construct($width = null, $height = null)
     {
@@ -53,7 +53,7 @@ class TFrame extends TElement
     
     /**
      * Set Legend
-     * @param  $legend frame legend
+     * @param mixed $legend frame legend
      */
     public function setLegend($legend)
     {

@@ -17,13 +17,9 @@ class TStyle
 {
     private $name;           // stylesheet name
     private $properties;     // properties
-    static  private $loaded; // array of loaded styles
-    static  private $styles;
+    private static $loaded; // array of loaded styles
+    private static $styles;
     
-    /**
-     * Class Constructor
-     * @param $mame Name of the style
-     */
     public function __construct($name)
     {
         $this->name = $name;
@@ -44,12 +40,9 @@ class TStyle
      */
     public static function findStyle($object)
     {
-        if (self::$styles)
-        {
-            foreach (self::$styles as $stylename => $style)
-            {
-                if ((array)$style->properties === (array)$object->properties)
-                {
+        if (self::$styles) {
+            foreach (self::$styles as $stylename => $style) {
+                if ((array)$style->properties === (array)$object->properties) {
                     return $stylename;
                 }
             }
@@ -69,10 +62,11 @@ class TStyle
         // store the assigned tag property
         $this->properties[$name] = $value;
     }
-    
+
     /**
      * Executed whenever a property is read
-     * @param  $name    = property's name
+     * @param  $name = property's name
+     * @return mixed
      */
     public function __get($name)
     {
@@ -99,11 +93,9 @@ class TStyle
         $style = '';
         $style.= "    .{$this->name}\n";
         $style.= "    {\n";
-        if ($this->properties)
-        {
+        if ($this->properties) {
             // iterate the style properties
-            foreach ($this->properties as $name=>$value)
-            {
+            foreach ($this->properties as $name => $value) {
                 $style.= "        {$name}: {$value};\n";
             }
         }
@@ -113,15 +105,13 @@ class TStyle
     
     /**
      * Return the style inline code
-     */ 
+     */
     public function getInline()
     {
         $style = '';
-        if ($this->properties)
-        {
+        if ($this->properties) {
             // iterate the style properties
-            foreach ($this->properties as $name=>$value)
-            {
+            foreach ($this->properties as $name => $value) {
                 $name = str_replace('_', '-', $name);
                 $style.= "{$name}: {$value};";
             }
@@ -129,27 +119,24 @@ class TStyle
         
         return $style;
     }
-    
+
     /**
      * Show the style
+     * @param bool $inline
      */
-    public function show( $inline = FALSE)
+    public function show($inline = false)
     {
         // check if the style is already loaded
-        if (!isset(self::$loaded[$this->name]))
-        {
-            if ($inline)
-            {
+        if (!isset(self::$loaded[$this->name])) {
+            if ($inline) {
                 echo "    <style type='text/css' media='screen'>\n";
                 echo $this->getContent();
                 echo "    </style>\n";
-            }
-            else
-            {
+            } else {
                 $style = $this->getContent();
                 TPage::register_css($this->name, $style);
                 // mark the style as loaded
-                self::$loaded[$this->name] = TRUE;
+                self::$loaded[$this->name] = true;
                 self::$styles[$this->name] = $this;
             }
         }

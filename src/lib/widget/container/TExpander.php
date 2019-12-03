@@ -20,12 +20,12 @@ class TExpander extends TElement
     private $button;
     private $caret_side;
     private $label;
-    
+
     /**
      * Class Constructor
-     * @param  $value text label
+     * @param string $label
      */
-    public function __construct($label = '')
+    public function __construct(string $label = '')
     {
         parent::__construct('div');
         $this->{'id'}    = 'texpander_'.mt_rand(1000000000, 1999999999);
@@ -49,7 +49,7 @@ class TExpander extends TElement
     
     /**
      * Set caret side
-     * @caret_side Caret side (left, right)
+     * @param string $caret_side Caret side (left, right)
      */
     public function setCaretSide($caret_side)
     {
@@ -58,36 +58,36 @@ class TExpander extends TElement
     
     /**
      * Define the pull side
-     * @side left/right
+     * @param string side left/right
      */
-    public function setPullSide($side)
+    public function setPullSide(string $side)
     {
         $this->container->{'class'} = "dropdown-menu texpander-container pull-{$side}";
     }
-    
+
     /**
      * Define a button property
-     * @param $property Property name (Ex: style)
-     * @param $value    Property value
+     * @param string $property Property name (Ex: style)
+     * @param string $value Property value
      */
-    public function setButtonProperty($property, $value)
+    public function setButtonProperty(string $property, $value)
     {
         $this->button->$property = $value;
     }
-    
+
     /**
      * Define a container property
-     * @param $property Property name (Ex: style)
-     * @param $value    Property value
+     * @param string $property Property name (Ex: style)
+     * @param string $value Property value
      */
-    public function setProperty($property, $value)
+    public function setProperty(string $property, $value)
     {
         $this->container->$property = $value;
     }
     
     /**
      * Add content to the expander
-     * @param $content Any Object that implements show() method
+     * @param mixed $content Any Object that implements show() method
      */
     public function add($content)
     {
@@ -99,19 +99,14 @@ class TExpander extends TElement
      */
     public function show()
     {
-        if ($this->caret_side == 'left')
-        {
+        if ($this->caret_side == 'left') {
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
             $this->button->add($this->label);
-        }
-        else if ($this->caret_side == 'right')
-        {
+        } elseif ($this->caret_side == 'right') {
             $this->button->add($this->label);
             $this->button->add('&nbsp');
             $this->button->add(TElement::tag('span', '', array('class'=>'caret')));
-        }
-        else
-        {
+        } else {
             $this->button->add($this->label);
         }
         

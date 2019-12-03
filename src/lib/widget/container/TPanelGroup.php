@@ -3,6 +3,7 @@ namespace Adianti\Base\Lib\Widget\Container;
 
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Wrapper\BootstrapDatagridWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 
 /**
  * Bootstrap native panel for Adianti Framework
@@ -19,31 +20,32 @@ class TPanelGroup extends TElement
     private $head;
     private $body;
     private $footer;
-    
+
     /**
      * Static creator for panels
-     * @param $title Panel title
-     * @param $element Panel content
+     * @param string $title Panel title
+     * @param mixed $element Panel content
+     * @param null $footer
+     * @return TPanelGroup
      */
-    public static function pack($title, $element, $footer = null)
+    public static function pack(string $title, $element, $footer = null)
     {
         $panel = new self($title);
         $panel->add($element);
         
-        if ($footer)
-        {
+        if ($footer) {
             $panel->addFooter($footer);
         }
         
         return $panel;
     }
-    
+
     /**
      * Constructor method
-     * @param $title  Panel Title
-     * @param $footer Panel Footer
+     * @param string $title Panel Title
+     * @param string $background
      */
-    public function __construct($title = NULL, $background = NULL)
+    public function __construct(string $title = null, string $background = null)
     {
         parent::__construct('div');
         $this->{'class'} = 'panel panel-default';
@@ -51,14 +53,12 @@ class TPanelGroup extends TElement
         $this->head = new TElement('div');
         $this->head->{'class'} = 'panel-heading';
         
-        if ($title)
-        {
+        if ($title) {
             $panel_title = new TElement('div');
             $panel_title->{'class'} = 'panel-title';
-            $panel_title->add( $title );
+            $panel_title->add($title);
             
-            if (!empty($background))
-            {
+            if (!empty($background)) {
                 $this->head->{'style'} = 'background:'.$background;
             }
             $this->head->add($panel_title);
@@ -80,14 +80,11 @@ class TPanelGroup extends TElement
     {
         $this->body->add($content);
         
-        if ($content instanceof BootstrapFormWrapper)
-        {
+        if ($content instanceof BootstrapFormWrapper) {
             $buttons = $content->detachActionButtons();
-            if ($buttons)
-            {
-                foreach ($buttons as $button)
-                {
-                    $this->footer->add( $button );
+            if ($buttons) {
+                foreach ($buttons as $button) {
+                    $this->footer->add($button);
                 }
                 parent::add($this->footer);
             }
@@ -119,13 +116,14 @@ class TPanelGroup extends TElement
     {
         return $this->footer;
     }
-    
+
     /**
      * Add footer
+     * @param $footer
      */
     public function addFooter($footer)
     {
-        $this->footer->add( $footer );
+        $this->footer->add($footer);
         parent::add($this->footer);
     }
 }

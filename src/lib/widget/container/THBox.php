@@ -22,10 +22,12 @@ class THBox extends TElement
     {
         parent::__construct('div');
     }
-    
+
     /**
      * Add an child element
-     * @param $child Any object that implements the show() method
+     * @param mixed $child Any object that implements the show() method
+     * @param string $style
+     * @return TElement
      */
     public function add($child, $style = 'display:inline-table;')
     {
@@ -35,35 +37,32 @@ class THBox extends TElement
         parent::add($wrapper);
         return $wrapper;
     }
-    
+
     /**
      * Add a new row with many cells
-     * @param $cells Each argument is a row cell
+     * @param mixed $cells Each argument is a row cell
      */
     public function addRowSet()
     {
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $this->add($arg);
             }
         }
     }
-    
+
     /**
      * Static method for pack content
      * @param $cells Each argument is a cell
+     * @return THBox
      */
     public static function pack()
     {
         $box = new self;
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $box->add($arg);
             }
         }

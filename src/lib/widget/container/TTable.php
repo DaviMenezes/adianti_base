@@ -15,6 +15,7 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  */
 class TTable extends TElement
 {
+    /**@var TElement*/
     private $section;
     
     /**
@@ -31,16 +32,11 @@ class TTable extends TElement
      */
     public function addSection($type)
     {
-        if ($type == 'thead')
-        {
+        if ($type == 'thead') {
             $this->section = new TElement('thead');
-        }
-        else if ($type == 'tbody')
-        {
+        } elseif ($type == 'tbody') {
             $this->section = new TElement('tbody');
-        }
-        else if ($type == 'tfoot')
-        {
+        } elseif ($type == 'tfoot') {
             $this->section = new TElement('tfoot');
         }
         parent::add($this->section);
@@ -55,24 +51,22 @@ class TTable extends TElement
     public function addRow()
     {
         // creates a new Table Row
-        $row = new TTableRow( $this->section ? $this->section->getName() : 'tbody');
+        $row = new TTableRow($this->section ? $this->section->getName() : 'tbody');
         
         // add this row to the table element
-        if (isset($this->section))
-        {
+        if (isset($this->section)) {
             $this->section->add($row);
-        }
-        else
-        {
+        } else {
             parent::add($row);
         }
         return $row;
     }
-    
+
     /**
      * Add a new row (TTableRow object) with many cells
-     * @param $cells Each argument is a row cell
+     * @param mixed $cells Each argument is a row cell
      * @return TTableRow
+     * @throws \Exception
      */
     public function addRowSet()
     {
@@ -80,38 +74,37 @@ class TTable extends TElement
         $row = $this->addRow();
         
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
-                if (is_array($arg))
-                {
+        if ($args) {
+            foreach ($args as $arg) {
+                if (is_array($arg)) {
                     $inst = $row;
                     call_user_func_array(array($inst, 'addMultiCell'), $arg);
-                }
-                else
-                {
-                    $row->addCell($arg, ($this->section && $this->section->getName() == 'thead') ? 'th' : 'td');
+                } else {
+                    $row->addCell($arg);
                 }
             }
         }
         return $row;
     }
-    
+
     /**
      * Create a table from data array
-     * @param $array_data Array with raw data
-     * @param $table_properties Array of CSS properties for table
-     * @param $header_properties Array of CSS properties for header
-     * @param $body_properties Array of CSS properties for body
+     * @param array $array_data Array with raw data
+     * @param array $table_properties Array of CSS properties for table
+     * @param array $header_properties Array of CSS properties for header
+     * @param array $body_properties Array of CSS properties for body
+     * @return TTable
+     * @throws \Exception
      */
-    public static function fromData($array_data, $table_properties = null, $header_properties = null, $body_properties = null)
-    {
-        $table = new self;
-        if ($table_properties)
-        {
-            foreach ($table_properties as $prop=>$value)
-            {
+    public static function fromData(
+        array $array_data,
+        array $table_properties = null,
+        array $header_properties = null,
+        array $body_properties = null
+    ) {
+        $table = new self();
+        if ($table_properties) {
+            foreach ($table_properties as $prop => $value) {
                 $table->$prop = $value;
             }
         }
@@ -123,13 +116,10 @@ class TTable extends TElement
         
         $tr = new TTableRow;
         $thead->add($tr);
-        foreach ($header as $cell)
-        {
+        foreach ($header as $cell) {
             $td = $tr->addCell((string) $cell);
-            if ($header_properties)
-            {
-                foreach ($header_properties as $prop=>$value)
-                {
+            if ($header_properties) {
+                foreach ($header_properties as $prop => $value) {
                     $td->$prop = $value;
                 }
             }
@@ -139,19 +129,15 @@ class TTable extends TElement
         $table->add($tbody);
         
         $i = 0;
-        foreach ($array_data as $row)
-        {
+        foreach ($array_data as $row) {
             $tr = new TTableRow;
             $tbody->add($tr);
             $tr->{'class'} = ($i %2==0) ? 'odd': 'even';
             
-            foreach ($row as $cell)
-            {
+            foreach ($row as $cell) {
                 $td = $tr->addCell((string) $cell);
-                if ($body_properties)
-                {
-                    foreach ($body_properties as $prop=>$value)
-                    {
+                if ($body_properties) {
+                    foreach ($body_properties as $prop => $value) {
                         $td->$prop = $value;
                     }
                 }

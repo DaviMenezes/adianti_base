@@ -19,28 +19,23 @@ class TTableRow extends TElement
 {
     private $section;
     
-    /**
-     * Class Constructor
-     */
-    public function __construct($section = 'tbody')
+    public function __construct(string $section = 'tbody')
     {
         parent::__construct('tr');
         $this->section = $section;
     }
-    
+
     /**
      * Add a new cell (TTableCell) to the Table Row
-     * @param  $value Cell Content
+     * @param string $value Cell Content
      * @return TTableCell
+     * @throws Exception
      */
-    public function addCell($value)
+    public function addCell(string $value)
     {
-        if (is_null($value))
-        {
+        if (is_null($value)) {
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 does not accept null values', __METHOD__));
-        }
-        else
-        {
+        } else {
             // creates a new Table Cell
             $cell = new TTableCell($value, $this->section == 'thead' ? 'th' : 'td');
             
@@ -49,20 +44,20 @@ class TTableRow extends TElement
             return $cell;
         }
     }
-    
+
     /**
      * Add a multi-cell content to a table cell
-     * @param $cells Each argument is a row cell
+     * @param mixed $cells Each argument is a row cell
+     * @return TTableCell
+     * @throws Exception
      */
     public function addMultiCell()
     {
         $wrapper = new THBox;
         
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $wrapper->add($arg);
             }
         }

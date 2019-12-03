@@ -15,17 +15,18 @@ class TScript
 {
     /**
      * Create a script
-     * @param $code source code
+     * @param string $code source code
+     * @param bool $show
+     * @return TElement
      */
-    public static function create( $code, $show = TRUE )
+    public static function create($code, $show = true)
     {
         $script = new TElement('script');
         $script->{'language'} = 'JavaScript';
-        $script->setUseSingleQuotes(TRUE);
-        $script->setUseLineBreaks(FALSE);
-        $script->add( str_replace( ["\n", "\r"], [' ', ' '], $code) );
-        if ($show)
-        {
+        $script->setUseSingleQuotes(true);
+        $script->setUseLineBreaks(false);
+        $script->add(str_replace(["\n", "\r"], [' ', ' '], $code));
+        if ($show) {
             $script->show();
         }
         return $script;

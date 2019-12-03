@@ -28,7 +28,7 @@ class TPanel extends TElement
     public function __construct($width, $height)
     {
         parent::__construct('div');
-		
+        
         $this->{'id'} = 'tpanel_' . mt_rand(1000000000, 1999999999);
         
         // creates the panel style
@@ -39,13 +39,13 @@ class TPanel extends TElement
         
         $this->{'class'} = 'style_'.$this->{'id'};
     }
-    
+
     /**
      * Set the panel's size
-     * @param $width Panel width
-     * @param $height Panel height
+     * @param string $width Panel width
+     * @param string $height Panel height
      */
-    public function setSize($width, $height)
+    public function setSize(string $width, string $height)
     {
         $this->width = $width;
         $this->height = $height;
@@ -66,7 +66,7 @@ class TPanel extends TElement
      * @param  $col    = column in pixels.
      * @param  $row    = row in pixels.
      */
-    public function put($widget, $col, $row)
+    public function put($widget, string $col, string $row)
     {
         // creates a layer to put the widget inside
         $layer = new TElement('div');
@@ -84,8 +84,8 @@ class TPanel extends TElement
      */
     public function show()
     {
-        $this->style-> width  = $this->width.'px';
-        $this->style-> height = $this->height.'px';
+        $this->style->width  = $this->width.'px';
+        $this->style->height = $this->height.'px';
         $this->style->show();
         
         parent::show();

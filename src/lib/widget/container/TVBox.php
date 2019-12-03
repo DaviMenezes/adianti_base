@@ -23,10 +23,11 @@ class TVBox extends TElement
         parent::__construct('div');
         $this->{'style'} = 'display: inline-block';
     }
-    
+
     /**
      * Add an child element
-     * @param $child Any object that implements the show() method
+     * @param mixed $child Any object that implements the show() method
+     * @return TElement
      */
     public function add($child)
     {
@@ -39,32 +40,29 @@ class TVBox extends TElement
     
     /**
      * Add a new col with many cells
-     * @param $cells Each argument is a row cell
+     *@param mixed $cells Each argument is a row cell
      */
     public function addColSet()
     {
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $this->add($arg);
             }
         }
     }
-    
+
     /**
      * Static method for pack content
-     * @param $cells Each argument is a cell
+     * @param mixed $cells Each argument is a cell
+     * @return TVBox
      */
     public static function pack()
     {
         $box = new self;
         $args = func_get_args();
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
+        if ($args) {
+            foreach ($args as $arg) {
                 $box->add($arg);
             }
         }

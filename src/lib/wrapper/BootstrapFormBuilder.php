@@ -135,13 +135,13 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         return $this->decorated->$property = $value;
     }
-    
+
     /**
      * Define a style property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @param string $value Property Value
      */
-    public function setProperty($name, $value)
+    public function setProperty(string $name, string $value)
     {
         $this->properties[$name] = $value;
     }

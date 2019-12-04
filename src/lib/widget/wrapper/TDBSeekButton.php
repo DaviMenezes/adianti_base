@@ -106,9 +106,9 @@ class TDBSeekButton extends TSeekButton
 
     /**
      * Define the field's value
-     * @param $value Current value
+     * @param string $value Current value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         parent::setValue($value);
 

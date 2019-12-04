@@ -41,20 +41,22 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'type'}   = 'text';
         $this->tag->{'widget'} = 'tentry';
     }
-    
+
     /**
      * Define input type
+     * @param string $type
      */
-    public function setInputType($type)
+    public function setInputType(string $type)
     {
         $this->tag->{'type'}  = $type;
     }
-    
+
     /**
      * Define the field's mask
-     * @param $mask A mask for input data
+     * @param string $mask A mask for input data
+     * @param bool $replaceOnPost
      */
-    public function setMask($mask, $replaceOnPost = false)
+    public function setMask(string $mask, bool $replaceOnPost = false)
     {
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
@@ -67,12 +69,17 @@ class TEntry extends TField implements AdiantiWidgetInterface
 
     /**
      * Define the field's numeric mask (available just in web)
-     * @param $decimals Sets the number of decimal points.
-     * @param $decimalsSeparator Sets the separator for the decimal point.
-     * @param $thousandSeparator Sets the thousands separator.
+     * @param string $decimals Sets the number of decimal points.
+     * @param string $decimalsSeparator Sets the separator for the decimal point.
+     * @param string $thousandSeparator Sets the thousands separator.
+     * @param bool $replaceOnPost
      */
-    public function setNumericMask($decimals, $decimalsSeparator, $thousandSeparator, $replaceOnPost = false)
-    {
+    public function setNumericMask(
+        string $decimals,
+        string $decimalsSeparator,
+        string $thousandSeparator,
+        bool $replaceOnPost = false
+    ) {
         $this->numericMask = true;
         $this->decimals = $decimals;
         $this->decimalsSeparator = $decimalsSeparator;
@@ -80,11 +87,16 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->replaceOnPost = $replaceOnPost;
     }
 
-   public function setValue(?string $value)
+    public function setValue(?string $value)
     {
         if ($this->replaceOnPost) {
             if ($this->numericMask && is_numeric($value)) {
-                $this->value = number_format($value, $this->decimals, $this->decimalsSeparator, $this->thousandSeparator);
+                $this->value = number_format(
+                    $value,
+                    $this->decimals,
+                    $this->decimalsSeparator,
+                    $this->thousandSeparator
+                );
             } elseif ($this->mask) {
                 $this->value = $this->formatMask($this->mask, $value);
             } else {
@@ -122,12 +134,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
             return '';
         }
     }
-    
+
     /**
      * Define max length
-     * @param  $length Max length
+     * @param string $length Max length
      */
-    public function setMaxLength($length)
+    public function setMaxLength(string $length)
     {
         if ($length > 0) {
             $this->tag->{'maxlength'} = $length;
@@ -136,16 +148,17 @@ class TEntry extends TField implements AdiantiWidgetInterface
     
     /**
      * Define options for completion
-     * @param $options array of options for completion
+     * @param array $options array of options for completion
      */
-    public function setCompletion($options)
+    public function setCompletion(array $options)
     {
         $this->completion = $options;
     }
-    
+
     /**
      * Define the action to be executed when the user leaves the form field
-     * @param $action TAction object
+     * @param TAction $action object
+     * @throws Exception
      */
     public function setExitAction(TAction $action)
     {
@@ -156,12 +169,12 @@ class TEntry extends TField implements AdiantiWidgetInterface
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
     }
-    
+
     /**
      * Define the javascript function to be executed when the user leaves the form field
-     * @param $function Javascript function
+     * @param string $function Javascript function
      */
-    public function setExitFunction($function)
+    public function setExitFunction(string $function)
     {
         $this->exitFunction = $function;
     }
@@ -187,26 +200,27 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->tag->{'forceupper'} = "1";
         $this->setProperty('style', 'text-transform: uppercase');
     }
-    
+
     /**
      * Reload completion
      *
-     * @param $field Field name or id
+     * @param string $field Field name or id
      * @param $options array of options for autocomplete
      */
-    public static function reloadCompletion($field, $options)
+    public static function reloadCompletion(string $field, array $options)
     {
         $options = json_encode($options);
         TScript::create(" tentry_autocomplete( '{$field}', $options); ");
     }
-    
+
     /**
      * Apply mask
      *
-     * @param $mask  Mask
-     * @param $value Value
+     * @param string $mask Mask
+     * @param string $value Value
+     * @return string
      */
-    protected function formatMask($mask, $value)
+    protected function formatMask(string $mask, string $value)
     {
         if ($value) {
             $value_index  = 0;

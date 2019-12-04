@@ -58,13 +58,13 @@ abstract class TField
         $this->tag->{'class'} = 'tfield';   // classe CSS
         $this->tag->{'widget'} = strtolower($classname);
     }
-    
+
     /**
      * Intercepts whenever someones assign a new property's value
-     * @param $name     Property Name
-     * @param $value    Property Value
+     * @param string $name Property Name
+     * @param int|float|string $value Property Value
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         // objects and arrays are not set as properties
         if (is_scalar($value)) {
@@ -72,12 +72,13 @@ abstract class TField
             $this->setProperty($name, $value);
         }
     }
-    
+
     /**
      * Returns a property value
-     * @param $name     Property Name
+     * @param string $name Property Name
+     * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         return $this->getProperty($name);
     }
@@ -89,13 +90,15 @@ abstract class TField
     {
         $this->tag = clone $this->tag;
     }
-    
+
     /**
      * Redirects function call
-     * @param $method Method name
-     * @param $param  Array of parameters
+     * @param string $method Method name
+     * @param array $param Array of parameters
+     * @return mixed
+     * @throws Exception
      */
-    public function __call($method, $param)
+    public function __call(string $method, array $param)
     {
         if (method_exists($this->tag, $method)) {
             return call_user_func_array(array($this->tag, $method), $param);
@@ -120,12 +123,12 @@ abstract class TField
     {
         return $this->label;
     }
-    
+
     /**
      * Define the field's name
-     * @param $name   A string containing the field's name
+     * @param string $name A string containing the field's name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -137,12 +140,12 @@ abstract class TField
     {
         return $this->name;
     }
-    
+
     /**
      * Define the field's id
-     * @param $id A string containing the field's id
+     * @param string $id A string containing the field's id
      */
-    public function setId($id)
+    public function setId(string $id)
     {
         $this->id = $id;
     }
@@ -171,13 +174,13 @@ abstract class TField
     {
         return $this->value;
     }
-    
+
     /**
      * Define the name of the form to wich the field is attached
-     * @param $name    A string containing the name of the form
+     * @param string $name A string containing the name of the form
      * @ignore-autocomplete on
      */
-    public function setFormName($name)
+    public function setFormName(string $name)
     {
         $this->formName = $name;
     }
@@ -189,12 +192,12 @@ abstract class TField
     {
         return $this->formName;
     }
-    
+
     /**
      * Define the field's tooltip
-     * @param $name   A string containing the field's tooltip
+     * @param string $tip
      */
-    public function setTip($tip)
+    public function setTip(string $tip)
     {
         $this->tag->{'title'} = $tip;
     }
@@ -265,7 +268,7 @@ abstract class TField
      * Define the Field's width
      * @param $width Field's width in pixels
      */
-    public function setSize($width, $height = null)
+    public function setSize(string $width)
     {
         //Todo Dvi-custom
         $sufix = strstr($width, '%') === false ? 'px' : '';
@@ -279,14 +282,14 @@ abstract class TField
     {
         return $this->size;
     }
-    
+
     /**
      * Add a field validator
-     * @param $label Field name
+     * @param string $label Field name
      * @param $validator TFieldValidator object
-     * @param $parameters Aditional parameters
+     * @param array $parameters Aditional parameters
      */
-    public function addValidation($label, TFieldValidator $validator, $parameters = null)
+    public function addValidation(string $label, TFieldValidator $validator, array $parameters = null)
     {
         $this->validations[] = array($label, $validator, $parameters);
     }

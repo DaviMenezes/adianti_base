@@ -26,24 +26,26 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     protected $id;
     protected $formName;
     protected $value;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = 'tspinner_'.mt_rand(1000000000, 1999999999);
     }
-    
+
     /**
      * Define the field's range
-     * @param $min Minimal value
-     * @param $max Maximal value
-     * @param $step Step value
+     * @param string $min Minimal value
+     * @param string $max Maximal value
+     * @param string $step Step value
+     * @throws Exception
      */
-    public function setRange($min, $max, $step)
+    public function setRange(string $min, string $max, string $step)
     {
         $this->min = $min;
         $this->max = $max;
@@ -57,10 +59,11 @@ class TSpinner extends TField implements AdiantiWidgetInterface
             parent::setValue($min);
         }
     }
-    
+
     /**
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
+     * @throws Exception
      */
     public function setExitAction(TAction $action)
     {
@@ -68,16 +71,20 @@ class TSpinner extends TField implements AdiantiWidgetInterface
             $this->exitAction = $action;
         } else {
             $string_action = $action->toString();
-            throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
+            throw new Exception(AdiantiCoreTranslator::translate(
+                'Action (^1) must be static to be used in ^2',
+                $string_action,
+                __METHOD__
+            ));
         }
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field_name Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field_name)
+    public static function enableField(string $form_name, string $field_name)
     {
         TScript::create(" tspinner_enable_field('{$form_name}', '{$field_name}'); ");
     }
@@ -124,7 +131,12 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         $exit_action = 'function() {}';
         if (isset($this->exitAction)) {
             if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+                throw new Exception(AdiantiCoreTranslator::translate(
+                    'You must pass the ^1 (^2) as a parameter to ^3',
+                    __CLASS__,
+                    $this->name,
+                    'TForm::setFields()'
+                ));
             }
             $string_action = $this->exitAction->serialize(false);
             $exit_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}' ) }";

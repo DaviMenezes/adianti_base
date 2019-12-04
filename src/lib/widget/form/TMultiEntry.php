@@ -138,7 +138,6 @@ class TMultiEntry extends TSelect implements AdiantiWidgetInterface
             $size  = "{$this->size}px";
         }
         
-        $search_word = AdiantiCoreTranslator::translate('Search');
         $change_action = 'function() {}';
         
         $this->renderItems(false);

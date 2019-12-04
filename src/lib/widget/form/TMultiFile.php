@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
+use ReflectionException;
 
 /**
  * FileChooser widget
@@ -28,16 +29,18 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     protected $extensions;
     protected $seed;
     protected $fileHandling;
-    
+
     /**
      * Constructor method
-     * @param $name input name
+     * @param string $name input name
+     * @throws ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
+        //Todo criar classe especifica para sobrescrever o uso de urlRoute
         $this->uploaderClass = urlRoute('/admin/system/service/document/upload');
         $this->fileHandling = false;
         
@@ -96,6 +99,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         if (isset($_POST[$name])) {
             return $_POST[$name];
         }
+        return null;
     }
 
     public function setValue(?string $value)

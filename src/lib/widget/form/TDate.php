@@ -24,10 +24,6 @@ class TDate extends Varchar implements AdiantiWidgetInterface
     protected $options;
     protected $replaceOnPost;
     
-    /**
-     * Class Constructor
-     * @param $name Name of the widget
-     */
     public function __construct($name)
     {
         parent::__construct($name);
@@ -45,7 +41,7 @@ class TDate extends Varchar implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tdate';
     }
     
-   public function setValue(?string $value)
+    public function setValue(?string $value)
     {
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
             return parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));
@@ -54,9 +50,6 @@ class TDate extends Varchar implements AdiantiWidgetInterface
         }
     }
     
-    /**
-     * Return the post data
-     */
     public function getPostData()
     {
         $value = parent::getPostData();
@@ -67,14 +60,15 @@ class TDate extends Varchar implements AdiantiWidgetInterface
             return $value;
         }
     }
-    
+
     /**
      * Convert from one mask to another
-     * @param $value original date
-     * @param $fromMask source mask
-     * @param $toMask target mask
+     * @param string|null $value original date
+     * @param string $fromMask source mask
+     * @param string $toMask target mask
+     * @return original|false|string|null
      */
-    public static function convertToMask($value, $fromMask, $toMask)
+    public static function convertToMask(?string $value, string $fromMask, string $toMask)
     {
         if ($value) {
             $value = substr($value, 0, strlen($fromMask));
@@ -90,12 +84,13 @@ class TDate extends Varchar implements AdiantiWidgetInterface
         
         return $value;
     }
-    
+
     /**
      * Define the field's mask
-     * @param $mask  Mask for the field (dd-mm-yyyy)
+     * @param string $mask Mask for the field (dd-mm-yyyy)
+     * @param bool $replaceOnPost
      */
-    public function setMask($mask, $replaceOnPost = false)
+    public function setMask(string $mask, bool $replaceOnPost = false)
     {
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
@@ -107,28 +102,32 @@ class TDate extends Varchar implements AdiantiWidgetInterface
         
         parent::setMask($newmask);
     }
-    
+
     /**
      * Set the mask to be used to colect the data
+     * @param string $mask
      */
-    public function setDatabaseMask($mask)
+    public function setDatabaseMask(string $mask)
     {
         $this->dbmask = $mask;
     }
-    
+
     /**
      * Set extra datepicker options (ex: autoclose, startDate, daysOfWeekDisabled, datesDisabled)
+     * @param string $option
+     * @param string $value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, string $value)
     {
         $this->options[$option] = $value;
     }
-    
+
     /**
      * Shortcut to convert a date to format yyyy-mm-dd
-     * @param $date = date in format dd/mm/yyyy
+     * @param string $date = date in format dd/mm/yyyy
+     * @return string
      */
-    public static function date2us($date)
+    public static function date2us(string $date)
     {
         if ($date) {
             // get the date parts
@@ -137,13 +136,15 @@ class TDate extends Varchar implements AdiantiWidgetInterface
             $year = substr($date, 6, 4);
             return "{$year}-{$mon}-{$day}";
         }
+        return '';
     }
-    
+
     /**
      * Shortcut to convert a date to format dd/mm/yyyy
      * @param $date = date in format yyyy-mm-dd
+     * @return string
      */
-    public static function date2br($date)
+    public static function date2br(string $date)
     {
         if ($date) {
             // get the date parts
@@ -152,6 +153,7 @@ class TDate extends Varchar implements AdiantiWidgetInterface
             $day  = substr($date, 8, 2);
             return "{$day}/{$mon}/{$year}";
         }
+        return '';
     }
 
     /**
@@ -173,13 +175,14 @@ class TDate extends Varchar implements AdiantiWidgetInterface
     {
         TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Shows the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {
-        $js_mask = str_replace('yyyy', 'yy', $this->mask);
+        str_replace('yyyy', 'yy', $this->mask);
         $language = strtolower(LANG);
         $options = json_encode($this->options);
         

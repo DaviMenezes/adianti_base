@@ -23,10 +23,11 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     protected $size;
     protected $formName;
     private $height;
-    
+
     /**
      * Class Constructor
      * @param $name Widet's name
+     * @throws \ReflectionException
      */
     public function __construct($name)
     {
@@ -42,7 +43,7 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
      * @param  $width   Widget's width
      * @param  $height  Widget's height
      */
-    public function setSize($width, $height = null)
+    public function setSize(string $width, string $height = null)
     {
         $this->size   = $width;
         if ($height) {

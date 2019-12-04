@@ -31,14 +31,11 @@ class TFile extends TField implements AdiantiWidgetInterface
     protected $seed;
     protected $fileHandling;
     
-    /**
-     * Constructor method
-     * @param $name input name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
+        //Todo voltar ao comportamento padrao e criar classe sobrescrevendo o q precisa para usar urlRoute
         $this->uploaderClass = urlRoute('/admin/system/service/document/upload');
         $this->fileHandling = false;
         
@@ -86,19 +83,22 @@ class TFile extends TField implements AdiantiWidgetInterface
     {
         $this->placeHolder = $widget;
     }
-    
+
     /**
      * Set field size
+     * @param string $width
+     * @param null $height
      */
-    public function setSize($width, $height = null)
+    public function setSize(string $width)
     {
         $this->size   = $width;
     }
-    
+
     /**
      * Set field height
+     * @param string $height
      */
-    public function setHeight($height)
+    public function setHeight(string $height)
     {
         $this->height = $height;
     }
@@ -113,6 +113,7 @@ class TFile extends TField implements AdiantiWidgetInterface
         if (isset($_POST[$name])) {
             return $_POST[$name];
         }
+        return null;
     }
 
     public function setValue(?string $value)
@@ -222,10 +223,11 @@ class TFile extends TField implements AdiantiWidgetInterface
         
         TScript::create(" tfile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling);");
     }
-    
+
     /**
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
+     * @throws Exception
      */
     public function setCompleteAction(TAction $action)
     {

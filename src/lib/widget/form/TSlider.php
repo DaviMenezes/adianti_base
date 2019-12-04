@@ -20,24 +20,25 @@ class TSlider extends TField implements AdiantiWidgetInterface
     private $min;
     private $max;
     private $step;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
     public function __construct($name)
     {
         parent::__construct($name);
         $this->id   = 'tslider_'.mt_rand(1000000000, 1999999999);
     }
-    
+
     /**
      * Define the field's range
-     * @param $min Minimal value
-     * @param $max Maximal value
-     * @param $step Step value
+     * @param string $min Minimal value
+     * @param string $max Maximal value
+     * @param string $step Step value
      */
-    public function setRange($min, $max, $step)
+    public function setRange(string $min, string $max, string $step)
     {
         $this->min = $min;
         $this->max = $max;

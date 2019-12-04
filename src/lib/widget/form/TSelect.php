@@ -29,11 +29,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
     protected $separator;
     protected $value;
     
-    /**
-     * Class Constructor
-     * @param  $name widget's name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         // executes the parent class constructor
         parent::__construct($name);
@@ -61,12 +57,12 @@ class TSelect extends TField implements AdiantiWidgetInterface
     {
         $this->defaultOption = $option;
     }
-    
+
     /**
      * Add items to the select
-     * @param $items An indexed array containing the combo options
+     * @param array $items An indexed array containing the combo options
      */
-    public function addItems($items)
+    public function addItems(array $items)
     {
         if (is_array($items)) {
             $this->items = $items;
@@ -100,12 +96,12 @@ class TSelect extends TField implements AdiantiWidgetInterface
     {
         return array( $this->size, $this->height );
     }
-    
+
     /**
      * Define the field's separator
-     * @param $sep A string containing the field's separator
+     * @param string $sep A string containing the field's separator
      */
-    public function setValueSeparator($sep)
+    public function setValueSeparator(string $sep)
     {
         $this->separator = $sep;
     }
@@ -140,10 +136,11 @@ class TSelect extends TField implements AdiantiWidgetInterface
             return array();
         }
     }
-    
+
     /**
      * Define the action to be executed when the user changes the combo
      * @param $action TAction object
+     * @throws Exception
      */
     public function setChangeAction(TAction $action)
     {
@@ -162,15 +159,15 @@ class TSelect extends TField implements AdiantiWidgetInterface
     {
         $this->changeFunction = $function;
     }
-    
+
     /**
      * Reload combobox items after it is already shown
-     * @param $formname form name (used in gtk version)
-     * @param $name field name
+     * @param string $formname form name (used in gtk version)
+     * @param string $name field name
      * @param $items array with items
-     * @param $startEmpty ...
+     * @param bool $startEmpty ...
      */
-    public static function reload($formname, $name, $items, $startEmpty = false)
+    public static function reload(string $formname, string $name, array $items, bool $startEmpty = false)
     {
         $code = "tselect_clear('{$formname}', '{$name}'); ";
         if ($startEmpty) {
@@ -214,11 +211,12 @@ class TSelect extends TField implements AdiantiWidgetInterface
     {
         TScript::create(" tselect_clear_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Render items
+     * @param bool $with_titles
      */
-    protected function renderItems($with_titles = true)
+    protected function renderItems(bool $with_titles = true)
     {
         if ($this->defaultOption !== false) {
             // creates an empty <option> tag
@@ -250,8 +248,14 @@ class TSelect extends TField implements AdiantiWidgetInterface
                     $option->add(htmlspecialchars($item));      // add the item label
                     
                     // verify if this option is selected
-                    if ((is_array($this->value)  and @in_array($chave, $this->value)) or
-                         (is_scalar($this->value) and strlen((string) $this->value) > 0 and @in_array($chave, (array) $this->value))) {
+                    if ((is_array($this->value)  and @in_array($chave, $this->value))
+                        or
+                         (
+                             is_scalar($this->value)
+                             and strlen((string) $this->value) > 0
+                             and @in_array($chave, (array) $this->value)
+                         )
+                    ) {
                         // mark as selected
                         $option->{'selected'} = 1;
                     }
@@ -265,9 +269,10 @@ class TSelect extends TField implements AdiantiWidgetInterface
             }
         }
     }
-    
+
     /**
      * Shows the widget
+     * @throws Exception
      */
     public function show()
     {
@@ -281,11 +286,19 @@ class TSelect extends TField implements AdiantiWidgetInterface
         if (parent::getEditable()) {
             if (isset($this->changeAction)) {
                 if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+                    throw new Exception(AdiantiCoreTranslator::translate(
+                        'You must pass the ^1 (^2) as a parameter to ^3',
+                        __CLASS__,
+                        $this->name,
+                        'TForm::setFields()'
+                    ));
                 }
                 
                 $string_action = $this->changeAction->serialize(false);
-                $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
+                $this->setProperty(
+                    'changeaction',
+                    "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')"
+                );
                 $this->setProperty('onChange', $this->getProperty('changeaction'));
             }
             

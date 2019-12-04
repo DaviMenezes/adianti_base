@@ -6,6 +6,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Util\TImage;
+use Adianti\Core\AdiantiCoreTranslator;
 use Adianti\Widget\Form\TField;
 use Exception;
 use ReflectionClass;
@@ -22,6 +23,7 @@ use ReflectionClass;
  */
 class TSeekButton extends TEntry implements AdiantiWidgetInterface
 {
+    /**@var TAction*/
     private $action;
     private $useOutEvent;
     private $button;
@@ -35,8 +37,9 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      * Class Constructor
      * @param string $name name of the field
      * @param string|null $icon
+     * @throws \ReflectionException
      */
-    public function __construct($name, $icon = null)
+    public function __construct(string $name, string $icon = null)
     {
         parent::__construct($name);
         $this->useOutEvent = true;
@@ -47,8 +50,11 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
 
     /**
      * Create seek button object
+     * @param string $name
+     * @param string $icon
+     * @return TElement
      */
-    public static function createButton($name, $icon)
+    public static function createButton(string $name, string $icon)
     {
         $image = new TImage($icon ? $icon : 'fa:search');
         $button = new TElement('span');
@@ -87,7 +93,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
 
     /**
      * Define the action for the SeekButton
-     * @param $action Action taken when the user
+     * @param TAction $action Action taken when the user
      * clicks over the Seek Button (A TAction object)
      */
     public function setAction(TAction $action)
@@ -105,9 +111,9 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
 
     /**
      * Define an auxiliar field
-     * @param $object any TField object
+     * @param object $object any TField object
      */
-    public function setAuxiliar($object)
+    public function setAuxiliar(object $object)
     {
         if (method_exists($object, 'show')) {
             $this->auxiliar = $object;
@@ -150,7 +156,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      */
     public static function enableField(string $form_name, string $field_name)
     {
-        \Adianti\Widget\Base\TScript::create(" tseekbutton_enable_field('{$form_name}', '{$field_name}'); ");
+        TScript::create(" tseekbutton_enable_field('{$form_name}', '{$field_name}'); ");
     }
 
     /**
@@ -166,13 +172,19 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     /**
      * Show the widget
      * @throws \ReflectionException
+     * @throws Exception
      */
     public function show()
     {
         // check if it's not editable
         if (parent::getEditable()) {
             if (!TForm::getFormByName($this->formName) instanceof TForm) {
-                throw new Exception(\Adianti\Core\AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+                throw new Exception(AdiantiCoreTranslator::translate(
+                    'You must pass the ^1 (^2) as a parameter to ^3',
+                    __CLASS__,
+                    $this->name,
+                    'TForm::setFields()'
+                ));
             }
 
             $serialized_action = '';

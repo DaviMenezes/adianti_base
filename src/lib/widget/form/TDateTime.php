@@ -2,8 +2,8 @@
 namespace Adianti\Base\Lib\Widget\Form;
 
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Form\TEntry;
 use DateTime;
+use Exception;
 
 /**
  * DateTimePicker Widget
@@ -24,12 +24,13 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     protected $value;
     protected $options;
     protected $replaceOnPost;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id   = 'tdatetime_' . mt_rand(1000000000, 1999999999);
@@ -54,15 +55,12 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     {
         $value = str_replace('T', ' ', $value);
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
-            return parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));
+            parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));
         } else {
-            return parent::setValue($value);
+            parent::setValue($value);
         }
     }
     
-    /**
-     * Return the post data
-     */
     public function getPostData()
     {
         $value = parent::getPostData();
@@ -73,14 +71,15 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
             return $value;
         }
     }
-    
+
     /**
      * Convert from one mask to another
-     * @param $value original date
-     * @param $fromMask source mask
-     * @param $toMask target mask
+     * @param string $value original date
+     * @param string $fromMask source mask
+     * @param string $toMask target mask
+     * @return false|string
      */
-    public static function convertToMask($value, $fromMask, $toMask)
+    public static function convertToMask(string $value, string $fromMask, string $toMask)
     {
         if ($value) {
             $value = substr($value, 0, strlen($fromMask));
@@ -96,12 +95,13 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         
         return $value;
     }
-    
+
     /**
      * Define the field's mask
-     * @param $mask  Mask for the field (dd-mm-yyyy)
+     * @param string $mask Mask for the field (dd-mm-yyyy)
+     * @param bool $replaceOnPost
      */
-    public function setMask($mask, $replaceOnPost = false)
+    public function setMask(string $mask, bool $replaceOnPost = false)
     {
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
@@ -115,19 +115,22 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         
         parent::setMask($newmask);
     }
-    
+
     /**
      * Set the mask to be used to colect the data
+     * @param string $mask
      */
-    public function setDatabaseMask($mask)
+    public function setDatabaseMask(string $mask)
     {
         $this->dbmask = $mask;
     }
-    
+
     /**
      * Set extra datepicker options (ex: autoclose, startDate, daysOfWeekDisabled, datesDisabled)
+     * @param string $option
+     * @param string $value
      */
-    public function setOption($option, $value)
+    public function setOption(string $option, string $value)
     {
         $this->options[$option] = $value;
     }
@@ -151,13 +154,14 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
     {
         TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Shows the widget at the screen
+     * @throws Exception
      */
     public function show()
     {
-        $js_mask = str_replace('yyyy', 'yy', $this->mask);
+        str_replace('yyyy', 'yy', $this->mask);
         $language = strtolower(LANG);
         $options = json_encode($this->options);
         

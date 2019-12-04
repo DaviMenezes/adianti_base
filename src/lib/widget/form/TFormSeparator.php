@@ -20,13 +20,20 @@ class TFormSeparator extends TElement
     private $fontSize;
     private $header;
     private $divisor;
-    
+
     /**
      * Class Constructor
-     * @param $text Separator title
+     * @param string $text Separator title
+     * @param string $fontColor
+     * @param string $fontSize
+     * @param string $separatorColor
      */
-    public function __construct($text, $fontColor = '#333333', $fontSize = '16', $separatorColor = '#eeeeee')
-    {
+    public function __construct(
+        string $text,
+        string $fontColor = '#333333',
+        string $fontSize = '16',
+        string $separatorColor = '#eeeeee'
+    ) {
         parent::__construct('div');
         
         $this->fontColor = $fontColor;
@@ -48,19 +55,19 @@ class TFormSeparator extends TElement
 
     /**
      * Set font size
-     * @param $size font size
+     * @param string $size font size
      */
-    public function setFontSize($size)
+    public function setFontSize(string $size)
     {
         $this->fontSize = $size;
         $this->header->{'style'} = "font-size: {$this->fontSize}px; color: {$this->fontColor};";
     }
-    
+
     /**
      * Set font color
-     * @param $color font color
+     * @param string $color font color
      */
-    public function setFontColor($color)
+    public function setFontColor(string $color)
     {
         $this->fontColor = $color;
         $this->header->{'style'} = "font-size: {$this->fontSize}px; color: {$this->fontColor};";
@@ -68,9 +75,9 @@ class TFormSeparator extends TElement
 
     /**
      * Set separator color
-     * @param $color separator color
+     * @param string $color separator color
      */
-    public function setSeparatorColor($color)
+    public function setSeparatorColor(string $color)
     {
         $this->separatorColor = $color;
         $this->divisor->{'style'} = "border-top-color: {$this->separatorColor}";

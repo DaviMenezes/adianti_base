@@ -22,10 +22,6 @@ class TTime extends TEntry implements AdiantiWidgetInterface
     protected $options;
     protected $replaceOnPost;
     
-    /**
-     * Class Constructor
-     * @param $name Name of the widget
-     */
     public function __construct($name)
     {
         parent::__construct($name);
@@ -44,12 +40,13 @@ class TTime extends TEntry implements AdiantiWidgetInterface
         parent::setMask($newmask);
         $this->tag->{'widget'} = 'ttime';
     }
-    
+
     /**
      * Define the field's mask
-     * @param $mask  Mask for the field (dd-mm-yyyy)
+     * @param string $mask Mask for the field (dd-mm-yyyy)
+     * @param bool $replaceOnPost
      */
-    public function setMask($mask, $replaceOnPost = false)
+    public function setMask(string $mask, bool $replaceOnPost = false)
     {
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
@@ -88,9 +85,10 @@ class TTime extends TEntry implements AdiantiWidgetInterface
     {
         TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Shows the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {

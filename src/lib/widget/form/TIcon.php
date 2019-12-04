@@ -20,12 +20,13 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
     protected $changeFunction;
     protected $formName;
     protected $name;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = 'ticon_'.mt_rand(1000000000, 1999999999);
@@ -61,6 +62,7 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
 
     /**
      * Shows the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {

@@ -13,16 +13,16 @@ namespace Adianti\Base\Lib\Widget\Form;
  */
 interface AdiantiFormInterface
 {
-    public function setName($name);
+    public function setName(string $name);
     public function getName();
     public function addField(AdiantiWidgetInterface $field);
     public function delField(AdiantiWidgetInterface $field);
-    public function setFields($fields);
-    public function getField($name);
+    public function setFields(array $fields);
+    public function getField(string $name);
     public function getFields();
     public function clear();
     public function setData($object);
-    public function getData($class = 'StdClass');
+    public function getData(string $class = 'StdClass');
     public function validate();
     public function show();
 }

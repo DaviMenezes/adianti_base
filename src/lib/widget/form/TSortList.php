@@ -33,10 +33,11 @@ class TSortList extends TField implements AdiantiWidgetInterface
     protected $width;
     protected $height;
     protected $separator;
-    
+
     /**
      * Class Constructor
      * @param  $name widget's name
+     * @throws \ReflectionException
      */
     public function __construct($name)
     {
@@ -70,10 +71,10 @@ class TSortList extends TField implements AdiantiWidgetInterface
     {
         $this->limit = $limit;
     }
-    
+
     /**
      * Define the item icon
-     * @param $image Item icon
+     * @param TImage $icon
      */
     public function setItemIcon(TImage $icon)
     {
@@ -88,12 +89,12 @@ class TSortList extends TField implements AdiantiWidgetInterface
         $this->width = $width;
         $this->height = $height;
     }
-    
+
     /**
      * Define the field's separator
-     * @param $sep A string containing the field's separator
+     * @param string $sep A string containing the field's separator
      */
-    public function setValueSeparator($sep)
+    public function setValueSeparator(string $sep)
     {
         $this->separator = $sep;
     }
@@ -102,7 +103,7 @@ class TSortList extends TField implements AdiantiWidgetInterface
      * Define the field's value
      * @param string $value An array the field's values
      */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if (!empty($this->separator)) {
             $value = explode($this->separator, $value);
@@ -125,21 +126,21 @@ class TSortList extends TField implements AdiantiWidgetInterface
             $this->valueSet = true;
         }
     }
-    
+
     /**
      * Connect to another list
-     * @param $list Another TSortList
+     * @param TSortList $list Another TSortList
      */
     public function connectTo(TSortList $list)
     {
         $this->connectedTo[] = $list;
     }
-    
+
     /**
      * Add items to the sort list
-     * @param $items An indexed array containing the options
+     * @param array $items An indexed array containing the options
      */
-    public function addItems($items)
+    public function addItems(array $items)
     {
         if (is_array($items)) {
             $this->initialItems += $items;
@@ -220,9 +221,10 @@ class TSortList extends TField implements AdiantiWidgetInterface
     {
         TScript::create(" tsortlist_clear_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Shows the widget at the screen
+     * @throws Exception
      */
     public function show()
     {

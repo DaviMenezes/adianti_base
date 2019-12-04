@@ -63,11 +63,12 @@ class BootstrapFormWrapper implements AdiantiFormInterface
     {
         return $this->element->$property = $value;
     }
-    
+
     /**
      * Set form name
+     * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         return $this->decorated->setName($name);
     }
@@ -95,19 +96,23 @@ class BootstrapFormWrapper implements AdiantiFormInterface
     {
         return $this->decorated->delField($field);
     }
-    
+
     /**
      * Set form fields
+     * @param array $fields
+     * @throws \Exception
      */
-    public function setFields($fields)
+    public function setFields(array $fields)
     {
         return $this->decorated->setFields($fields);
     }
-    
+
     /**
      * Return form field
+     * @param string $name
+     * @return object
      */
-    public function getField($name)
+    public function getField(string $name)
     {
         return $this->decorated->getField($name);
     }
@@ -135,11 +140,14 @@ class BootstrapFormWrapper implements AdiantiFormInterface
     {
         return $this->decorated->setData($object);
     }
-    
+
     /**
      * Get form data
+     * @param string $class
+     * @return mixed
+     * @throws \Exception
      */
-    public function getData($class = 'StdClass')
+    public function getData(string $class = 'StdClass')
     {
         return $this->decorated->getData($class);
     }

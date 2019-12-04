@@ -360,7 +360,6 @@ class TCombo extends TField implements AdiantiWidgetInterface
 
     protected function getTextPlaceholder()
     {
-        $select = AdiantiCoreTranslator::translate('Select');
-        return $select;
+        return AdiantiCoreTranslator::translate('Select');
     }
 }

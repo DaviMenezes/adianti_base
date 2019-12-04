@@ -1,11 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Form\TRadioButton;
 use Exception;
 
 /**
@@ -26,18 +25,13 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     private $breakItems;
     private $buttons;
     private $labels;
-    private $appearance;
     protected $changeFunction;
     protected $formName;
     protected $labelClass;
     protected $useButton;
     protected $is_boolean;
     
-    /**
-     * Class Constructor
-     * @param  $name name of the field
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         parent::setSize(null);
@@ -45,9 +39,10 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
         $this->useButton  = false;
         $this->is_boolean = false;
     }
-    
+
     /**
      * Clone object
+     * @throws \ReflectionException
      */
     public function __clone()
     {
@@ -147,12 +142,13 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
         $this->labelClass = 'btn btn-default ';
         $this->useButton  = true;
     }
-    
+
     /**
      * Add items to the radio group
-     * @param $items An indexed array containing the options
+     * @param array $items An indexed array containing the options
+     * @throws \ReflectionException
      */
-    public function addItems($items)
+    public function addItems(array $items)
     {
         if (is_array($items)) {
             $this->items = $items;
@@ -193,10 +189,11 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     {
         return $this->labels;
     }
-    
+
     /**
      * Define the action to be executed when the user changes the combo
      * @param $action TAction object
+     * @throws Exception
      */
     public function setChangeAction(TAction $action)
     {
@@ -245,9 +242,10 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     {
         TScript::create(" tradiogroup_clear_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Show the widget at the screen
+     * @throws Exception
      */
     public function show()
     {

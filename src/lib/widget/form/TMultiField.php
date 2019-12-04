@@ -32,11 +32,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     protected $name;
     protected $formName;
     
-    /**
-     * Class Constructor
-     * @param $name Name of the widget
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         // define some default properties
         self::setEditable(true);
@@ -55,13 +51,13 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     {
         $this->orientation = $orientation;
     }
-    
+
     /**
      * Define the name of the form to wich the multifield is attached
-     * @param $name    A string containing the name of the form
+     * @param string $name A string containing the name of the form
      * @ignore-autocomplete on
      */
-    public function setFormName($name)
+    public function setFormName(string $name)
     {
         parent::setFormName($name);
         
@@ -72,16 +68,16 @@ class TMultiField extends TField implements AdiantiWidgetInterface
             }
         }
     }
-    
+
     /**
      * Add a field to the MultiField
-     * @param $name      Widget's name
-     * @param $text      Widget's label
-     * @param $object    Widget
-     * @param $size      Widget's size
-     * @param $mandatory Mandatory field
+     * @param string $name Widget's name
+     * @param string $text Widget's label
+     * @param TField $object Widget
+     * @param int $size Widget's size
+     * @param bool $mandatory Mandatory field
      */
-    public function addField($name, $text, TField $object, $size, $mandatory = false)
+    public function addField(string $name, string $text, TField $object, int $size, bool $mandatory = false)
     {
         $obj = new StdClass;
         $obj-> name      = $name;
@@ -96,19 +92,19 @@ class TMultiField extends TField implements AdiantiWidgetInterface
             $this->width += 20;
         }
     }
-    
+
     /**
      * Define the class for the Active Records returned by this component
-     * @param $class Class Name
+     * @param string $class Class Name
      */
-    public function setClass($class)
+    public function setClass(string $class)
     {
         $this->className = $class;
     }
     
     /**
      * Returns the class defined by the setClass() method
-     * @return the class for the Active Records returned by this component
+     * @return string the class for the Active Records returned by this component
      */
     public function getClass()
     {
@@ -187,12 +183,12 @@ class TMultiField extends TField implements AdiantiWidgetInterface
             return '';
         }
     }
-    
+
     /**
      * Define the MultiField height
-     * @param $height Height in pixels
+     * @param string $height Height in pixels
      */
-    public function setHeight($height)
+    public function setHeight(string $height)
     {
         $this->height = $height;
     }
@@ -226,9 +222,10 @@ class TMultiField extends TField implements AdiantiWidgetInterface
     {
         TScript::create(" tmultifield_clear_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Show the widget at the screen
+     * @throws \ReflectionException
      */
     public function show()
     {

@@ -1,9 +1,6 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
-use Adianti\Base\Lib\Widget\Form\TField;
-
 /**
  * CheckButton widget
  *
@@ -17,13 +14,13 @@ use Adianti\Base\Lib\Widget\Form\TField;
 class TCheckButton extends TField implements AdiantiWidgetInterface
 {
     private $indexValue;
-    
+
     /**
      * Define the index value for check button
-     * @index Index value
+     * @param string $index
      */
-    public function setIndexValue($index)
-    {        
+    public function setIndexValue(string $index)
+    {
         $this->indexValue = $index;
     }
     
@@ -39,14 +36,12 @@ class TCheckButton extends TField implements AdiantiWidgetInterface
         $this->tag->{'class'} = '';
         
         // compare current value with indexValue
-        if ($this->indexValue == $this->value AND !(is_null($this->value)) AND strlen((string) $this->value) > 0)
-        {
+        if ($this->indexValue == $this->value and !(is_null($this->value)) and strlen((string) $this->value) > 0) {
             $this->tag->{'checked'} = '1';
         }
         
         // check whether the widget is non-editable
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             // make the widget read-only
             //$this->tag-> disabled   = "1"; // the value don't post
             $this->tag->{'onclick'} = "return false;";

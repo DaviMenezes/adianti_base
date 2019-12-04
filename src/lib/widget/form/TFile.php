@@ -114,11 +114,12 @@ class TFile extends TField implements AdiantiWidgetInterface
             return $_POST[$name];
         }
     }
-    
+
     /**
      * Set field value
+     * @param string $value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         if ($this->fileHandling) {
             if (strpos($value, '%7B') === false) {
@@ -239,34 +240,34 @@ class TFile extends TField implements AdiantiWidgetInterface
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create(" tfile_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create(" tfile_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
         TScript::create(" tfile_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create(" tfile_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create(" tfile_clear_field('{$form_name}', '{$field_name}'); ");
     }
 }

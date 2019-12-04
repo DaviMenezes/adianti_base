@@ -49,13 +49,11 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         $this->max = $max;
         $this->step = $step;
         
-        if ($step == 0)
-        {
+        if ($step == 0) {
             throw new Exception(AdiantiCoreTranslator::translate('Invalid parameter (^1) in ^2', $step, 'setRange'));
         }
         
-        if (is_int($step) AND $this->getValue() % $step !== 0)
-        {
+        if (is_int($step) and $this->getValue() % $step !== 0) {
             parent::setValue($min);
         }
     }
@@ -64,14 +62,11 @@ class TSpinner extends TField implements AdiantiWidgetInterface
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
      */
-    function setExitAction(TAction $action)
+    public function setExitAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->exitAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -80,21 +75,21 @@ class TSpinner extends TField implements AdiantiWidgetInterface
     /**
      * Enable the field
      * @param $form_name Form name
-     * @param $field Field name
+     * @param $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField($form_name, $field_name)
     {
-        TScript::create( " tspinner_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tspinner_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tspinner_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tspinner_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -115,34 +110,27 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         $this->tag->{'value'} = $this->value;   // TAG value
         $this->tag->{'type'}  = 'text';         // input type
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
             $this->setProperty('relwidth', "{$this->size}", false); //aggregate style info
-        }
-        else
-        {
+        } else {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
         }
         
-        if ($this->id)
-        {
+        if ($this->id) {
             $this->tag->{'id'}  = $this->id;
         }
         
         $exit_action = 'function() {}';
-        if (isset($this->exitAction))
-        {
-            if (!TForm::getFormByName($this->formName) instanceof TForm)
-            {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
-            }            
-            $string_action = $this->exitAction->serialize(FALSE);
+        if (isset($this->exitAction)) {
+            if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
+            }
+            $string_action = $this->exitAction->serialize(false);
             $exit_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}' ) }";
         }
         
-        if (isset($this->exitFunction))
-        {
+        if (isset($this->exitFunction)) {
             $exit_action = "function() { {$this->exitFunction} }";
         }
         
@@ -152,17 +140,17 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         TScript::create(" tspinner_start( '#{$this->id}', '{$this->value}', '{$this->min}', '{$this->max}', '{$this->step}', $exit_action); ");
         
         // verify if the widget is non-editable
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             self::disableField($this->formName, $this->name);
         }
     }
-    
+
     /**
      * Set the value
+     * @param string $value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
-        parent::setValue( (float) $value);
+        parent::setValue((float) $value);
     }
 }

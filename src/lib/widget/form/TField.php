@@ -30,24 +30,24 @@ abstract class TField
     protected $tag;
     protected $formName;
     protected $label;
-    private   $validations;
-    
+    private $validations;
+
     /**
      * Class Constructor
-     * @param  $name name of the field
+     * @param string $name name of the field
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $rc = new ReflectionClass( $this );
+        $rc = new ReflectionClass($this);
         $classname = $rc->getShortName();
         
-        if (empty($name))
-        {
+        if (empty($name)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 constructor is required', 'name', $classname));
         }
         
         // define some default properties
-        self::setEditable(TRUE);
+        self::setEditable(true);
         self::setName(trim($name));
         
         // initialize validations array
@@ -67,8 +67,7 @@ abstract class TField
     public function __set($name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value))
-        {              
+        if (is_scalar($value)) {
             // store the property's value
             $this->setProperty($name, $value);
         }
@@ -86,7 +85,7 @@ abstract class TField
     /**
      * Clone the object
      */
-    function __clone()
+    public function __clone()
     {
         $this->tag = clone $this->tag;
     }
@@ -98,21 +97,18 @@ abstract class TField
      */
     public function __call($method, $param)
     {
-        if (method_exists($this->tag, $method))
-        {
-            return call_user_func_array( array($this->tag, $method), $param );
-        }
-        else
-        {
+        if (method_exists($this->tag, $method)) {
+            return call_user_func_array(array($this->tag, $method), $param);
+        } else {
             throw new Exception(AdiantiCoreTranslator::translate("Method ^1 not found", $method.'()'));
         }
     }
-    
+
     /**
      * Define the field's label
-     * @param $label   A string containing the field's label
+     * @param string $label A string containing the field's label
      */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
         $this->label = $label;
     }
@@ -158,12 +154,12 @@ abstract class TField
     {
         return $this->id;
     }
-    
+
     /**
      * Define the field's value
-     * @param $value A string containing the field's value
+     * @param string $value A string containing the field's value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         $this->value = $value;
     }
@@ -208,68 +204,59 @@ abstract class TField
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name]))
-        {
+        if (isset($_POST[$this->name])) {
             return $_POST[$this->name];
-        }
-        else
-        {
+        } else {
             return '';
         }
     }
-    
+
     /**
      * Define if the field is editable
-     * @param $editable A boolean
+     * @param bool $editable A boolean
      */
-    public function setEditable($editable)
+    public function setEditable(bool $editable)
     {
         $this->editable= $editable;
     }
 
     /**
      * Returns if the field is editable
-     * @return A boolean
+     * @return bool A boolean
      */
     public function getEditable()
     {
         return $this->editable;
     }
-    
+
     /**
      * Define a field property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @param string $value Property Value
+     * @param bool $replace
      */
-    public function setProperty($name, $value, $replace = TRUE)
+    public function setProperty(string $name, string $value, bool $replace = true)
     {
-        if ($replace)
-        {
+        if ($replace) {
             // delegates the property assign to the composed object
             $this->tag->$name = $value;
-        }
-        else
-        {
-            if ($this->tag->$name)
-            {
-            
+        } else {
+            if ($this->tag->$name) {
                 // delegates the property assign to the composed object
                 $this->tag->$name = $this->tag->$name . ';' . $value;
-            }
-            else
-            {
+            } else {
                 // delegates the property assign to the composed object
                 $this->tag->$name = $value;
             }
         }
     }
-    
+
     /**
      * Return a field property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @return mixed
      */
-    public function getProperty($name)
+    public function getProperty(string $name)
     {
         return $this->tag->$name;
     }
@@ -278,7 +265,7 @@ abstract class TField
      * Define the Field's width
      * @param $width Field's width in pixels
      */
-    public function setSize($width, $height = NULL)
+    public function setSize($width, $height = null)
     {
         //Todo Dvi-custom
         $sufix = strstr($width, '%') === false ? 'px' : '';
@@ -299,7 +286,7 @@ abstract class TField
      * @param $validator TFieldValidator object
      * @param $parameters Aditional parameters
      */
-    public function addValidation($label, TFieldValidator $validator, $parameters = NULL)
+    public function addValidation($label, TFieldValidator $validator, $parameters = null)
     {
         $this->validations[] = array($label, $validator, $parameters);
     }
@@ -317,18 +304,15 @@ abstract class TField
      */
     public function isRequired()
     {
-        if ($this->validations)
-        {
-            foreach ($this->validations as $validation)
-            {
+        if ($this->validations) {
+            foreach ($this->validations as $validation) {
                 $validator = $validation[1];
-                if ($validator instanceof TRequiredValidator)
-                {
-                    return TRUE;
+                if ($validator instanceof TRequiredValidator) {
+                    return true;
                 }
             }
         }
-        return FALSE;
+        return false;
     }
     
     /**
@@ -336,10 +320,8 @@ abstract class TField
      */
     public function validate()
     {
-        if ($this->validations)
-        {
-            foreach ($this->validations as $validation)
-            {
+        if ($this->validations) {
+            foreach ($this->validations as $validation) {
                 $label      = $validation[0];
                 $validator  = $validation[1];
                 $parameters = $validation[2];
@@ -360,34 +342,34 @@ abstract class TField
         ob_end_clean();
         return $content;
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tfield_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfield_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tfield_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfield_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create( " tfield_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tfield_clear_field('{$form_name}', '{$field_name}'); ");
     }
 }

@@ -1,15 +1,10 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
-use Adianti\Base\Lib\Widget\Form\AdiantiWidgetInterface;
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
-use Adianti\Base\Lib\Widget\Form\TForm;
-use Adianti\Base\Lib\Widget\Form\TLabel;
-use Adianti\Base\Lib\Widget\Form\TField;
-use Adianti\Base\Lib\Widget\Form\TCheckButton;
-
 use Exception;
 
 /**
@@ -25,6 +20,7 @@ use Exception;
 class TCheckGroup extends TField implements AdiantiWidgetInterface
 {
     private $layout = 'vertical';
+    /**@var TAction*/
     private $changeAction;
     private $items;
     private $breakItems;
@@ -37,17 +33,13 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     protected $labelClass;
     protected $useButton;
     protected $value;
-    
-    /**
-     * Class Constructor
-     * @param  $name name of the field
-     */
-    public function __construct($name)
+
+    public function __construct(string $name)
     {
         parent::__construct($name);
-        parent::setSize(NULL);
+        parent::setSize(null);
         $this->labelClass = 'tcheckgroup_label ';
-        $this->useButton  = FALSE;
+        $this->useButton  = false;
     }
     
     /**
@@ -55,14 +47,12 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
      */
     public function __clone()
     {
-        if (is_array($this->items))
-        {
+        if (is_array($this->items)) {
             $oldbuttons = $this->buttons;
             $this->buttons = array();
             $this->labels  = array();
 
-            foreach ($this->items as $key => $value)
-            {
+            foreach ($this->items as $key => $value) {
                 $button = new TCheckButton("{$this->name}[]");
                 $button->setProperty('checkgroup', $this->name);
                 $button->setIndexValue($key);
@@ -80,16 +70,16 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
      */
     public function checkAll()
     {
-        $this->allItemsChecked = TRUE;
+        $this->allItemsChecked = true;
     }
-    
+
     /**
      * Define the direction of the options
-     * @param $direction String (vertical, horizontal)
+     * @param string $direction String (vertical, horizontal)
      */
-    public function setLayout($dir)
+    public function setLayout(string $direction)
     {
-        $this->layout = $dir;
+        $this->layout = $direction;
     }
     
     /**
@@ -113,24 +103,23 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
      */
     public function setUseButton()
     {
-       $this->labelClass = 'btn btn-default ';
-       $this->useButton  = TRUE;
+        $this->labelClass = 'btn btn-default ';
+        $this->useButton  = true;
     }
-    
+
     /**
      * Add items to the check group
-     * @param $items An indexed array containing the options
+     * @param array $items An indexed array containing the options
+     * @throws \ReflectionException
      */
-    public function addItems($items)
+    public function addItems(array $items)
     {
-        if (is_array($items))
-        {
+        if (is_array($items)) {
             $this->items = $items;
             $this->buttons = array();
             $this->labels  = array();
 
-            foreach ($items as $key => $value)
-            {
+            foreach ($items as $key => $value) {
                 $button = new TCheckButton("{$this->name}[]");
                 $button->setProperty('checkgroup', $this->name);
                 $button->setIndexValue($key);
@@ -165,30 +154,26 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     {
         return $this->labels;
     }
-    
+
     /**
      * Define the field's separator
-     * @param $sep A string containing the field's separator
+     * @param string $separator A string containing the field's separator
      */
-    public function setValueSeparator($sep)
+    public function setValueSeparator(string $separator)
     {
-        $this->separator = $sep;
+        $this->separator = $separator;
     }
-    
+
     /**
      * Define the field's value
-     * @param $value A string containing the field's value
+     * @param string $value A string containing the field's value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
-        if (empty($this->separator))
-        {
+        if (empty($this->separator)) {
             $this->value = $value;
-        }
-        else
-        {
-            if ($value)
-            {
+        } else {
+            if ($value) {
                 $this->value = explode($this->separator, $value);
             }
         }
@@ -199,35 +184,27 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
      */
     public function getPostData()
     {
-        if (isset($_POST[$this->name]))
-        {
-            if (empty($this->separator))
-            {
+        if (isset($_POST[$this->name])) {
+            if (empty($this->separator)) {
                 return $_POST[$this->name];
-            }
-            else
-            {
+            } else {
                 return implode($this->separator, $_POST[$this->name]);
             }
-        }
-        else
-        {
+        } else {
             return array();
         }
     }
-    
+
     /**
      * Define the action to be executed when the user changes the combo
-     * @param $action TAction object
+     * @param TAction $action object
+     * @throws Exception
      */
     public function setChangeAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->changeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
@@ -240,35 +217,35 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
     {
         $this->changeFunction = $function;
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tcheckgroup_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcheckgroup_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tcheckgroup_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcheckgroup_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create( " tcheckgroup_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcheckgroup_clear_field('{$form_name}', '{$field_name}'); ");
     }
     
     /**
@@ -276,27 +253,23 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
      */
     public function show()
     {
-        if ($this->useButton)
-        {
+        if ($this->useButton) {
             echo '<div data-toggle="buttons">';
             echo '<div class="btn-group" style="clear:both;float:left">';
         }
         
-        if ($this->items)
-        {
+        if ($this->items) {
             // iterate the checkgroup options
             $i = 0;
-            foreach ($this->items as $index => $label)
-            {
+            foreach ($this->items as $index => $label) {
                 $button = $this->buttons[$index];
                 $button->setName($this->name.'[]');
-                $active = FALSE;
+                $active = false;
                 
                 // verify if the checkbutton is checked
-                if ((@in_array($index, $this->value) AND !(is_null($this->value))) OR $this->allItemsChecked)
-                {
+                if ((@in_array($index, $this->value) and !(is_null($this->value))) or $this->allItemsChecked) {
                     $button->setValue($index); // value=indexvalue (checked)
-                    $active = TRUE;
+                    $active = true;
                 }
                 
                 // create the label for the button
@@ -304,35 +277,28 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                 $obj->{'class'} = $this->labelClass . ($active?'active':'');
                 $obj->setTip($this->tag->title);
                 
-                if ($this->getSize() AND !$obj->getSize())
-                {
+                if ($this->getSize() and !$obj->getSize()) {
                     $obj->setSize($this->getSize());
                 }
                 
                 // check whether the widget is non-editable
-                if (parent::getEditable())
-                {
-                    if (isset($this->changeAction))
-                    {
-                        if (!TForm::getFormByName($this->formName) instanceof TForm)
-                        {
-                            throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+                if (parent::getEditable()) {
+                    if (isset($this->changeAction)) {
+                        if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                            throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                         }
-                        $string_action = $this->changeAction->serialize(FALSE);
+                        $string_action = $this->changeAction->serialize(false);
                         
                         $button->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', this, 'callback')");
-                        $button->setProperty('onChange', $button->getProperty('changeaction'), FALSE);
+                        $button->setProperty('onChange', $button->getProperty('changeaction'), false);
                     }
                     
-                    if (isset($this->changeFunction))
-                    {
-                        $button->setProperty('changeaction', $this->changeFunction, FALSE);
-                        $button->setProperty('onChange', $this->changeFunction, FALSE);
+                    if (isset($this->changeFunction)) {
+                        $button->setProperty('changeaction', $this->changeFunction, false);
+                        $button->setProperty('onChange', $this->changeFunction, false);
                     }
-                }
-                else
-                {
-                    $button->setEditable(FALSE);
+                } else {
+                    $button->setEditable(false);
                     $obj->setFontColor('gray');
                 }
                 
@@ -340,16 +306,12 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                 $obj->show();
                 $i ++;
                 
-                if ($this->layout == 'vertical' OR ($this->breakItems == $i))
-                {
+                if ($this->layout == 'vertical' or ($this->breakItems == $i)) {
                     $i = 0;
-                    if ($this->useButton)
-                    {
-                       echo '</div>';
-                       echo '<div class="btn-group" style="clear:both;float:left">';
-                    }
-                    else
-                    {
+                    if ($this->useButton) {
+                        echo '</div>';
+                        echo '<div class="btn-group" style="clear:both;float:left">';
+                    } else {
                         // shows a line break
                         $br = new TElement('br');
                         $br->show();
@@ -359,8 +321,7 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
             }
         }
         
-        if ($this->useButton)
-        {
+        if ($this->useButton) {
             echo '</div>';
             echo '</div>';
         }

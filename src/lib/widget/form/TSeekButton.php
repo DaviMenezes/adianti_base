@@ -146,19 +146,19 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
     /**
      * Enable the field
      * @param string $form_name Form name
-     * @param string $field Field name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        \Adianti\Widget\Base\TScript::create(" tseekbutton_enable_field('{$form_name}', '{$field}'); ");
+        \Adianti\Widget\Base\TScript::create(" tseekbutton_enable_field('{$form_name}', '{$field_name}'); ");
     }
 
     /**
      * Disable the field
      * @param string $form_name Form name
-     * @param string $field Field name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
         TScript::create(" tseekbutton_disable_field('{$form_name}', '{$field}'); ");
     }

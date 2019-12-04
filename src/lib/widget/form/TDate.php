@@ -47,8 +47,9 @@ class TDate extends Varchar implements AdiantiWidgetInterface
     
     /**
      * Store the value inside the object
+     * @param string $value
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
             return parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));
@@ -156,23 +157,23 @@ class TDate extends Varchar implements AdiantiWidgetInterface
             return "{$day}/{$mon}/{$year}";
         }
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create(" tdate_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create(" tdate_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
         TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
     }

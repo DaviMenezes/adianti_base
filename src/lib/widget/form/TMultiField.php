@@ -115,11 +115,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
         return $this->className;
     }
 
-    /**
-     * Define the MultiField content
-     * @param string $objects A Collection of Active Records
-     */
-    public function setValue(string $objects)
+    public function setValue(?string $objects)
     {
         $this->objects = $objects;
         

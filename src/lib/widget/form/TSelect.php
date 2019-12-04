@@ -110,11 +110,7 @@ class TSelect extends TField implements AdiantiWidgetInterface
         $this->separator = $sep;
     }
 
-    /**
-     * Define the field's value
-     * @param string $value A string containing the field's value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if (empty($this->separator)) {
             $this->value = $value;

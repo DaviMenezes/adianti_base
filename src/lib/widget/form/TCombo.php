@@ -59,11 +59,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
                            '2' => AdiantiCoreTranslator::translate('No') ]);
     }
 
-    /**
-     * Define the field's value
-     * @param string $value A string containing the field's value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if ($this->is_boolean) {
             $this->value = $value ? '1' : '2';

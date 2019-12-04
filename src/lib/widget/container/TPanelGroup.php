@@ -42,10 +42,10 @@ class TPanelGroup extends TElement
 
     /**
      * Constructor method
-     * @param string $title Panel Title
-     * @param string $background
+     * @param string|object|null $title Panel Title
+     * @param string|null $background
      */
-    public function __construct(string $title = null, string $background = null)
+    public function __construct($title = null, string $background = null)
     {
         parent::__construct('div');
         $this->{'class'} = 'panel panel-default';

@@ -80,11 +80,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
         $this->replaceOnPost = $replaceOnPost;
     }
 
-    /**
-     * Define the field's value
-     * @param string $value A string containing the field's value
-     */
-    public function setValue(string $value)
+   public function setValue(?string $value)
     {
         if ($this->replaceOnPost) {
             if ($this->numericMask && is_numeric($value)) {

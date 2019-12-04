@@ -127,7 +127,7 @@ class TButton extends TField implements AdiantiWidgetInterface
      * @param string $value Property Value
      * @param bool $replace
      */
-    public function setProperty(string $name, string $value, bool $replace = true)
+    public function setProperty(string $name, ?string $value, bool $replace = true)
     {
         $this->properties[$name] = $value;
     }

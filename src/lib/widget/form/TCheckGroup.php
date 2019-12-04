@@ -124,7 +124,7 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
                 $button->setProperty('checkgroup', $this->name);
                 $button->setIndexValue($key);
 
-                $obj = new TLabel($value);
+                $obj = new TLabel($this->getValueLabel($value));
                 $this->buttons[$key] = $button;
                 $this->labels[$key] = $obj;
             }
@@ -166,9 +166,9 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
 
     /**
      * Define the field's value
-     * @param string $value A string containing the field's value
+     * @param string|null $value A string containing the field's value
      */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if (empty($this->separator)) {
             $this->value = $value;
@@ -325,5 +325,10 @@ class TCheckGroup extends TField implements AdiantiWidgetInterface
             echo '</div>';
             echo '</div>';
         }
+    }
+
+    private function getValueLabel($value)
+    {
+        return is_object($value) ? $value->label : $value;
     }
 }

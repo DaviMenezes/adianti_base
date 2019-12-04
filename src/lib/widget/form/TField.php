@@ -159,7 +159,7 @@ abstract class TField
      * Define the field's value
      * @param string $value A string containing the field's value
      */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         $this->value = $value;
     }
@@ -231,11 +231,11 @@ abstract class TField
 
     /**
      * Define a field property
-     * @param string $name Property Name
-     * @param string $value Property Value
+     * @param string $name
+     * @param string|null $value
      * @param bool $replace
      */
-    public function setProperty(string $name, string $value, bool $replace = true)
+    public function setProperty(string $name, ?string $value, bool $replace = true)
     {
         if ($replace) {
             // delegates the property assign to the composed object

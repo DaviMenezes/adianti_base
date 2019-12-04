@@ -28,11 +28,7 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tuniquesearch';
     }
 
-    /**
-     * Set value
-     * @param string $value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         $this->value = $value; // avoid use parent::setValue() because compat mode
     }

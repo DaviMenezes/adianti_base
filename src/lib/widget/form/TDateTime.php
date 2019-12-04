@@ -50,11 +50,7 @@ class TDateTime extends TEntry implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tdatetime';
     }
 
-    /**
-     * Store the value inside the object
-     * @param string $value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         $value = str_replace('T', ' ', $value);
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {

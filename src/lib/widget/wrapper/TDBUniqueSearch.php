@@ -39,11 +39,7 @@ class TDBUniqueSearch extends TDBMultiSearch implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tdbuniquesearch';
     }
 
-    /**
-     * Define the field's value
-     * @param string $value Current value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if ($value) {
             TTransaction::open($this->database);

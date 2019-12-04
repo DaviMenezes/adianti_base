@@ -134,7 +134,7 @@ class TMultiSearch extends TSelect implements AdiantiWidgetInterface
      * Define the field's value
      * @param string $value A string containing the field's value
      */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         $ini = AdiantiApplicationConfig::get();
         

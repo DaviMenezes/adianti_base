@@ -98,11 +98,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         }
     }
 
-    /**
-     * Set field value
-     * @param string $value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         if ($this->fileHandling) {
             if (is_array($value)) {

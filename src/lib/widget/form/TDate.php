@@ -45,11 +45,7 @@ class TDate extends Varchar implements AdiantiWidgetInterface
         $this->tag->{'widget'} = 'tdate';
     }
     
-    /**
-     * Store the value inside the object
-     * @param string $value
-     */
-    public function setValue(string $value)
+   public function setValue(?string $value)
     {
         if (!empty($this->dbmask) and ($this->mask !== $this->dbmask)) {
             return parent::setValue(self::convertToMask($value, $this->dbmask, $this->mask));

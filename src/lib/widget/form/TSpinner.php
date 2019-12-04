@@ -145,11 +145,7 @@ class TSpinner extends TField implements AdiantiWidgetInterface
         }
     }
 
-    /**
-     * Set the value
-     * @param string $value
-     */
-    public function setValue(string $value)
+    public function setValue(?string $value)
     {
         parent::setValue((float) $value);
     }

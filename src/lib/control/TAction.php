@@ -123,10 +123,11 @@ class TAction
     {
         return $this->properties[$property];
     }
-    
+
     /**
      * Prepare action for use over an object
-     * @param $object Data Object
+     * @param object $object Data Object
+     * @return TAction
      */
     public function prepare($object)
     {

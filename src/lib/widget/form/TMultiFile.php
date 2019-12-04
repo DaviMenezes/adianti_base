@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Exception;
+use ReflectionException;
 
 /**
  * FileChooser widget
@@ -28,21 +29,23 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     protected $extensions;
     protected $seed;
     protected $fileHandling;
-    
+
     /**
      * Constructor method
-     * @param $name input name
+     * @param string $name input name
+     * @throws ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
         $this->height = 25;
+        //Todo criar classe especifica para sobrescrever o uso de urlRoute
         $this->uploaderClass = urlRoute('/admin/system/service/document/upload');
-        $this->fileHandling = FALSE;
+        $this->fileHandling = false;
         
         $ini = AdiantiApplicationConfig::get();
-        $this->seed = APPLICATION_NAME . ( !empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094' );
+        $this->seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
     }
     
     /**
@@ -67,13 +70,13 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
      */
     public function enableFileHandling()
     {
-        $this->fileHandling = TRUE;
+        $this->fileHandling = true;
     }
     
     /**
      * Set field size
      */
-    public function setSize($width, $height = NULL)
+    public function setSize($width, $height = null)
     {
         $this->size   = $width;
     }
@@ -93,46 +96,31 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
     {
         $name = str_replace(['[',']'], ['',''], $this->name);
         
-        if (isset($_POST[$name]))
-        {
+        if (isset($_POST[$name])) {
             return $_POST[$name];
         }
+        return null;
     }
-    
-    /**
-     * Set field value
-     */
-    public function setValue($value)
+
+    public function setValue(?string $value)
     {
-        if ($this->fileHandling)
-        {
-            if (is_array($value))
-            {
+        if ($this->fileHandling) {
+            if (is_array($value)) {
                 $new_value = [];
                 
-                foreach ($value as $key => $item)
-                {
-                    if (is_array($item))
-                    {
+                foreach ($value as $key => $item) {
+                    if (is_array($item)) {
                         $new_value[] = urlencode(json_encode($item));
-                    }
-                    else if (is_scalar($item) and (strpos($item, '%7B') === false))
-                    {
-                        if (!empty($item))
-                        {
+                    } elseif (is_scalar($item) and (strpos($item, '%7B') === false)) {
+                        if (!empty($item)) {
                             $new_value[] = urlencode(json_encode(['idFile'=>$key,'fileName'=>$item]));
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $value_object = json_decode(urldecode($item));
                         
-                        if (!empty($value_object->{'delFile'}) AND $value_object->{'delFile'} == $value_object->{'fileName'})
-                        {
+                        if (!empty($value_object->{'delFile'}) and $value_object->{'delFile'} == $value_object->{'fileName'}) {
                             $value = '';
-                        }
-                        else
-                        {
+                        } else {
                             $new_value[] = $item;
                         }
                     }
@@ -141,9 +129,7 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
             }
             
             parent::setValue($value);
-        }
-        else
-        {            
+        } else {
             parent::setValue($value);
         }
     }
@@ -161,33 +147,25 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $this->tag->{'type'}      = 'file';       // input type
         $this->tag->{'multiple'}  = '1';
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $this->setProperty('style', "width:{$this->size};height:{$this->height}", false); //aggregate style info
-        }
-        else
-        {
+        } else {
             $this->setProperty('style', "width:{$this->size}px;height:{$this->height}px", false); //aggregate style info
         }
         
         $complete_action = "'undefined'";
         
         // verify if the widget is editable
-        if (parent::getEditable())
-        {
-            if (isset($this->completeAction))
-            {
-                if (!TForm::getFormByName($this->formName) instanceof TForm)
-                {
-                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if (parent::getEditable()) {
+            if (isset($this->completeAction)) {
+                if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                    throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
                 }
-                $string_action = $this->completeAction->serialize(FALSE);
+                $string_action = $this->completeAction->serialize(false);
                 
                 $complete_action = "function() { __adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->tag-> id}', 'callback'); }";
             }
-        }
-        else
-        {
+        } else {
             // make the field read-only
             $this->tag->{'readonly'} = "1";
             $this->tag->{'type'}     = 'text';
@@ -200,24 +178,20 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
         $div->{'style'} = "width:{$this->size}px;";
         $div->{'id'}    = 'div_file_'.$id_div;
         
-        foreach( (array)$this->value as $val )
-        {
+        foreach ((array)$this->value as $val) {
             $hdFileName = new THidden($this->name.'[]');
-            $hdFileName->setValue( $val );
+            $hdFileName->setValue($val);
             
-            $div->add( $hdFileName );
+            $div->add($hdFileName);
         }
                 
-        $div->add( $this->tag );
+        $div->add($this->tag);
         $div->show();
         
-        if (empty($this->extensions))
-        {
+        if (empty($this->extensions)) {
 //          //Todo remover apos teste  $action = "engine.php?class={$this->uploaderClass}";
             $action = route($this->uploaderClass).'&static=1';
-        }
-        else
-        {
+        } else {
             $hash = md5("{$this->seed}{$this->name}".base64_encode(serialize($this->extensions)));
 //          //Todo remover apos testes  $action = "engine.php?class={$this->uploaderClass}&name={$this->name}&hash={$hash}&extensions=".base64_encode(serialize($this->extensions));
             $action = route($this->uploaderClass)."/name/$this->name/hash/$hash/extensions/".base64_encode(serialize($this->extensions));
@@ -232,46 +206,43 @@ class TMultiFile extends TField implements AdiantiWidgetInterface
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
      */
-    function setCompleteAction(TAction $action)
+    public function setCompleteAction(TAction $action)
     {
-        if ($action->isStatic())
-        {
+        if ($action->isStatic()) {
             $this->completeAction = $action;
-        }
-        else
-        {
+        } else {
             $string_action = $action->toString();
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tmultifile_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultifile_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tmultifile_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultifile_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create( " tmultifile_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tmultifile_clear_field('{$form_name}', '{$field_name}'); ");
     }
 }

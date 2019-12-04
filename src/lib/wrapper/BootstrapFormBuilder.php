@@ -135,13 +135,13 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         return $this->decorated->$property = $value;
     }
-    
+
     /**
      * Define a style property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @param string $value Property Value
      */
-    public function setProperty($name, $value)
+    public function setProperty(string $name, string $value)
     {
         $this->properties[$name] = $value;
     }
@@ -155,12 +155,12 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         $this->header_properties[$name] = $value;
     }
-    
+
     /**
      * Set form name
-     * @param $name Form name
+     * @param string $name Form name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         return $this->decorated->setName($name);
     }
@@ -190,21 +190,23 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         return $this->decorated->delField($field);
     }
-    
+
     /**
      * Set form fields
-     * @param $fields Array of Form fields
+     * @param array $fields Array of Form fields
+     * @throws Exception
      */
-    public function setFields($fields)
+    public function setFields(array $fields)
     {
         return $this->decorated->setFields($fields);
     }
-    
+
     /**
      * Return form field
-     * @param $name Field name
+     * @param string $name Field name
+     * @return object
      */
-    public function getField($name)
+    public function getField(string $name)
     {
         return $this->decorated->getField($name);
     }
@@ -233,12 +235,14 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     {
         return $this->decorated->setData($object);
     }
-    
+
     /**
      * Get form data
-     * @param $class Object type of return data
+     * @param string $class Object type of return data
+     * @return mixed
+     * @throws Exception
      */
-    public function getData($class = 'StdClass')
+    public function getData(string $class = 'StdClass')
     {
         return $this->decorated->getData($class);
     }

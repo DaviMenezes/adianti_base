@@ -21,13 +21,13 @@ class TDataGridActionGroup
     private $label;
     private $icon;
     private $index;
-    
+
     /**
      * Constructor
-     * @param $label Action Group label
-     * @param $icon  Action Group icon
+     * @param string $label Action Group label
+     * @param string $icon Action Group icon
      */
-    public function __construct( $label, $icon = NULL)
+    public function __construct(string $label, string $icon = null)
     {
         $this->index = 0;
         $this->actions = array();
@@ -66,17 +66,17 @@ class TDataGridActionGroup
      */
     public function addSeparator()
     {
-        $this->separators[ $this->index ] = TRUE;
+        $this->separators[ $this->index ] = true;
         $this->index ++;
     }
-    
+
     /**
      * Add a header
-     * @param $header Options header
+     * @param string $header Options header
      */
-    public function addHeader($header)
+    public function addHeader(string $header)
     {
-        $this->headers[ $this->index ] = $header;
+        $this->headers[$this->index] = $header;
         $this->index ++;
     }
     

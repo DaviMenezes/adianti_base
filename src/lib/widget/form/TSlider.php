@@ -20,49 +20,50 @@ class TSlider extends TField implements AdiantiWidgetInterface
     private $min;
     private $max;
     private $step;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
     public function __construct($name)
     {
         parent::__construct($name);
         $this->id   = 'tslider_'.mt_rand(1000000000, 1999999999);
     }
-    
+
     /**
      * Define the field's range
-     * @param $min Minimal value
-     * @param $max Maximal value
-     * @param $step Step value
+     * @param string $min Minimal value
+     * @param string $max Maximal value
+     * @param string $step Step value
      */
-    public function setRange($min, $max, $step)
+    public function setRange(string $min, string $max, string $step)
     {
         $this->min = $min;
         $this->max = $max;
         $this->step = $step;
         $this->value = $min;
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tslider_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tslider_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tslider_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tslider_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -75,17 +76,13 @@ class TSlider extends TField implements AdiantiWidgetInterface
         $this->tag->{'value'} = $this->value;   // TAG value
         $this->tag->{'type'}  = 'text';         // input type
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $this->setProperty('style', "width:{$this->size};", false); //aggregate style info
-        }
-        else
-        {
+        } else {
             $this->setProperty('style', "width:{$this->size}px;", false); //aggregate style info
         }
         
-        if ($this->id)
-        {
+        if ($this->id) {
             $this->tag->{'id'} = $this->id;
         }
         
@@ -104,17 +101,13 @@ class TSlider extends TField implements AdiantiWidgetInterface
         
         TScript::create(" tslider_start( '#{$this->id}', {$this->value}, {$this->min}, {$this->max}, {$this->step}); ");
         
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             self::disableField($this->formName, $this->name);
         }
     }
-    
-    /**
-     * Set the value
-     */
-    public function setValue($value)
+
+    public function setValue(?string $value)
     {
-        parent::setValue( (int) $value);
+        parent::setValue((int) $value);
     }
 }

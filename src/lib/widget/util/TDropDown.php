@@ -24,7 +24,7 @@ class TDropDown extends TElement
      * @param $title Dropdown title
      * @param $icon  Dropdown icon
      */
-    public function __construct($label, $icon = NULL, $use_caret = TRUE, $title = '', $height = null)
+    public function __construct($label, $icon = null, $use_caret = true, $title = '', $height = null)
     {
         parent::__construct('div');
         $this->{'class'} = 'btn-group';
@@ -35,18 +35,15 @@ class TDropDown extends TElement
         $button->{'class'}       = 'btn btn-default btn-sm dropdown-toggle';
         $this->button = $button;
         
-        if ($icon)
-        {
+        if ($icon) {
             $button->add(new TImage($icon));
         }
         
-        if ($title)
-        {
+        if ($title) {
             $button->{'title'} = $title;
         }
         $button->add($label);
-        if ($use_caret)
-        {
+        if ($use_caret) {
             $span = new TElement('span');
             $span->{'class'} = 'caret';
             $button->add($span);
@@ -59,8 +56,7 @@ class TDropDown extends TElement
         $this->elements->{'class'} = 'dropdown-menu pull-left';
         $this->elements->{'aria-labelledby'} = 'drop2';
         
-        if (!empty($height))
-        {
+        if (!empty($height)) {
             $this->elements->{'style'} = "height:{$height}px;overflow:auto";
         }
         parent::add($this->elements);
@@ -100,30 +96,27 @@ class TDropDown extends TElement
     {
         return $this->button;
     }
-    
+
     /**
      * Add an action
-     * @param $title  Title
-     * @param $action Action (TAction or string Javascript action)
-     * @param $icon   Icon
+     * @param string $title Title
+     * @param TAction $action Action (TAction or string Javascript action)
+     * @param string $icon Icon
+     * @return TElement
      */
-    public function addAction($title, $action, $icon = NULL)
+    public function addAction(string $title, TAction $action, string $icon = null)
     {
         $li = new TElement('li');
         $link = new TElement('a');
         
-        if ($action instanceof TAction)
-        { 
+        if ($action instanceof TAction) {
             $link->{'onclick'} = "__adianti_load_page('{$action->serialize()}');";
-        }
-        else if (is_string($action))
-        {
+        } elseif (is_string($action)) {
             $link->{'onclick'} = $action;
         }
         $link->{'style'} = 'cursor: pointer';
         
-        if ($icon)
-        {
+        if ($icon) {
             $image = is_object($icon) ? clone $icon : new TImage($icon);
             $image->{'style'} .= ';padding: 4px';
             $link->add($image);

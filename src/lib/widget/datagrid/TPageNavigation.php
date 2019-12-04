@@ -34,17 +34,11 @@ class TPageNavigation
         $this->resume = false;
     }
     
-    /**
-     * Hide
-     */
     public function hide()
     {
         $this->hidden = true;
     }
     
-    /**
-     * Enable counters
-     */
     public function enableCounters()
     {
         $this->resume = true;
@@ -55,24 +49,21 @@ class TPageNavigation
      */
     private function getResume()
     {
-        if( !$this->getCount() )
-        {
+        if (!$this->getCount()) {
             return AdiantiCoreTranslator::translate('No records found');
-        }
-        else
-        {
-            $max = number_format( (min(( $this->getLimit() * $this->getPage() ) , $this->getCount())) , 0, '', '.');
-            $min = number_format( (($this->getLimit() * ($this->getPage() - 1) ) + 1) , 0, '', '.');
+        } else {
+            $max = number_format((min(($this->getLimit() * $this->getPage()), $this->getCount())), 0, '', '.');
+            $min = number_format((($this->getLimit() * ($this->getPage() - 1)) + 1), 0, '', '.');
             
-            return AdiantiCoreTranslator::translate('^1 to ^2 from ^3 records', $min, $max, number_format($this->getCount(), 0 , '', '.'));
+            return AdiantiCoreTranslator::translate('^1 to ^2 from ^3 records', $min, $max, number_format($this->getCount(), 0, '', '.'));
         }
     }
-    
+
     /**
      * Set the Amount of displayed records
-     * @param $limit An integer
+     * @param int $limit An integer
      */
-    public function setLimit($limit)
+    public function setLimit(int $limit)
     {
         $this->limit  = (int) $limit;
     }
@@ -93,14 +84,14 @@ class TPageNavigation
     {
         $this->width = $width;
     }
-    
+
     /**
      * Define the total count of records
-     * @param $count An integer (the total count of records)
+     * @param int $count An integer (the total count of records)
      */
-    public function setCount($count)
+    public function setCount(int $count)
     {
-        $this->count = (int) $count;
+        $this->count = $count;
     }
     
     /**
@@ -110,12 +101,12 @@ class TPageNavigation
     {
         return $this->count;
     }
-    
+
     /**
      * Define the current page
-     * @param $page An integer (the current page)
+     * @param int $page An integer (the current page)
      */
-    public function setPage($page)
+    public function setPage(int $page)
     {
         $this->page = (int) $page;
     }
@@ -127,43 +118,43 @@ class TPageNavigation
     {
         return $this->page;
     }
-    
+
     /**
      * Define the first page
-     * @param $page An integer (the first page)
+     * @param int $first_page
      */
-    public function setFirstPage($first_page)
+    public function setFirstPage(int $first_page)
     {
         $this->first_page = (int) $first_page;
     }
-    
+
     /**
      * Define the ordering
-     * @param $order A string containint the column name
+     * @param string $order A string containint the column name
      */
-    public function setOrder($order)
+    public function setOrder(string $order)
     {
         $this->order = $order;
     }
-    
+
     /**
      * Define the ordering
-     * @param $direction asc, desc
+     * @param string $direction asc, desc
      */
-    public function setDirection($direction)
+    public function setDirection(string $direction)
     {
         $this->direction = $direction;
     }
     
     /**
      * Set the page navigation properties
-     * @param $properties array of properties
+     * @param array $properties of properties
      */
-    public function setProperties($properties)
+    public function setProperties(array $properties)
     {
         $order      = isset($properties['order'])  ? addslashes($properties['order'])  : '';
         $page       = isset($properties['page'])   ? $properties['page']   : 1;
-        $direction  = (isset($properties['direction']) AND in_array($properties['direction'], array('asc', 'desc')))  ? $properties['direction']   : NULL;
+        $direction  = (isset($properties['direction']) and in_array($properties['direction'], array('asc', 'desc')))  ? $properties['direction']   : null;
         $first_page = isset($properties['first_page']) ? $properties['first_page']: 1;
         
         $this->setOrder($order);
@@ -186,18 +177,15 @@ class TPageNavigation
      */
     public function show()
     {
-        if ($this->hidden)
-        {
+        if ($this->hidden) {
             return;
         }
         
-        if (!$this->action instanceof TAction)
-        {
+        if (!$this->action instanceof TAction) {
             throw new Exception(AdiantiCoreTranslator::translate('You must call ^1 before add this component', __CLASS__ . '::' . 'setAction()'));
         }
         
-        if ($this->resume)
-        {
+        if ($this->resume) {
             $total = new TElement('div');
             $total->{'class'} = 'tpagenavigation_resume';
             $total->add($this->getResume());
@@ -210,22 +198,17 @@ class TPageNavigation
         $max = 10;
         $registros = $this->count;
         
-        if (!$registros)
-        {
+        if (!$registros) {
             $registros = 0;
         }
         
-        if ($page_size > 0)
-        {
+        if ($page_size > 0) {
             $pages = (int) ($registros / $page_size) - $first_page +1;
-        }
-        else
-        {
+        } else {
             $pages = 1;
         }
         
-        if ($page_size>0)
-        {
+        if ($page_size>0) {
             $resto = $registros % $page_size;
         }
         
@@ -240,8 +223,7 @@ class TPageNavigation
         $ul->{'class'} = 'pagination';
         $nav->add($ul);
         
-        if ($first_page > 1)
-        {
+        if ($first_page > 1) {
             // first
             $item = new TElement('li');
             $link = new TElement('a');
@@ -251,9 +233,9 @@ class TPageNavigation
             $item->add($link);
             $link->add($span);
             $this->action->setParameter('offset', 0);
-            $this->action->setParameter('limit',  $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',   1);
+            $this->action->setParameter('page', 1);
             $this->action->setParameter('first_page', 1);
             $this->action->setParameter('order', $this->order);
             $link->{'href'}      = $this->action->serialize();
@@ -269,9 +251,9 @@ class TPageNavigation
             $item->add($link);
             $link->add($span);
             $this->action->setParameter('offset', ($first_page - $max -1) * $page_size);
-            $this->action->setParameter('limit',  $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',   $first_page - $max);
+            $this->action->setParameter('page', $first_page - $max);
             $this->action->setParameter('first_page', $first_page - $max);
             $this->action->setParameter('order', $this->order);
             $link->{'href'}      = $this->action->serialize();
@@ -280,8 +262,7 @@ class TPageNavigation
         }
         
         // active pages
-        for ($n = $first_page; $n <= $last_page + $first_page -1; $n++)
-        {
+        for ($n = $first_page; $n <= $last_page + $first_page -1; $n++) {
             $offset = ($n -1) * $page_size;
             $item = new TElement('li');
             $link = new TElement('a');
@@ -292,24 +273,22 @@ class TPageNavigation
             $span->add($n);
             
             $this->action->setParameter('offset', $offset);
-            $this->action->setParameter('limit',  $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',   $n);
+            $this->action->setParameter('page', $n);
             $this->action->setParameter('first_page', $first_page);
             $this->action->setParameter('order', $this->order);
             
             $link->{'href'}      = $this->action->serialize();
             $link->{'generator'} = 'adianti';
             
-            if($this->page == $n)
-            {
+            if ($this->page == $n) {
                 $item->{'class'} = 'active';
             }
         }
         
         // inactive pages/placeholders
-        for ($z=$n; $z<=10; $z++)
-        {
+        for ($z=$n; $z<=10; $z++) {
             $item = new TElement('li');
             $link = new TElement('a');
             $span = new TElement('span');
@@ -320,8 +299,7 @@ class TPageNavigation
             $span->add($z);
         }
         
-        if ($pages > $max)
-        {
+        if ($pages > $max) {
             // next
             $first_page = $n;
             $item = new TElement('li');
@@ -331,10 +309,10 @@ class TPageNavigation
             $ul->add($item);
             $item->add($link);
             $link->add($span);
-            $this->action->setParameter('offset',  ($n -1) * $page_size);
-            $this->action->setParameter('limit',   $page_size);
+            $this->action->setParameter('offset', ($n -1) * $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',    $n);
+            $this->action->setParameter('page', $n);
             $this->action->setParameter('first_page', $n);
             $this->action->setParameter('order', $this->order);
             $link->{'href'}      = $this->action->serialize();
@@ -349,10 +327,10 @@ class TPageNavigation
             $ul->add($item);
             $item->add($link);
             $link->add($span);
-            $this->action->setParameter('offset',  ceil($registros / $page_size)* $page_size - $page_size);
-            $this->action->setParameter('limit',   $page_size);
+            $this->action->setParameter('offset', ceil($registros / $page_size)* $page_size - $page_size);
+            $this->action->setParameter('limit', $page_size);
             $this->action->setParameter('direction', $this->direction);
-            $this->action->setParameter('page',    ceil($registros / $page_size));
+            $this->action->setParameter('page', ceil($registros / $page_size));
             $this->action->setParameter('first_page', (int) ($registros / ($page_size *10)) *10 +1);
             $this->action->setParameter('order', $this->order);
             $link->{'href'}      = $this->action->serialize();

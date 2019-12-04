@@ -22,10 +22,6 @@ class TTime extends TEntry implements AdiantiWidgetInterface
     protected $options;
     protected $replaceOnPost;
     
-    /**
-     * Class Constructor
-     * @param $name Name of the widget
-     */
     public function __construct($name)
     {
         parent::__construct($name);
@@ -39,24 +35,25 @@ class TTime extends TEntry implements AdiantiWidgetInterface
         $this->setOption('fontAwesome', true);
     
         $newmask = $this->mask;
-        $newmask = str_replace('hh',   '99',   $newmask);
-        $newmask = str_replace('ii',   '99',   $newmask);
+        $newmask = str_replace('hh', '99', $newmask);
+        $newmask = str_replace('ii', '99', $newmask);
         parent::setMask($newmask);
         $this->tag->{'widget'} = 'ttime';
     }
-    
+
     /**
      * Define the field's mask
-     * @param $mask  Mask for the field (dd-mm-yyyy)
+     * @param string $mask Mask for the field (dd-mm-yyyy)
+     * @param bool $replaceOnPost
      */
-    public function setMask($mask, $replaceOnPost = FALSE)
+    public function setMask(string $mask, bool $replaceOnPost = false)
     {
         $this->mask = $mask;
         $this->replaceOnPost = $replaceOnPost;
         
         $newmask = $this->mask;
-        $newmask = str_replace('hh',   '99',   $newmask);
-        $newmask = str_replace('ii',   '99',   $newmask);
+        $newmask = str_replace('hh', '99', $newmask);
+        $newmask = str_replace('ii', '99', $newmask);
         
         parent::setMask($newmask, $replaceOnPost);
     }
@@ -68,40 +65,39 @@ class TTime extends TEntry implements AdiantiWidgetInterface
     {
         $this->options[$option] = $value;
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tdate_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tdate_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tdate_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tdate_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Shows the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {
         $language = strtolower(LANG);
         $options = json_encode($this->options);
         
-        if (parent::getEditable())
-        {
+        if (parent::getEditable()) {
             $outer_size = 'undefined';
-            if (strstr($this->size, '%') !== FALSE)
-            {
+            if (strstr($this->size, '%') !== false) {
                 $outer_size = $this->size;
                 $this->size = '100%';
             }
@@ -109,9 +105,8 @@ class TTime extends TEntry implements AdiantiWidgetInterface
         
         parent::show();
         
-        if (parent::getEditable())
-        {
-            TScript::create( "tdatetime_start( '#{$this->id}', '{$this->mask}', '{$language}', '{$outer_size}', '{$options}');");
+        if (parent::getEditable()) {
+            TScript::create("tdatetime_start( '#{$this->id}', '{$this->mask}', '{$language}', '{$outer_size}', '{$options}');");
         }
     }
 }

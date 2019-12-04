@@ -16,11 +16,11 @@ use Adianti\Base\Lib\Widget\Base\TElement;
  */
 class TProgressBar extends TElement
 {
-    private $value;
-    private $mask;
-    private $className;
+    public $value;
+    protected $mask;
+    protected $className;
     
-    public function __construct() 
+    public function __construct()
     {
         parent::__construct('div');
         $this->{'class'} = 'progress';
@@ -29,36 +29,39 @@ class TProgressBar extends TElement
         $this->mask = '{value}%';
         $this->className = 'info';
     }
-    
+
     /**
      * set mask for progress bar value Ex: "{value}%"
+     * @param string $mask
      */
-    public function setMask($mask)
+    public function setMask(string $mask)
     {
         $this->mask = $mask;
     }
-    
+
     /**
      * set style class
+     * @param string $class
      */
-    public function setClass($class)
+    public function setClass(string $class)
     {
         $this->className = $class;
     }
-    
+
     /**
      * Set the value of progress bar
-     */ 
-    public function setValue($value)
+     * @param string $value
+     */
+    public function setValue(string $value)
     {
-       $this->value = $value;
+        $this->value = $value;
     }
-            
+
     /**
      * Shows the widget at the screen
-     */       
+     */
     public function show()
-    {                   
+    {
         $progressBar = new TElement('div');
         $progressBar->{'class'} = "progress-bar progress-bar-{$this->className}";
         $progressBar->{'role'} = 'progressbar';

@@ -20,35 +20,36 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
     protected $changeFunction;
     protected $formName;
     protected $name;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = 'ticon_'.mt_rand(1000000000, 1999999999);
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " ticon_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" ticon_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " ticon_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" ticon_disable_field('{$form_name}', '{$field}'); ");
     }
     
     /**
@@ -61,6 +62,7 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
 
     /**
      * Shows the widget at the screen
+     * @throws \Exception
      */
     public function show()
     {
@@ -69,16 +71,14 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
         $span = new TElement('span');
         $span->{'class'} = 'input-group-addon';
         
-        if (!empty($this->exitAction))
-        {
-            $this->setChangeFunction( $this->changeFunction . "; tform_fire_field_actions('{$this->formName}', '{$this->name}'); " );
+        if (!empty($this->exitAction)) {
+            $this->setChangeFunction($this->changeFunction . "; tform_fire_field_actions('{$this->formName}', '{$this->name}'); ");
         }
         
         $i = new TElement('i');
         $span->add($i);
         
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $outer_size = $this->size;
             $this->size = '100%';
             $wrapper->{'style'} = "width: $outer_size";
@@ -93,14 +93,10 @@ class TIcon extends TEntry implements AdiantiWidgetInterface
         $wrapper->add($span);
         $wrapper->show();
         
-        if (parent::getEditable())
-        {
-            if($this->changeFunction)
-            {
-                TScript::create(" ticon_start('{$this->id}',function(icon){ {$this->changeFunction} }); ");   
-            }
-            else
-            {
+        if (parent::getEditable()) {
+            if ($this->changeFunction) {
+                TScript::create(" ticon_start('{$this->id}',function(icon){ {$this->changeFunction} }); ");
+            } else {
                 TScript::create(" ticon_start('{$this->id}',false); ");
             }
         }

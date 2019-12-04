@@ -1,9 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Datagrid;
 
+use Adianti\Base\Lib\Control\TAction;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
-use App\Http\RouteInfo;
-use App\Http\Router;
 use Dvi\Component\Widget\Util\Action;
 use Exception;
 
@@ -29,40 +28,37 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     
     /**
      * Define wich Active Record's property will be passed along with the action
-     * @param $field Active Record's property
+     * @param object $field Active Record's property
      */
     public function setField($field)
     {
         $this->field = $field;
         
-        $this->setParameter('key',  '{'.$field.'}');
+        $this->setParameter('key', '{'.$field.'}');
         $this->setParameter($field, '{'.$field.'}');
     }
-    
+
     /**
      * Define wich Active Record's properties will be passed along with the action
-     * @param $field Active Record's property
+     * @param array $fields
      */
-    public function setFields($fields)
+    public function setFields(array $fields)
     {
         $this->fields = $fields;
         
-        if ($fields)
-        {
-            if (empty($this->field))
-            {
+        if ($fields) {
+            if (empty($this->field)) {
                 $this->setParameter('key', '{'.$fields[0].'}');
             }
             
-            foreach ($fields as $field)
-            {
+            foreach ($fields as $field) {
                 $this->setParameter($field, '{'.$field.'}');
             }
         }
     }
     
     /**
-     * Returns the Active Record's property that 
+     * Returns the Active Record's property that
      * will be passed along with the action
      */
     public function getField()
@@ -71,7 +67,7 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     }
     
     /**
-     * Returns the Active Record's properties that 
+     * Returns the Active Record's properties that
      * will be passed along with the action
      */
     public function getFields()
@@ -86,12 +82,12 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     {
         return (!empty($this->field) or !empty($this->fields));
     }
-    
+
     /**
      * Define an icon for the action
-     * @param $image  The Image path
+     * @param string $image The Image path
      */
-    public function setImage($image)
+    public function setImage(string $image)
     {
         $this->image = $image;
     }
@@ -103,12 +99,12 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     {
         return $this->image;
     }
-    
+
     /**
      * define the label for the action
-     * @param $label A string containing a text label
+     * @param string $label A string containing a text label
      */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
         $this->label = $label;
     }
@@ -120,12 +116,12 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     {
         return $this->label;
     }
-    
+
     /**
      * define the buttonClass for the action
-     * @param $buttonClass A string containing the button css class
+     * @param string $buttonClass A string containing the button css class
      */
-    public function setButtonClass($buttonClass)
+    public function setButtonClass(string $buttonClass)
     {
         $this->buttonClass = $buttonClass;
     }
@@ -137,12 +133,12 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     {
         return $this->buttonClass;
     }
-    
+
     /**
      * define if the action will use a regular button
-     * @param $useButton A boolean
+     * @param bool $useButton A boolean
      */
-    public function setUseButton($useButton)
+    public function setUseButton(bool $useButton)
     {
         $this->useButton = $useButton;
     }
@@ -159,7 +155,7 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
      * Define a callback that must be valid to show the action
      * @param Callback $displayCondition Action display condition
      */
-    public function setDisplayCondition( /*Callable*/ $displayCondition )
+    public function setDisplayCondition(/*Callable*/ $displayCondition)
     {
         $this->displayCondition = $displayCondition;
     }
@@ -171,73 +167,44 @@ class TDataGridAction extends Action //Action is a DviLibrary custom class
     {
         return $this->displayCondition;
     }
-    
+
     /**
      * Prepare action for use over an object
-     * @param $object Data Object
+     * @param object $object Data Object
+     * @return TAction
+     * @throws Exception
      */
     public function prepare($object)
     {
-        if ( !$this->fieldDefined() )
-        {
-            throw new Exception(AdiantiCoreTranslator::translate('Field for action ^1 not defined', parent::toString()) . '.<br>' . 
+        if (!$this->fieldDefined()) {
+            throw new Exception(AdiantiCoreTranslator::translate('Field for action ^1 not defined', parent::toString()) . '.<br>' .
                                 AdiantiCoreTranslator::translate('Use the ^1 method', 'setField'.'()').'.');
         }
         
-        if ($field = $this->getField())
-        {
-            if ( !isset( $object->$field ) )
-            {
+        if ($field = $this->getField()) {
+            if (!isset($object->$field)) {
                 throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
             }
         }
         
-        if ($fields = $this->getFields())
-        {
+        if ($fields = $this->getFields()) {
             $field = $fields[0];
             
-            if ( !isset( $object->$field ) )
-            {
+            if (!isset($object->$field)) {
                 throw new Exception(AdiantiCoreTranslator::translate('Field ^1 not exists or contains NULL value', $field));
             }
         }
         
         return parent::prepare($object);
     }
-    
+
     /**
      * Converts the action into an URL
-     * @param  $format_action = format action with document or javascript (ajax=no)
+     * @param bool $format_action = format action with document or javascript (ajax=no)
+     * @return string
      */
-    public function serialize($format_action = TRUE)
+    public function serialize($format_action = true)
     {
-        /*if (is_array($this->action) AND is_object($this->action[0]))
-        {
-            if (isset( $_REQUEST['offset'] ))
-            {
-                $this->setParameter('offset',     $_REQUEST['offset'] );
-            }
-            if (isset( $_REQUEST['limit'] ))
-            {
-                $this->setParameter('limit',      $_REQUEST['limit'] );
-            }
-            if (isset( $_REQUEST['page'] ))
-            {
-                $this->setParameter('page',       $_REQUEST['page'] );
-            }
-            if (isset( $_REQUEST['first_page'] ))
-            {
-                $this->setParameter('first_page', $_REQUEST['first_page'] );
-            }
-            if (isset( $_REQUEST['order'] ))
-            {
-                $this->setParameter('order',      $_REQUEST['order'] );
-            }
-        }
-        if (parent::isStatic())
-        {
-            $this->setParameter('static',     '1' );
-        }*/
         return parent::serialize($format_action);
     }
 }

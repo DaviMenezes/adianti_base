@@ -13,9 +13,9 @@ namespace Adianti\Base\Lib\Widget\Form;
  */
 interface AdiantiWidgetInterface
 {
-    public function setName($name);
+    public function setName(string $name);
     public function getName();
-    public function setValue($value);
+    public function setValue(string $value);
     public function getValue();
     public function show();
 }

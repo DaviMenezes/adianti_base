@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Widget\Form;
 
+use Exception;
+
 /**
  * Unique Search Widget
  *
@@ -27,11 +29,8 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
         
         $this->tag->{'widget'} = 'tuniquesearch';
     }
-    
-    /**
-     * Set value
-     */
-    public function setValue($value)
+
+    public function setValue(?string $value)
     {
         $this->value = $value; // avoid use parent::setValue() because compat mode
     }
@@ -51,9 +50,10 @@ class TUniqueSearch extends TMultiSearch implements AdiantiWidgetInterface
             return '';
         }
     }
-    
+
     /**
      * Show the component
+     * @throws Exception
      */
     public function show()
     {

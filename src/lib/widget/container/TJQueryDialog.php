@@ -131,7 +131,7 @@ class TJQueryDialog extends TElement
      * @param string $width
      * @param string $height
      */
-    public function setSize(string $width, string $height)
+    public function setSize(string $width, string $height = null)
     {
         $this->width  = $width  < 1 ? "\$(window).width() * $width" : $width;
         

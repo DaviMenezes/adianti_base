@@ -22,11 +22,12 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     protected $id;
     protected $size;
     protected $formName;
-    private   $height;
-    
+    private $height;
+
     /**
      * Class Constructor
      * @param $name Widet's name
+     * @throws \ReflectionException
      */
     public function __construct($name)
     {
@@ -42,11 +43,10 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
      * @param  $width   Widget's width
      * @param  $height  Widget's height
      */
-    public function setSize($width, $height = NULL)
+    public function setSize(string $width, string $height = null)
     {
         $this->size   = $width;
-        if ($height)
-        {
+        if ($height) {
             $this->height = $height;
         }
     }
@@ -59,35 +59,35 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
     {
         return array( $this->size, $this->height );
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " thtmleditor_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" thtmleditor_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " thtmleditor_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" thtmleditor_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create( " thtmleditor_clear_field('{$form_name}', '{$field}'); " );
+        TScript::create(" thtmleditor_clear_field('{$form_name}', '{$field_name}'); ");
     }
     
     /**
@@ -112,9 +112,8 @@ class THtmlEditor extends TField implements AdiantiWidgetInterface
         TScript::create(" thtmleditor_start( '{$this->tag->{'id'}}', '{$this->size}', '{$this->height}', '{$locale}' ); ");
         
         // check if the field is not editable
-        if (!parent::getEditable())
-        {
-            TScript::create( " thtmleditor_disable_field('{$this->formName}', '{$this->name}'); " );
+        if (!parent::getEditable()) {
+            TScript::create(" thtmleditor_disable_field('{$this->formName}', '{$this->name}'); ");
         }
     }
 }

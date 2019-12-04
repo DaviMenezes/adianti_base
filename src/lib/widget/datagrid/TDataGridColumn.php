@@ -33,7 +33,7 @@ class TDataGridColumn
      * @param  $align = Column align (left, center, right)
      * @param  $width = Column Width (pixels)
      */
-    public function __construct($name, $label, $align, $width = NULL)
+    public function __construct(string $name, string $label, string $align, string $width = null)
     {
         $this->name  = $name;
         $this->label = $label;
@@ -42,47 +42,47 @@ class TDataGridColumn
         $this->properties = array();
         $this->dataProperties = array();
     }
-    
+
     /**
      * Define a column header property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @param string $value Property Value
      */
-    public function setProperty($name, $value)
+    public function setProperty(string $name, string $value)
     {
         $this->properties[$name] = $value;
     }
-    
+
     /**
      * Define a data property
-     * @param $name  Property Name
-     * @param $value Property Value
+     * @param string $name Property Name
+     * @param string $value Property Value
      */
-    public function setDataProperty($name, $value)
+    public function setDataProperty(string $name, string $value)
     {
         $this->dataProperties[$name] = $value;
     }
-    
+
     /**
      * Return a column property
-     * @param $name  Property Name
+     * @param string $name Property Name
+     * @return mixed
      */
-    public function getProperty($name)
+    public function getProperty(string $name)
     {
-        if (isset($this->properties[$name]))
-        {
+        if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
     }
-    
+
     /**
      * Return a data property
-     * @param $name  Property Name
+     * @param string $name Property Name
+     * @return mixed
      */
-    public function getDataProperty($name)
+    public function getDataProperty(string $name)
     {
-        if (isset($this->dataProperties[$name]))
-        {
+        if (isset($this->dataProperties[$name])) {
             return $this->dataProperties[$name];
         }
     }
@@ -102,17 +102,16 @@ class TDataGridColumn
     {
         return $this->dataProperties;
     }
-    
+
     /**
      * Intercepts whenever someones assign a new property's value
-     * @param $name     Property Name
-     * @param $value    Property Value
+     * @param string $name Property Name
+     * @param mixed $value    Property Value
      */
-    public function __set($name, $value)
+    public function __set(string $name, $value)
     {
         // objects and arrays are not set as properties
-        if (is_scalar($value))
-        {              
+        if (is_scalar($value)) {
             // store the property's value
             $this->setProperty($name, $value);
         }
@@ -133,12 +132,12 @@ class TDataGridColumn
     {
         return $this->label;
     }
-    
+
     /**
      * Set the column's label
-     * @param $label column label
+     * @param string $label column label
      */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
         $this->label = $label;
     }
@@ -158,41 +157,39 @@ class TDataGridColumn
     {
         return $this->width;
     }
-    
+
     /**
      * Define the action to be executed when
      * the user clicks over the column header
-     * @param $action     TAction object
-     * @param $parameters Action parameters
+     * @param TAction $action object
+     * @param array $parameters Action parameters
      */
-    public function setAction(TAction $action, $parameters = null)
+    public function setAction(TAction $action, array $parameters = null)
     {
         $this->action = $action;
         
-        if ($parameters)
-        {
+        if ($parameters) {
             $this->action->setParameters($parameters);
         }
     }
     
     /**
-     * Returns the action defined by set_action() method
-     * @return the action to be executed when the
+     * Is Returns the action defined by set_action() method
      * user clicks over the column header
+     * @return TAction the action to be executed when the
      */
     public function getAction()
     {
         // verify if the column has an actions
-        if ($this->action)
-        {
+        if ($this->action) {
             return $this->action;
         }
     }
-    
+
     /**
      * Define the action to be executed when
      * the user clicks do edit the column
-     * @param $action   A TDataGridAction object
+     * @param TDataGridAction $editaction
      */
     public function setEditAction(TDataGridAction $editaction)
     {
@@ -201,23 +198,22 @@ class TDataGridColumn
     
     /**
      * Returns the action defined by setEditAction() method
-     * @return the action to be executed when the
      * user clicks do edit the column
+     * @return TAction the action to be executed when the
      */
     public function getEditAction()
     {
         // verify if the column has an actions
-        if ($this->editaction)
-        {
+        if ($this->editaction) {
             return $this->editaction;
         }
     }
-    
+
     /**
      * Define a callback function to be applyed over the column's data
-     * @param $callback  A function name of a method of an object
+     * @param callable $callback A function name of a method of an object
      */
-    public function setTransformer(Callable $callback)
+    public function setTransformer(callable $callback)
     {
         $this->transformer = $callback;
     }
@@ -229,12 +225,12 @@ class TDataGridColumn
     {
         return $this->transformer;
     }
-    
+
     /**
      * Define a callback function to totalize column
-     * @param $callback  A function name of a method of an object
+     * @param callable $callback A function name of a method of an object
      */
-    public function setTotalFunction(Callable $callback)
+    public function setTotalFunction(callable $callback)
     {
         $this->totalFunction = $callback;
     }

@@ -25,42 +25,44 @@ class TColor extends TEntry implements AdiantiWidgetInterface
     protected $size;
     protected $changeFunction;
     protected $changeAction;
-    
+
     /**
      * Class Constructor
-     * @param $name Name of the widget
+     * @param string $name Name of the widget
+     * @throws \ReflectionException
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = 'tcolor_'.mt_rand(1000000000, 1999999999);
         $this->tag->{'widget'} = 'tcolor';
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create( " tcolor_enable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcolor_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
-        TScript::create( " tcolor_disable_field('{$form_name}', '{$field}'); " );
+        TScript::create(" tcolor_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Set change function
+     * @param string $function
      */
-    public function setChangeFunction($function)
+    public function setChangeFunction(string $function)
     {
         $this->changeFunction = $function;
     }
@@ -87,20 +89,17 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         $span->{'class'} = 'input-group-addon tcolor';
         
         $outer_size = 'undefined';
-        if (strstr($this->size, '%') !== FALSE)
-        {
+        if (strstr($this->size, '%') !== false) {
             $outer_size = $this->size;
             $this->size = '100%';
         }
         
-        if ($this->changeAction)
-        {
-            if (!TForm::getFormByName($this->formName) instanceof TForm)
-            {
-                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()') );
+        if ($this->changeAction) {
+            if (!TForm::getFormByName($this->formName) instanceof TForm) {
+                throw new Exception(AdiantiCoreTranslator::translate('You must pass the ^1 (^2) as a parameter to ^3', __CLASS__, $this->name, 'TForm::setFields()'));
             }
             
-            $string_action = $this->changeAction->serialize(FALSE);
+            $string_action = $this->changeAction->serialize(false);
             $this->setProperty('changeaction', "__adianti_post_lookup('{$this->formName}', '{$string_action}', '{$this->id}', 'callback')");
             $this->changeFunction = $this->getProperty('changeaction');
         }
@@ -118,8 +117,7 @@ class TColor extends TEntry implements AdiantiWidgetInterface
         
         TScript::create("tcolor_start('{$this->id}', '{$outer_size}', function(color) { {$this->changeFunction} }); ");
         
-        if (!parent::getEditable())
-        {
+        if (!parent::getEditable()) {
             self::disableField($this->formName, $this->name);
         }
     }

@@ -31,14 +31,11 @@ class TFile extends TField implements AdiantiWidgetInterface
     protected $seed;
     protected $fileHandling;
     
-    /**
-     * Constructor method
-     * @param $name input name
-     */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name);
         $this->id = $this->name . '_' . mt_rand(1000000000, 1999999999);
+        //Todo voltar ao comportamento padrao e criar classe sobrescrevendo o q precisa para usar urlRoute
         $this->uploaderClass = urlRoute('/admin/system/service/document/upload');
         $this->fileHandling = false;
         
@@ -86,19 +83,22 @@ class TFile extends TField implements AdiantiWidgetInterface
     {
         $this->placeHolder = $widget;
     }
-    
+
     /**
      * Set field size
+     * @param string $width
+     * @param null $height
      */
-    public function setSize($width, $height = null)
+    public function setSize(string $width)
     {
         $this->size   = $width;
     }
-    
+
     /**
      * Set field height
+     * @param string $height
      */
-    public function setHeight($height)
+    public function setHeight(string $height)
     {
         $this->height = $height;
     }
@@ -113,12 +113,10 @@ class TFile extends TField implements AdiantiWidgetInterface
         if (isset($_POST[$name])) {
             return $_POST[$name];
         }
+        return null;
     }
-    
-    /**
-     * Set field value
-     */
-    public function setValue($value)
+
+    public function setValue(?string $value)
     {
         if ($this->fileHandling) {
             if (strpos($value, '%7B') === false) {
@@ -225,10 +223,11 @@ class TFile extends TField implements AdiantiWidgetInterface
         
         TScript::create(" tfile_start( '{$this->tag-> id}', '{$div-> id}', '{$action}', {$complete_action}, $fileHandling);");
     }
-    
+
     /**
      * Define the action to be executed when the user leaves the form field
      * @param $action TAction object
+     * @throws Exception
      */
     public function setCompleteAction(TAction $action)
     {
@@ -239,34 +238,34 @@ class TFile extends TField implements AdiantiWidgetInterface
             throw new Exception(AdiantiCoreTranslator::translate('Action (^1) must be static to be used in ^2', $string_action, __METHOD__));
         }
     }
-    
+
     /**
      * Enable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function enableField($form_name, $field)
+    public static function enableField(string $form_name, string $field_name)
     {
-        TScript::create(" tfile_enable_field('{$form_name}', '{$field}'); ");
+        TScript::create(" tfile_enable_field('{$form_name}', '{$field_name}'); ");
     }
-    
+
     /**
      * Disable the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param object $field Field name
      */
-    public static function disableField($form_name, $field)
+    public static function disableField(string $form_name, object $field)
     {
         TScript::create(" tfile_disable_field('{$form_name}', '{$field}'); ");
     }
-    
+
     /**
      * Clear the field
-     * @param $form_name Form name
-     * @param $field Field name
+     * @param string $form_name Form name
+     * @param string $field_name Field name
      */
-    public static function clearField($form_name, $field)
+    public static function clearField(string $form_name, string $field_name)
     {
-        TScript::create(" tfile_clear_field('{$form_name}', '{$field}'); ");
+        TScript::create(" tfile_clear_field('{$form_name}', '{$field_name}'); ");
     }
 }

@@ -19,39 +19,35 @@ class TQuestion
 {
     /**
      * Class Constructor
-     * @param  $message    A string containint the question
-     * @param  $action_yes Action taken for YES response
-     * @param  $action_no  Action taken for NO  response
-     * @param  $title_msg  Dialog Title
+     * @param string $message A string containint the question
+     * @param TAction $action_yes Action taken for YES response
+     * @param TAction $action_no Action taken for NO  response
+     * @param string $title_msg Dialog Title
      */
-    public function __construct($message, TAction $action_yes = NULL, TAction $action_no = NULL, $title_msg = '')
+    public function __construct(string $message, TAction $action_yes = null, TAction $action_no = null, string $title_msg = '')
     {
-        $title        = ( $title_msg ? $title_msg : AdiantiCoreTranslator::translate('Question') );
+        $title        = ($title_msg ? $title_msg : AdiantiCoreTranslator::translate('Question'));
         $callback_yes = "function () {}";
         $callback_no  = "function () {}";
         $label_yes    = AdiantiCoreTranslator::translate('Yes');
         $label_no     = AdiantiCoreTranslator::translate('No');
         
-        if ($action_yes && $action_yes->isStatic())
-        {
-            $action_yes->setParameter('static', '1' );
+        if ($action_yes && $action_yes->isStatic()) {
+            $action_yes->setParameter('static', '1');
         }
         
-        if ($action_no && $action_no->isStatic())
-        {
-            $action_no->setParameter('static', '1' );
+        if ($action_no && $action_no->isStatic()) {
+            $action_no->setParameter('static', '1');
         }
         
         $title = addslashes($title);
         $message = addslashes($message);
         
-        if ($action_yes)
-        {
+        if ($action_yes) {
             $callback_yes = "function () { __adianti_load_page('{$action_yes->serialize()}') }";
         }
         
-        if ($action_no)
-        {
+        if ($action_no) {
             $callback_no = "function () { __adianti_load_page('{$action_no->serialize()}') }";
         }
         

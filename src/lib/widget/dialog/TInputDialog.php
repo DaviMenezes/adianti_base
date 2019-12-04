@@ -8,7 +8,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Widget\Form\AdiantiFormInterface;
 use Adianti\Base\Lib\Widget\Form\TButton;
 use Adianti\Base\Lib\Widget\Wrapper\TQuickForm;
-use Adianti\Base\Lib\Widget\Wrapper\BootstrapFormWrapper;
+use Adianti\Base\Lib\Wrapper\BootstrapFormWrapper;
 use Adianti\Base\Lib\Wrapper\BootstrapFormBuilder;
 
 use Exception;
@@ -27,15 +27,16 @@ class TInputDialog
 {
     private $id;
     private $action;
-    
+
     /**
      * Class Constructor
-     * @param $title_msg  Dialog Title
-     * @param $form    Dialog form body
-     * @param $action  Action to be processed when closing the dialog
-     * @param $caption Button caption
+     * @param string $title_msg Dialog Title
+     * @param AdiantiFormInterface $form Dialog form body
+     * @param TAction $action Action to be processed when closing the dialog
+     * @param string $caption Button caption
+     * @throws Exception
      */
-    public function __construct($title_msg, AdiantiFormInterface $form, TAction $action = NULL, $caption = '')
+    public function __construct(string $title_msg, AdiantiFormInterface $form, TAction $action = null, $caption = '')
     {
         $this->id = 'tinputdialog_'.mt_rand(1000000000, 1999999999);
         
@@ -64,23 +65,19 @@ class TInputDialog
         $title = new TElement('h4');
         $title->{'class'} = 'modal-title';
         $title->{'style'} = 'display:inline';
-        $title->add( $title_msg ? $title_msg : AdiantiCoreTranslator::translate('Input') );
+        $title->add($title_msg ? $title_msg : AdiantiCoreTranslator::translate('Input'));
         
         $form_name = $form->getName();
         $wait_message = AdiantiCoreTranslator::translate('Loading');
         
-        if ($form instanceof TQuickForm or $form instanceof BootstrapFormWrapper or $form instanceof BootstrapFormBuilder)
-        {
+        if ($form instanceof TQuickForm or $form instanceof BootstrapFormWrapper or $form instanceof BootstrapFormBuilder) {
             $actionButtons = $form->getActionButtons();
             $form->delActions();
             
-            if ($actionButtons)
-            {
-                foreach ($actionButtons as $key => $button)
-                {
-                    if ($button->getAction()->getParameter('stay-open') !== 1)
-                    {
-                        $button->addFunction( "tdialog_close('{$this->id}')" );
+            if ($actionButtons) {
+                foreach ($actionButtons as $key => $button) {
+                    if ($button->getAction()->getParameter('stay-open') !== 1) {
+                        $button->addFunction("tdialog_close('{$this->id}')");
                         $button->{'data-toggle'} = "modal";
                         $button->{'data-dismiss'} = 'modal';
                     }
@@ -88,20 +85,16 @@ class TInputDialog
                     $buttons[] = $button;
                 }
             }
-        }
-        else
-        {
+        } else {
             $button = new TButton(strtolower(str_replace(' ', '_', $caption)));
-            if ($action->getParameter('stay-open') !== 1)
-            {
+            if ($action->getParameter('stay-open') !== 1) {
                 $button->{'data-toggle'} = "modal";
                 $button->{'data-dismiss'} = 'modal';
-                $button->addFunction( "tdialog_close('{$this->id}')" );
-                
+                $button->addFunction("tdialog_close('{$this->id}')");
             }
             $action->setParameter('modalId', $this->id);
-            $button->setAction( $action );
-            $button->setLabel( $caption );
+            $button->setAction($action);
+            $button->setLabel($caption);
             $buttons[] = $button;
             $form->addField($button);
         }
@@ -118,21 +111,18 @@ class TInputDialog
         $modal_content->add($form);
         $modal_content->add($footer);
         
-        if ($form instanceof BootstrapFormBuilder)
-        {
+        if ($form instanceof BootstrapFormBuilder) {
             // remove panel class, remove borders
             $form->setProperty('class', '');
         }
         
-        if (isset($buttons) AND $buttons)
-        {
-            foreach ($buttons as $button)
-            {
+        if (isset($buttons) and $buttons) {
+            foreach ($buttons as $button) {
                 $footer->add($button);
             }
         }
         
         $modal_wrapper->show();
-        TScript::create( "tdialog_start( '#{$this->id}' );");
+        TScript::create("tdialog_start( '#{$this->id}' );");
     }
 }

@@ -20,19 +20,16 @@ class TMessage
 {
     /**
      * Class Constructor
-     * @param $type    Type of the message (info, error)
-     * @param $message Message to be shown
-     * @param $action  Action to be processed when closing the dialog
-     * @param $title_msg  Dialog Title
+     * @param string $type Type of the message (info, error)
+     * @param string $message Message to be shown
+     * @param TAction $action Action to be processed when closing the dialog
+     * @param string $title_msg Dialog Title
      */
-    public function __construct($type, $message, TAction $action = NULL, $title_msg = '')
+    public function __construct(string $type, string $message, TAction $action = null, string $title_msg = '')
     {
-        if (!empty($title_msg))
-        {
+        if (!empty($title_msg)) {
             $title = $title_msg;
-        }
-        else
-        {
+        } else {
             $titles = [];
             $titles['info']    = AdiantiCoreTranslator::translate('Information');
             $titles['error']   = AdiantiCoreTranslator::translate('Error');
@@ -42,24 +39,18 @@ class TMessage
         
         $callback = "function () {}";
         
-        if ($action)
-        {
+        if ($action) {
             $callback = "function () { __adianti_load_page('{$action->serialize()}') }";
         }
         
         $title = addslashes($title);
         $message = addslashes($message);
         
-        if ($type == 'info')
-        {
+        if ($type == 'info') {
             TScript::create("__adianti_message('{$title}', '{$message}', $callback)");
-        }
-        else if ($type == 'warning')
-        {
+        } elseif ($type == 'warning') {
             TScript::create("__adianti_warning('{$title}', '{$message}', $callback)");
-        }
-        else
-        {
+        } else {
             TScript::create("__adianti_error('{$title}', '{$message}', $callback)");
         }
     }

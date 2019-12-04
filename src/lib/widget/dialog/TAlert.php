@@ -17,10 +17,10 @@ class TAlert extends TElement
 {
     /**
      * Class Constructor
-     * @param $type    Type of the alert (success, info, warning, danger)
-     * @param $message Message to be shown
+     * @param string $type Type of the alert (success, info, warning, danger)
+     * @param string $message Message to be shown
      */
-    public function __construct($type, $message)
+    public function __construct(string $type, string $message)
     {
         parent::__construct('div');
         $this->{'class'} = 'talert alert alert-dismissible alert-'.$type;

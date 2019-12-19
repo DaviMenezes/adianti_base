@@ -34,7 +34,6 @@ class TRadioGroup extends TField implements AdiantiWidgetInterface
     public function __construct(string $name)
     {
         parent::__construct($name);
-        parent::setSize(null);
         $this->labelClass = 'tcheckgroup_label ';
         $this->useButton  = false;
         $this->is_boolean = false;

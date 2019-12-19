@@ -197,8 +197,11 @@ abstract class TField
      * Define the field's tooltip
      * @param string $tip
      */
-    public function setTip(string $tip)
+    public function setTip(?string $tip)
     {
+        if (!$tip) {
+            return;
+        }
         $this->tag->{'title'} = $tip;
     }
     

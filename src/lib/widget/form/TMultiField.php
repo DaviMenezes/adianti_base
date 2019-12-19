@@ -77,7 +77,7 @@ class TMultiField extends TField implements AdiantiWidgetInterface
      * @param int $size Widget's size
      * @param bool $mandatory Mandatory field
      */
-    public function addField(string $name, string $text, TField $object, int $size, bool $mandatory = false)
+    public function addField(string $name, $text, TField $object, int $size, bool $mandatory = false)
     {
         $obj = new StdClass;
         $obj-> name      = $name;
@@ -333,6 +333,9 @@ class TMultiField extends TField implements AdiantiWidgetInterface
                     $cell=$row->addCell('ID');
                     $cell->{'width'} = '20px';
                     $cell->{'class'} = 'multifield_header';
+                }
+                if (is_string($c)) {
+                    $c = new TLabel($c);
                 }
                 $cell = $row->addCell($c);
                 $cell->{'width'} = $obj-> size.'px';

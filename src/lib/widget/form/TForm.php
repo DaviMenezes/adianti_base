@@ -191,7 +191,7 @@ class TForm implements AdiantiFormInterface
                 $this->fields[$name] = $field;
                 $field->setFormName($this->name);
                 
-                if ($field instanceof TButton) {
+                if ($this->js_function and $field instanceof TButton) {
                     $field->addFunction($this->js_function);
                 }
             }

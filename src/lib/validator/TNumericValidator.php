@@ -22,7 +22,7 @@ class TNumericValidator extends TFieldValidator
      * @param $value Value to be validated
      * @param $parameters aditional parameters for validation (min value)
      */
-    public function validate($label, $value, $parameters = NULL)
+    public function validate($label, $value, array $parameters = NULL)
     {
         if (!is_numeric($value))
         {

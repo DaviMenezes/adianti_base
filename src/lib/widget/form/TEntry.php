@@ -26,6 +26,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
     protected $thousandSeparator;
     protected $replaceOnPost;
     protected $exitFunction;
+    /**@var TAction*/
     protected $exitAction;
     protected $id;
     protected $formName;

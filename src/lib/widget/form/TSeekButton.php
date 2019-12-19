@@ -54,7 +54,7 @@ class TSeekButton extends TEntry implements AdiantiWidgetInterface
      * @param string $icon
      * @return TElement
      */
-    public static function createButton(string $name, string $icon)
+    public static function createButton(string $name, string $icon = null)
     {
         $image = new TImage($icon ? $icon : 'fa:search');
         $button = new TElement('span');

@@ -22,7 +22,7 @@ class TDateValidator extends TFieldValidator
      * @param $parameters aditional parameters for validation (ex: mask)
      * @throws Exception
      */
-    public function validate($label, $value, $parameters = null)
+    public function validate($label, $value, array $parameters = null)
     {
         $mask = $parameters[0];
         $year_pos  = strpos($mask, 'yyyy');

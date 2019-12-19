@@ -37,8 +37,6 @@ class TLabel extends TField implements AdiantiWidgetInterface
         string $decoration = null,
         string $size = null
     ) {
-        parent::__construct('');
-
         $this->id = mt_rand(1000000000, 1999999999);
         $stylename = 'tlabel_'.$this->id;
         

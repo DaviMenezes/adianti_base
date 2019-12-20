@@ -1,0 +1,15 @@
+{
+	"name": "dvi/adianti_base",
+	"description": "Base classes of Adianti framework",
+	"type":"library",
+	"authors": [ {
+		"name": "Davi Menezes",
+	    	"email": "davimenezes.dev@gmail.com"
+	}],
+	"autoload": {
+		"psr-4" : {
+			"Adianti\\Base\\" : "/src"
+		},
+		"classmap": ["/src"]
+	}
+}

@@ -1,0 +1,56 @@
+<?php
+namespace Adianti\Base\Lib\Widget\Dialog;
+
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TScript;
+
+/**
+ * Question Dialog
+ *
+ * @version    5.5
+ * @package    widget
+ * @subpackage dialog
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
+class TQuestion
+{
+    /**
+     * Class Constructor
+     * @param string $message A string containint the question
+     * @param TAction $action_yes Action taken for YES response
+     * @param TAction $action_no Action taken for NO  response
+     * @param string $title_msg Dialog Title
+     */
+    public function __construct(string $message, TAction $action_yes = null, TAction $action_no = null, string $title_msg = '')
+    {
+        $title        = ($title_msg ? $title_msg : AdiantiCoreTranslator::translate('Question'));
+        $callback_yes = "function () {}";
+        $callback_no  = "function () {}";
+        $label_yes    = AdiantiCoreTranslator::translate('Yes');
+        $label_no     = AdiantiCoreTranslator::translate('No');
+        
+        if ($action_yes && $action_yes->isStatic()) {
+            $action_yes->setParameter('static', '1');
+        }
+        
+        if ($action_no && $action_no->isStatic()) {
+            $action_no->setParameter('static', '1');
+        }
+        
+        $title = addslashes($title);
+        $message = addslashes($message);
+        
+        if ($action_yes) {
+            $callback_yes = "function () { __adianti_load_page('{$action_yes->serialize()}') }";
+        }
+        
+        if ($action_no) {
+            $callback_no = "function () { __adianti_load_page('{$action_no->serialize()}') }";
+        }
+        
+        TScript::create("__adianti_question('{$title}', '{$message}', $callback_yes, $callback_no, '{$label_yes}', '{$label_no}')");
+    }
+}

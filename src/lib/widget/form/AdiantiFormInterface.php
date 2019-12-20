@@ -1,0 +1,28 @@
+<?php
+namespace Adianti\Base\Lib\Widget\Form;
+
+/**
+ * Form Interface
+ *
+ * @version    5.5
+ * @package    widget
+ * @subpackage form
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
+interface AdiantiFormInterface
+{
+    public function setName(string $name);
+    public function getName();
+    public function addField(AdiantiWidgetInterface $field);
+    public function delField(AdiantiWidgetInterface $field);
+    public function setFields(array $fields);
+    public function getField(string $name);
+    public function getFields();
+    public function clear();
+    public function setData($object);
+    public function getData(string $class = 'StdClass');
+    public function validate();
+    public function show();
+}

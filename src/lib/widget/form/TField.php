@@ -7,6 +7,7 @@ use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Validator\TFieldValidator;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
 
+use Dvi\Component\Widget\Form\Field\Contract\ValidatorContract;
 use Exception;
 use ReflectionClass;
 
@@ -292,7 +293,7 @@ abstract class TField
      * @param $validator TFieldValidator object
      * @param array $parameters Aditional parameters
      */
-    public function addValidation(string $label, TFieldValidator $validator, array $parameters = null)
+    public function addValidation(string $label, ValidatorContract $validator, array $parameters = null)
     {
         $this->validations[] = array($label, $validator, $parameters);
     }

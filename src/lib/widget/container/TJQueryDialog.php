@@ -1,0 +1,237 @@
+<?php
+namespace Adianti\Base\Lib\Widget\Container;
+
+use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
+use Adianti\Base\Lib\Widget\Base\TScript;
+use Adianti\Base\Lib\Widget\Base\TElement;
+use Exception;
+
+/**
+ * JQuery dialog container
+ *
+ * @version    5.5
+ * @package    widget
+ * @subpackage container
+ * @author     Pablo Dall'Oglio
+ * @copyright  Copyright (c) 2006 Adianti Solutions Ltd. (http://www.adianti.com.br)
+ * @license    http://www.adianti.com.br/framework-license
+ */
+class TJQueryDialog extends TElement
+{
+    private $actions;
+    private $width;
+    private $height;
+    private $top;
+    private $left;
+    private $modal;
+    private $draggable;
+    private $resizable;
+    private $useOKButton;
+    private $stackOrder;
+    /**@var TAction*/
+    private $closeAction;
+    
+    public function __construct()
+    {
+        parent::__construct('div');
+        $this->useOKButton = true;
+        $this->top = null;
+        $this->left = null;
+        $this->modal = 'true';
+        $this->draggable = 'true';
+        $this->resizable = 'true';
+        $this->stackOrder = 2000;
+        $this->{'id'} = 'jquery_dialog_'.mt_rand(1000000000, 1999999999);
+        $this->{'style'} = "overflow:auto";
+    }
+    
+    /**
+     * Disable scrolling
+     */
+    public function disableScrolling()
+    {
+        $this->{'style'} = "overflow: hidden";
+    }
+
+    /**
+     * Set close action
+     * @param TAction $action
+     * @throws Exception
+     */
+    public function setCloseAction(TAction $action)
+    {
+        if ($action->isStatic()) {
+            $this->closeAction = $action;
+        } else {
+            $string_action = $action->toString();
+            throw new Exception(AdiantiCoreTranslator::translate(
+                'Action (^1) must be static to be used in ^2',
+                $string_action,
+                __METHOD__
+            ));
+        }
+    }
+    
+    /**
+     * Define if will use OK Button
+     * @param $bool boolean
+     */
+    public function setUseOKButton($bool)
+    {
+        $this->useOKButton = $bool;
+    }
+    
+    /**
+     * Define the dialog title
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->{'title'} = $title;
+    }
+
+    /**
+     * Turn on/off modal
+     * @param bool $bool
+     */
+    public function setModal($bool)
+    {
+        $this->modal = $bool ? 'true' : 'false';
+    }
+    
+    /**
+     * Turn on/off resizeable
+     * @param $bool Boolean
+     */
+    public function setResizable($bool)
+    {
+        $this->resizable = $bool ? 'true' : 'false';
+    }
+    
+    /**
+     * Turn on/off draggable
+     * @param $bool Boolean
+     */
+    public function setDraggable($bool)
+    {
+        $this->draggable = $bool ? 'true' : 'false';
+    }
+    
+    /**
+     * Returns the element ID
+     */
+    public function getId()
+    {
+        return $this->{'id'};
+    }
+
+    /**
+     * Define the dialog size
+     * @param string $width
+     * @param string $height
+     */
+    public function setSize(string $width, string $height = null)
+    {
+        $this->width  = $width  < 1 ? "\$(window).width() * $width" : $width;
+        
+        if (is_null($height)) {
+            $this->height = "'auto'";
+        } else {
+            $this->height = $height < 1 ? "\$(window).height() * $height" : $height;
+        }
+    }
+
+    /**
+     * Define the dialog position
+     * @param string $left left
+     * @param string $top top
+     */
+    public function setPosition(string $left, string $top)
+    {
+        $this->left = $left;
+        $this->top  = $top;
+    }
+
+    /**
+     * Add a JS button to the dialog
+     * @param string $label button label
+     * @param mixed $action JS action
+     */
+    public function addAction(string $label, $action)
+    {
+        $this->actions[] = array($label, $action);
+    }
+
+    /**
+     * Define the stack order (zIndex)
+     * @param string $order Stack order
+     */
+    public function setStackOrder(string $order)
+    {
+        $this->stackOrder = $order;
+    }
+    
+    /**
+     * Shows the widget at the screen
+     */
+    public function show()
+    {
+        $action_code = '';
+        if ($this->actions) {
+            foreach ($this->actions as $action_array) {
+                $label  = $action_array[0];
+                $action = $action_array[1];
+                $action_code .= "\"{$label}\": function() {  $action },";
+            }
+        }
+        
+        $ok_button = '';
+        if ($this->useOKButton) {
+            $ok_button = '  OK: function() { $( this ).remove(); }';
+        }
+        
+        $left = $this->left ? $this->left : 0;
+        $top  = $this->top  ? $this->top  : 0;
+        
+        $id = $this->{'id'};
+        
+        $close_action = ''; // cannot be function, because it is tested inside tjquerydialog.js
+        
+        if (isset($this->closeAction)) {
+            $string_action = $this->closeAction->serialize(false);
+            $close_action = "function() { __adianti_ajax_exec('{$string_action}') }";
+        }
+        
+        parent::add(TScript::create("tjquerydialog_start( '#{$id}', {$this->modal}, {$this->draggable}, {$this->resizable}, {$this->width}, {$this->height}, {$top}, {$left}, {$this->stackOrder}, { {$action_code} {$ok_button} }, $close_action ); ", false));
+        parent::show();
+    }
+    
+    /**
+     * Closes the dialog
+     */
+    public function close()
+    {
+        parent::add(TScript::create('$( "#' . $this->{'id'} . '" ).remove();', false));
+    }
+
+    /**
+     * Close window by id
+     * @param $id
+     */
+    public static function closeById($id)
+    {
+        TScript::create('$( "#' . $id . '" ).remove();');
+    }
+    
+    /**
+     * Close all TJQueryDialog
+     */
+    public static function closeAll()
+    {
+        if (!isset($_REQUEST['ajax_lookup']) or $_REQUEST['ajax_lookup'] !== '1') {
+            // it has to be inline (not external function call)
+            TScript::create(' $(\'[widget="TWindow"]\').remove(); ');
+        }
+    }
+}

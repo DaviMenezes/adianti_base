@@ -6,7 +6,6 @@ use Adianti\Base\Lib\Widget\Base\TElement;
 use Adianti\Base\Lib\Widget\Base\TScript;
 use Adianti\Base\Lib\Validator\TFieldValidator;
 use Adianti\Base\Lib\Validator\TRequiredValidator;
-
 use Dvi\Component\Widget\Form\Field\Contract\ValidatorContract;
 use Exception;
 use ReflectionClass;
@@ -40,8 +39,7 @@ abstract class TField
      */
     public function __construct(string $name)
     {
-        $rc = new ReflectionClass($this);
-        $classname = $rc->getShortName();
+        $classname = (new ReflectionClass($this))->getShortName();
         
         if (empty($name)) {
             throw new Exception(AdiantiCoreTranslator::translate('The parameter (^1) of ^2 constructor is required', 'name', $classname));

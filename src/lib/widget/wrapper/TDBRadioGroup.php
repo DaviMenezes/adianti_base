@@ -21,8 +21,6 @@ use Exception;
  */
 class TDBRadioGroup extends TRadioGroup
 {
-    protected $items; // array containing the combobox options
-    
     /**
      * Class Constructor
      * @param  $name     widget's name

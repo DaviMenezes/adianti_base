@@ -1,6 +1,8 @@
 <?php
 namespace Adianti\Base\Lib\Core;
 
+use Adianti\Base\Lib\Registry\TSession;
+
 /**
  * Application config
  *
@@ -12,7 +14,7 @@ namespace Adianti\Base\Lib\Core;
  */
 class AdiantiApplicationConfig
 {
-    private static $config;
+    protected static $config;
     
     /**
      * Load configuration from array
@@ -29,6 +31,26 @@ class AdiantiApplicationConfig
      */
     public static function get()
     {
+        $class  = isset($_REQUEST['class']) ? $_REQUEST['class'] : '';
+        if ($class == 'BuilderView') {
+            self::updateTheme('theme4');
+        }
         return self::$config;
+    }
+
+    public static function updateTheme(string $theme)
+    {
+        self::$config['general']['theme'] = $theme;
+        TSession::setValue('theme', $theme);
+    }
+
+    public static function getTheme()
+    {
+        return TSession::getValue('theme') ?? self::$config['general']['theme'];
+    }
+
+    public static function parseIniFile()
+    {
+        return self::$config = parse_ini_file('app/config/application.ini', true);
     }
 }

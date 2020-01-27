@@ -3,6 +3,7 @@ namespace Adianti\Base\Lib\Widget\Wrapper;
 
 use Adianti\Base\Lib\Base\TStandardSeek;
 use Adianti\Base\Lib\Control\TAction;
+use Adianti\Base\Lib\Core\AdiantiApplicationConfig;
 use Adianti\Base\Lib\Core\AdiantiCoreTranslator;
 use Adianti\Base\Lib\Database\TCriteria;
 use Adianti\Base\Lib\Database\TTransaction;
@@ -51,7 +52,7 @@ class TDBSeekButton extends TSeekButton
         }
 
         $obj  = new TStandardSeek;
-        $ini  = \Adianti\Core\AdiantiApplicationConfig::get();
+        $ini  = AdiantiApplicationConfig::get();
         $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
 
         // define the action parameters

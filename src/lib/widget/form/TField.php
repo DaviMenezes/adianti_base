@@ -30,7 +30,7 @@ abstract class TField
     protected $tag;
     protected $formName;
     protected $label;
-    private $validations;
+    protected $validations;
 
     /**
      * Class Constructor
@@ -147,6 +147,7 @@ abstract class TField
     public function setId(string $id)
     {
         $this->id = $id;
+        $this->setProperty('id', $id);
     }
 
     /**

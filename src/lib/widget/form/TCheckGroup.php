@@ -19,14 +19,14 @@ use Exception;
  */
 class TCheckGroup extends TField implements AdiantiWidgetInterface
 {
-    private $layout = 'vertical';
+    protected $layout = 'vertical';
     /**@var TAction*/
-    private $changeAction;
-    private $items;
-    private $breakItems;
-    private $buttons;
-    private $labels;
-    private $allItemsChecked;
+    protected $changeAction;
+    protected $items;
+    protected $breakItems;
+    protected $buttons;
+    protected $labels;
+    protected $allItemsChecked;
     protected $separator;
     protected $changeFunction;
     protected $formName;

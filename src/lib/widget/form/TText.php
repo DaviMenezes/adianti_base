@@ -18,8 +18,8 @@ use Exception;
  */
 class TText extends TField implements AdiantiWidgetInterface
 {
-    private $exitAction;
-    private $exitFunction;
+    protected $exitAction;
+    protected $exitFunction;
     protected $id;
     protected $formName;
     protected $size;

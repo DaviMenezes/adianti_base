@@ -239,7 +239,7 @@ class TCombo extends TField implements AdiantiWidgetInterface
      * Define the combo default option value
      * @param bool $option option value
      */
-    public function setDefaultOption(bool $option)
+    public function setDefaultOption($option)
     {
         $this->defaultOption = $option;
     }

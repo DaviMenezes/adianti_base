@@ -19,14 +19,13 @@ use Exception;
  */
 class TRadioGroup extends TField implements AdiantiWidgetInterface
 {
-    private $layout = 'vertical';
-    private $changeAction;
-    private $items;
-    private $breakItems;
-    private $buttons;
-    private $labels;
+    protected $layout = 'vertical';
+    protected $changeAction;
+    protected $items;
+    protected $breakItems;
+    protected $buttons;
+    protected $labels;
     protected $changeFunction;
-    protected $formName;
     protected $labelClass;
     protected $useButton;
     protected $is_boolean;

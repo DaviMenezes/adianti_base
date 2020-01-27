@@ -19,15 +19,12 @@ class TDate extends Varchar implements AdiantiWidgetInterface
 {
     protected $mask;
     private $dbmask;
-    protected $id;
-    protected $size;
     protected $options;
-    protected $replaceOnPost;
-    
+
     public function __construct($name)
     {
         parent::__construct($name);
-        $this->id   = 'tdate_' . mt_rand(1000000000, 1999999999);
+        $this->setProperty('id', 'tdate_' . mt_rand(1000000000, 1999999999));
         $this->mask = 'yyyy-mm-dd';
         $this->dbmask = null;
         $this->options = [];

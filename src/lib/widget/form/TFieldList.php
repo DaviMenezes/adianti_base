@@ -22,23 +22,28 @@ use Exception;
  */
 class TFieldList extends TTable
 {
-    private $fields;
-    private $body_created;
-    private $detail_row;
-    private $remove_function;
-    private $clone_function;
+    protected $row_fields;
+    protected $body_created;
+    protected $detail_row;
+    protected $remove_function;
+    protected $clone_function;
     /**@var TAction*/
-    private $sort_action;
-    private $sorting;
-    private $fields_properties;
-    
-   public function __construct()
+    protected $sort_action;
+    protected $sorting;
+    protected $fields_properties;
+    /**
+     * @var string
+     */
+    protected $tbody_id;
+    protected $uniqid;
+
+    public function __construct()
     {
         parent::__construct();
         $this->{'id'}     = 'tfieldlist_' . mt_rand(1000000000, 1999999999);
         $this->{'class'}  = 'tfieldlist';
         
-        $this->fields = [];
+        $this->row_fields = [];
         $this->fields_properties = [];
         $this->body_created = false;
         $this->detail_row = 0;
@@ -92,26 +97,29 @@ class TFieldList extends TTable
      * @param array|null $properties
      * @throws Exception
      */
-    public function addField($label, AdiantiWidgetInterface $field, array $properties = null)
+    public function addField(AdiantiWidgetInterface $field, $label = null, array $properties = null)
     {
-        if ($field instanceof TField) {
-            $name = $field->getName();
-            
-            if (isset($this->fields[$name]) and substr($name, -2) !== '[]') {
-                throw new Exception(AdiantiCoreTranslator::translate('You have already added a field called "^1" inside the form', $name));
-            }
-            
-            if ($name) {
-                $this->fields[$name] = $field;
-                $this->fields_properties[$name] = $properties;
-            }
-            
-            if ($label instanceof TLabel) {
-                $label_value = $label->getValue();
-            } else {
-                $label_value = $label;
-            }
-            
+        if (!$field instanceof TField) {
+//            return;
+        }
+        $name = $field->getName();
+
+        if (isset($this->row_fields[$name]) and substr($name, -2) !== '[]') {
+            throw new Exception(AdiantiCoreTranslator::translate('You have already added a field called "^1" inside the form', $name));
+        }
+
+        if ($name) {
+            $this->row_fields[$name] = $field;
+            $this->fields_properties[$name] = $properties;
+        }
+
+        if ($label instanceof TLabel) {
+            $label_value = $label->getValue();
+        } else {
+            $label_value = $label;
+        }
+
+        if ($label_value) {
             $field->setLabel($label_value);
         }
     }
@@ -124,20 +132,20 @@ class TFieldList extends TTable
     {
         $section = parent::addSection('thead');
         
-        if ($this->fields) {
+        if ($this->row_fields) {
             $row = parent::addRow();
             
             if ($this->sorting) {
-                $row->addCell('');
+                $row->addCell('')->setProperty('style', 'width:20px');
             }
             
-            foreach ($this->fields as $name => $field) {
+            foreach ($this->row_fields as $name => $field) {
                 if ($field instanceof THidden) {
                     $cell = $row->addCell('');
                     $cell->{'style'} = 'display:none';
                 } else {
                     $cell = $row->addCell(new TLabel($field->getLabel()));
-                    
+                    $cell->setProperty('id', 'head_'.$field->getName());
                     if (!empty($this->fields_properties[$name])) {
                         foreach ($this->fields_properties[$name] as $property => $value) {
                             $cell->setProperty($property, $value);
@@ -150,6 +158,16 @@ class TFieldList extends TTable
         return $section;
     }
 
+    public function setUniqId($uniqid)
+    {
+        $this->uniqid = $uniqid;
+    }
+
+    public function getUniqId()
+    {
+        return $this->uniqid ?? mt_rand(1000000, 9999999);
+    }
+
     /**
      * Add detail row
      * @param object $item Data object
@@ -158,24 +176,26 @@ class TFieldList extends TTable
      */
     public function addDetail(object $item)
     {
-        $uniqid = mt_rand(1000000, 9999999);
-        
         if (!$this->body_created) {
-            parent::addSection('tbody');
+            $body = parent::addSection('tbody');
+            $this->tbody_id = 'tbody_' . $this->getUniqId();
+            $body->{'id'} = $this->tbody_id;
             $this->body_created = true;
         }
         
-        if ($this->fields) {
+        if ($this->row_fields) {
             $row = parent::addRow();
-            
+            $row->setProperty('id', $this->getUniqId());
             if ($this->sorting) {
                 $move = new TImage('fa:arrows gray');
                 $move->{'class'} .= ' handle';
                 $move->{'style'} .= ';font-size:100%;cursor:move';
-                $row->addCell($move);
+
+                $style_value = 'width:20px;vertical-align: bottom;padding-bottom: 5px;';
+                $row->addCell($move)->setProperty('style', $style_value);
             }
             
-            foreach ($this->fields as $field) {
+            foreach ($this->row_fields as $field) {
                 if ($this->detail_row == 0) {
                     $clone = $field;
                 } else {
@@ -183,11 +203,17 @@ class TFieldList extends TTable
                 }
                 
                 $name  = str_replace(['[', ']'], ['', ''], $field->getName());
-                $clone->setId($name.'_'.$uniqid);
+                $clone->setId($name.'_'.$this->getUniqId());
                 $clone->{'data-row'} = $this->detail_row;
-                
-                $cell = $row->addCell($clone);
-                
+
+                ob_start();
+                $clone->show();
+                $html = ob_get_contents();
+                ob_clean();
+
+                $component_html = '<div>'.$clone->getLabel(). $html .'</div>';
+                $cell = $row->addCell($component_html);
+                $cell->setProperty('id', 'td_'.$name.'_'.$this->getUniqId());
                 if ($clone instanceof THidden) {
                     $cell->{'style'} = 'display:none';
                 }
@@ -205,7 +231,7 @@ class TFieldList extends TTable
             $del->{'onclick'} = $this->remove_function;
             $del->add('<i class="fa fa-times red"></i>');
             
-            $row->addCell($del);
+            $row->addCell($del)->setProperty('style', 'width:20px;vertical-align: bottom');
         }
         $this->detail_row ++;
         
@@ -225,9 +251,11 @@ class TFieldList extends TTable
             $row->addCell('');
         }
         
-        if ($this->fields) {
-            foreach ($this->fields as $field) {
+        if ($this->row_fields) {
+            /**@var AdiantiWidgetInterface $field*/
+            foreach ($this->row_fields as $field) {
                 $cell = $row->addCell('');
+                $cell->setProperty('id', 'foot_'.$field->getId());
                 if ($field instanceof THidden) {
                     $cell->{'style'} = 'display:none';
                 }
@@ -238,6 +266,7 @@ class TFieldList extends TTable
         $add->{'class'} = 'btn btn-default btn-sm';
         $add->{'style'} = 'padding:3px 7px';
         $add->{'onclick'} = $this->clone_function;
+        $add->{'onclick'} = $this->getCloneFunction();
         $add->add('<i class="fa fa-plus green"></i>');
         
         // add buttons in table
@@ -286,8 +315,8 @@ class TFieldList extends TTable
             if (empty($this->sort_action)) {
                 TScript::create("ttable_sortable_rows('{$id}', '.handle')");
             } else {
-                if (!empty($this->fields)) {
-                    $first_field = array_values($this->fields)[0];
+                if (!empty($this->row_fields)) {
+                    $first_field = array_values($this->row_fields)[0];
                     $this->sort_action->setParameter('static', '1');
                     $form_name   = $first_field->getFormName();
                     $string_action = $this->sort_action->serialize(false);
@@ -296,5 +325,10 @@ class TFieldList extends TTable
                 }
             }
         }
+    }
+
+    protected function getCloneFunction()
+    {
+        return "ttable_clone_previous_row2(this, '".$this->tbody_id."')";
     }
 }

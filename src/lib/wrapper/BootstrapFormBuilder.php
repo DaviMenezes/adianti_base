@@ -61,7 +61,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     public function __construct($name = 'my_form')
     {
         $this->decorated      = new TForm($name);
-        $this->tabcurrent     = NULL;
+        $this->tabcurrent     = null;
         $this->current_page   = 0;
         $this->header_actions = array();
         $this->actions        = array();
@@ -125,7 +125,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
      */
     public function __call($method, $parameters)
     {
-        return call_user_func_array(array($this->decorated, $method),$parameters);
+        return call_user_func_array(array($this->decorated, $method), $parameters);
     }
     
     /**
@@ -222,9 +222,9 @@ class BootstrapFormBuilder implements AdiantiFormInterface
     /**
      * Clear form
      */
-    public function clear( $keepDefaults = FALSE )
+    public function clear($keepDefaults = false)
     {
-        return $this->decorated->clear( $keepDefaults );
+        return $this->decorated->clear($keepDefaults);
     }
     
     /**
@@ -306,16 +306,12 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $row->{'content'} = $args;
         $row->{'type'}    = 'fields';
         
-        if ($args)
-        {
+        if ($args) {
             $this->tabcontent[$this->tabcurrent][] = $row;
             
-            foreach ($args as $slot)
-            {
-                foreach ($slot as $field)
-                {
-                    if ($field instanceof AdiantiWidgetInterface)
-                    {
+            foreach ($args as $slot) {
+                foreach ($slot as $field) {
+                    if ($field instanceof AdiantiWidgetInterface) {
                         $this->decorated->addField($field);
                     }
                 }
@@ -341,8 +337,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $row->{'content'} = $args;
         $row->{'type'}    = 'content';
         
-        if ($args)
-        {
+        if ($args) {
             $this->tabcontent[$this->tabcurrent][] = $row;
         }
         
@@ -357,12 +352,9 @@ class BootstrapFormBuilder implements AdiantiFormInterface
      */
     public function validateInlineArguments($args, $method)
     {
-        if ($args)
-        {
-            foreach ($args as $arg)
-            {
-                if (!is_array($arg))
-                {
+        if ($args) {
+            foreach ($args as $arg) {
+                if (!is_array($arg)) {
                     throw new Exception(AdiantiCoreTranslator::translate('Method ^1 must receive a parameter of type ^2', $method, 'Array'));
                 }
             }
@@ -437,8 +429,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $label_info = ($label instanceof TLabel) ? $label->getValue() : $label;
         $name   = strtolower(str_replace(' ', '_', $label_info));
         $button = new TButton($name);
-        if (strstr($icon, '#') !== FALSE)
-        {
+        if (strstr($icon, '#') !== false) {
             $pieces = explode('#', $icon);
             $color = $pieces[1];
             $button->{'style'} = "color: #{$color}";
@@ -458,10 +449,8 @@ class BootstrapFormBuilder implements AdiantiFormInterface
      */
     public function delActions()
     {
-        if ($this->actions)
-        {
-            foreach ($this->actions as $key => $button)
-            {
+        if ($this->actions) {
+            foreach ($this->actions as $key => $button) {
                 unset($this->actions[$key]);
             }
         }
@@ -497,44 +486,34 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $panel->{'widget'} = 'bootstrapformbuilder';
         $panel->{'form'}   = $this->name;
         
-        if ($this->properties)
-        {
-            foreach ($this->properties as $property => $value)
-            {
+        if ($this->properties) {
+            foreach ($this->properties as $property => $value) {
                 $panel->$property = $value;
             }
         }
         
-        if (!empty($this->title))
-        {
+        if (!empty($this->title)) {
             $heading = new TElement('div');
             $heading->{'class'} = 'panel-heading';
             $heading->{'style'} = 'width: 100%;height:43px;padding:5px;';
             $heading->add(TElement::tag('div', $this->title, ['class'=>'panel-title', 'style'=>'padding:5px;float:left']));
             
-            if ($this->header_properties)
-            {
-                foreach ($this->header_properties as $property => $value)
-                {
-                    if (isset($heading->$property))
-                    {
+            if ($this->header_properties) {
+                foreach ($this->header_properties as $property => $value) {
+                    if (isset($heading->$property)) {
                         $heading->$property .= ' ' . $value;
-                    }
-                    else
-                    {
+                    } else {
                         $heading->$property = $value;
                     }
                 }
             }
             
-            if ($this->header_actions)
-            {
+            if ($this->header_actions) {
                 $title_actions = new TElement('div');
                 $title_actions->{'class'} = 'header-actions';
                 $title_actions->{'style'} = 'float:right';
                 $heading->add($title_actions);
-                foreach ($this->header_actions as $action_button)
-                {
+                foreach ($this->header_actions as $action_button) {
                     $title_actions->add($action_button);
                 }
             }
@@ -548,15 +527,13 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $panel->add($this->decorated);
         $this->decorated->add($body);
         
-        if ($this->tabcurrent !== null)
-        {
+        if ($this->tabcurrent !== null) {
             $tabs = new TElement('ul');
             $tabs->{'class'} = 'nav nav-tabs';
             $tabs->{'role'}  = 'tablist';
             
             $tab_counter = 0;
-            foreach ($this->tabcontent as $tab => $rows)
-            {
+            foreach ($this->tabcontent as $tab => $rows) {
                 $tab_li = new TElement('li');
                 $tab_li->{'role'}  = 'presentation';
                 $tab_li->{'class'} = ($tab_counter == $this->current_page) ? 'active' : '';
@@ -567,21 +544,19 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                 $tab_link->{'data-toggle'} = 'tab';
                 $tab_link->{'aria-expanded'} = 'true';
                 
-                if ($this->tabFunction)
-                {
+                if ($this->tabFunction) {
                     $tab_link->{'onclick'} = $this->tabFunction;
                     $tab_link->{'data-current_page'} = $tab_counter;
                 }
                 
-                if ($this->tabAction)
-                {
+                if ($this->tabAction) {
                     $this->tabAction->setParameter('current_page', $tab_counter);
-                    $string_action = $this->tabAction->serialize(FALSE);
+                    $string_action = $this->tabAction->serialize(false);
                     $tab_link->{'onclick'} = "__adianti_ajax_exec('$string_action')";
                 }
                 
                 $tab_li->add($tab_link);
-                $tab_link->add( TElement::tag('span', $tab, ['class'=>'tab-name'])); 
+                $tab_link->add(TElement::tag('span', $tab, ['class'=>'tab-name']));
                 
                 $tabs->add($tab_li);
                 $tab_counter ++;
@@ -595,43 +570,37 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $body->add($content);
         
         $tab_counter = 0;
-        foreach ($this->tabcontent as $tab => $rows)
-        {
+        foreach ($this->tabcontent as $tab => $rows) {
             $tabpanel = new TElement('div');
             $tabpanel->{'role'}  = 'tabpanel';
-            $tabpanel->{'class'} = 'tab-pane ' . ( ($tab_counter == $this->current_page) ? 'active' : '' );
+            $tabpanel->{'class'} = 'tab-pane ' . (($tab_counter == $this->current_page) ? 'active' : '');
             $tabpanel->{'style'} = 'padding:10px; margin-top: -1px;';
-            if ($tab)
-            {
+            if ($tab) {
                 $tabpanel->{'style'} .= 'border: 1px solid #DDDDDD';
             }
             $tabpanel->{'id'}    = "tab_{$this->id}_{$tab_counter}";
             
             $content->add($tabpanel);
             
-            if ($rows)
-            {
-                foreach ($rows as $row)
-                {
+            if ($rows) {
+                foreach ($rows as $row) {
                     $slots = $row->{'content'};
                     $type  = $row->{'type'};
                     
                     $form_group = new TElement('div');
-                    $form_group->{'class'} = 'form-group tformrow' . ' ' . ( isset($row->{'class'}) ? $row->{'class'} : '' );
+                    $form_group->{'class'} = 'form-group tformrow' . ' ' . (isset($row->{'class'}) ? $row->{'class'} : '');
                     $tabpanel->add($form_group);
                     $row_visual_widgets = 0;
                     
-                    if (isset($row->{'style'}))
-                    {
+                    if (isset($row->{'style'})) {
                         $form_group->{'style'} = $row->{'style'};
                     }
                     
                     $slot_counter = count($slots);
                     $row_counter  = 0;
                     
-                    foreach ($slots as $slot)
-                    {
-                        $label_css    = ((count($slots)>1) AND (count($slot)==1) AND $slot[0] instanceof TLabel AND empty($row->layout)) ? 'control-label' : '';
+                    foreach ($slots as $slot) {
+                        $label_css    = ((count($slots)>1) and (count($slot)==1) and $slot[0] instanceof TLabel and empty($row->layout)) ? 'control-label' : '';
                         $column_class = (!empty($row->layout) ? $row->layout[$row_counter] : $this->column_classes[$slot_counter][$row_counter]);
                         $slot_wrapper = new TElement('div');
                         $slot_wrapper->{'class'} = $column_class . ' fb-field-container '.$label_css;
@@ -639,36 +608,28 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                         $form_group->add($slot_wrapper);
                         
                         // one field per slot do not need to be wrapped
-                        if (count($slot)==1)
-                        {
-                            foreach ($slot as $field)
-                            {
+                        if (count($slot)==1) {
+                            foreach ($slot as $field) {
                                 $field_wrapper = self::wrapField($field, 'inherit', $this->field_sizes);
                                 
                                 $slot_wrapper->add($field_wrapper);
                                 
-                                if (!$field instanceof THidden)
-                                {
+                                if (!$field instanceof THidden) {
                                     $row_visual_widgets ++;
                                 }
                             }
-                        }
-                        else // more fields must be wrapped
-                        {
+                        } else { // more fields must be wrapped
                             $field_counter = 0;
-                            foreach ($slot as $field)
-                            {
+                            foreach ($slot as $field) {
                                 $field_wrapper = self::wrapField($field, 'inline-block', $this->field_sizes);
                                 
-                                if ( ($field_counter+1 < count($slot)) and (!$field instanceof TDBSeekButton) ) // padding less last element
-                                {
+                                if (($field_counter+1 < count($slot)) and (!$field instanceof TDBSeekButton)) { // padding less last element
                                     $field_wrapper->{'style'} .= ';padding-right: '.$this->padding.'px;';
                                 }
                                 
                                 $slot_wrapper->add($field_wrapper);
                                 
-                                if (!$field instanceof THidden)
-                                {
+                                if (!$field instanceof THidden) {
                                     $row_visual_widgets ++;
                                 }
                                 
@@ -679,8 +640,7 @@ class BootstrapFormBuilder implements AdiantiFormInterface
                         $row_counter ++;
                     }
                     
-                    if ($row_visual_widgets == 0)
-                    {
+                    if ($row_visual_widgets == 0) {
                         $form_group->{'style'} = 'display:none';
                     }
                 }
@@ -688,15 +648,13 @@ class BootstrapFormBuilder implements AdiantiFormInterface
             $tab_counter ++;
         }
         
-        if ($this->actions)
-        {
+        if ($this->actions) {
             $footer = new TElement('div');
             $footer->{'class'} = 'panel-footer';
             $footer->{'style'} = 'width: 100%';
             $this->decorated->add($footer);
             
-            foreach ($this->actions as $action_button)
-            {
+            foreach ($this->actions as $action_button) {
                 $footer->add($action_button);
             }
         }
@@ -716,65 +674,46 @@ class BootstrapFormBuilder implements AdiantiFormInterface
         $field_wrapper->{'class'} = 'fb-inline-field-container ' . ((($field instanceof TField) and ($has_underline)) ? 'form-line' : '');
         $field_wrapper->{'style'} = "display: {$display};vertical-align:top;" . ($display=='inline-block'?'float:left':'');
         
-        if (!empty($default_field_size))
-        {
-            if (is_array($field_size))
-            {
+        if (!empty($default_field_size)) {
+            if (is_array($field_size)) {
                 $field_size[0] = $default_field_size;
-            }
-            else
-            {
+            } else {
                 $field_size = $default_field_size;
             }
         }
         
-        if ($field instanceof TField)
-        {
-            if (is_array($field_size))
-            {
+        if ($field instanceof TField) {
+            if (is_array($field_size)) {
                 $width  = $field_size[0];
                 $height = $field_size[1];
-                $field_wrapper->{'style'} .= ( (strpos($width,  '%') !== FALSE) ? ';width: '  . $width  : ';width: '  . $width.'px');
-                if (!$object instanceof THtmlEditor)
-                {
-                    $field_wrapper->{'style'} .= ( (strpos($height, '%') !== FALSE) ? ';height: ' . $height : ';height: ' . $height.'px');
+                $field_wrapper->{'style'} .= ((strpos($width, '%') !== false) ? ';width: '  . $width  : ';width: '  . $width.'px');
+                if (!$object instanceof THtmlEditor) {
+                    $field_wrapper->{'style'} .= ((strpos($height, '%') !== false) ? ';height: ' . $height : ';height: ' . $height.'px');
                 }
-            }
-            else if ($field_size AND !$object instanceof TRadioGroup AND !$object instanceof TCheckGroup AND (!$object instanceof TSeekButton OR !empty($default_field_size)))
-            {
-                $field_wrapper->{'style'} .= ( (strpos($field_size, '%') !== FALSE) ? ';width: '.$field_size : ';width: '.$field_size.'px');
+            } elseif ($field_size and !$object instanceof TRadioGroup and !$object instanceof TCheckGroup and (!$object instanceof TSeekButton or !empty($default_field_size))) {
+                $field_wrapper->{'style'} .= ((strpos($field_size, '%') !== false) ? ';width: '.$field_size : ';width: '.$field_size.'px');
             }
         }
         
         $field_wrapper->add($field);
-        if ($field instanceof AdiantiWidgetInterface)
-        {
+        if ($field instanceof AdiantiWidgetInterface) {
             $input_class = ($field instanceof TLabel)  ? '' : 'form-control';
             $input_class = ($field instanceof TButton) ? 'btn btn-default btn-sm' : $input_class;
             $field->{'class'} = $input_class . ' ' . $field->{'class'};
         }
         
-        if ($object instanceof TLabel)
-        {
+        if ($object instanceof TLabel) {
             $object->{'style'} .= ';margin-top:3px';
             $object->setSize('100%');
-        }
-        else if (method_exists($object, 'setSize'))
-        {
-            if ($object instanceof TSeekButton)
-            {
+        } elseif (method_exists($object, 'setSize')) {
+            if ($object instanceof TSeekButton) {
                 $extra_size = $object->getExtraSize();
-                if (!$object->hasAuxiliar())
-                {
+                if (!$object->hasAuxiliar()) {
                     $object->setSize("calc(100% - {$extra_size}px)");
                 }
-            }
-            else if ( ($field_size) AND ($object instanceof TMultiSearch OR $object instanceof TDBMultiSearch OR $object instanceof THtmlEditor))
-            {
+            } elseif (($field_size) and ($object instanceof TMultiSearch or $object instanceof TDBMultiSearch or $object instanceof THtmlEditor)) {
                 $object->setSize('100%', $field_size[1] - 3);
-            }
-            else if ( ($field_size) AND !($object instanceof TRadioGroup OR $object instanceof TCheckGroup))
-            {
+            } elseif (($field_size) and !($object instanceof TRadioGroup or $object instanceof TCheckGroup)) {
                 $object->setSize('100%', '100%');
             }
         }

@@ -28,11 +28,7 @@ class TEntry extends TField implements AdiantiWidgetInterface
     protected $exitFunction;
     /**@var TAction*/
     protected $exitAction;
-    protected $id;
-    protected $formName;
-    protected $name;
-    protected $value;
-    
+
     public function __construct(string $name)
     {
         parent::__construct($name);
@@ -307,6 +303,11 @@ class TEntry extends TField implements AdiantiWidgetInterface
             $options = json_encode($this->completion);
             TScript::create(" tentry_autocomplete( '{$this->id}', $options); ");
         }
+        $this->createNumericMask();
+    }
+
+    protected function createNumericMask(): void
+    {
         if ($this->numericMask) {
             TScript::create("tentry_numeric_mask( '{$this->id}', {$this->decimals}, '{$this->decimalsSeparator}', '{$this->thousandSeparator}'); ");
         }

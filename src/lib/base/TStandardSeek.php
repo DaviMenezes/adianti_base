@@ -272,7 +272,7 @@ class TStandardSeek extends TWindow
      */
     public function onSetup($param=null)
     {
-        $ini  = \Adianti\Core\AdiantiApplicationConfig::get();
+        $ini  = \Adianti\Base\Lib\Core\AdiantiApplicationConfig::get();
         $seed = APPLICATION_NAME . (!empty($ini['general']['seed']) ? $ini['general']['seed'] : 's8dkld83kf73kf094');
 
         if (isset($param['hash']) and $param['hash'] == md5($seed.$param['database'].$param['model'].$param['display_field'])) {

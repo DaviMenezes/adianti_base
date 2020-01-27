@@ -31,7 +31,7 @@ class TTableRow extends TElement
      * @return TTableCell
      * @throws Exception
      */
-    public function addCell(object $value)
+    public function addCell($value)
     {
         if (is_null($value)) {
             throw new Exception(AdiantiCoreTranslator::translate('Method ^1 does not accept null values', __METHOD__));
